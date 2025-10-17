@@ -42,9 +42,6 @@ Dashboards: latency p95, error rate; SLO 99.9%/400ms
 Symptom: spike in 5xx  
 Diagnose: check scorer pods logs; roll back model `vX→vW` if LLM errors
 
-## Rollback
-`kubectl rollout undo deploy/scorer`; disable `feature.hover_badge`
-
 ## Post-Deploy Checks
 Run smoke `/v1/score` on 3 known URLs; confirm p95<400ms; set `feature.hover_badge=true` to 10% canary
 ```

@@ -6,7 +6,7 @@
 
 ## Key Rules
 - **Path:** `docs/adrs/`
-- **Naming:** `adr-YYYYMMDD-<slug>.md` (lowercase, kebab-case slug; unique per decision)
+- **Naming:** `adr-<ID>-<slug>.md` (lowercase, kebab-case slug; unique per decision)
 - **Status lifecycle:** Draft → Accepted | Rejected
 - **Content must include:** Header, Context, Decision, Consequences (±), Alternatives, Rollback Plan, Links (PRD/ADR/FEATURE references)
 - **Discipline:** If a public API/contract changes without an ADR → block merge until ADR exists.
@@ -14,7 +14,7 @@
 ## Example
 ```md
 # ADR: Choose Django DRF over FastAPI
-**File:** docs/adrs/adr-20250822-backend-framework.md  
+**File:** docs/adrs/adr-001-backend-framework.md  
 **Status:** Accepted  
 
 ## Context
@@ -34,7 +34,7 @@ FastAPI (lighter, but re-implement admin/auth), Flask (+plugins)
 Keep service boundaries; if DRF blocks latency goals, rebase views to FastAPI gateway.
 
 ## Links
-- PRD: `prd-20250822.md`
-- TECH-SPECs: `spec-20250822-frontend.md`
+- PRD: `prd.md`
+- TECH-SPECs: `spec-frontend.md`
 - FEATUREs: `ft-001-hover-badge.md`, `ft-002-explain-tooltip.md`
 ```

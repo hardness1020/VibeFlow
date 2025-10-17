@@ -8,12 +8,12 @@
 
 ### Path & Naming (mandatory)
 - **Path:** `docs/prds/`
-- **Naming:** `prd-YYYYMMDD.md` (date of acceptance/version)
-  - **Do not edit** older PRDs; create a **new version** PRD when making significant updates.
+- **Naming:** `prd.md` (single PRD file per project)
+  - **Edit the existing PRD** file directly; maintain only one PRD file per project.
 
 ### Versioning policy
-- **Minor editorial fixes:** update the current file + add to **Changelog**.
-- **Material changes** (significant updates): create a **new dated snapshot**.
+- **All changes:** update the current file + add to **Changelog** section.
+- **Major updates:** increment version number in header and document changes in changelog.
 
 ### Content Requirements (must include)
 - **Header** — version, file, owners, last_updated
@@ -21,14 +21,13 @@
 - **Problem & Context** — evidence, KPIs affected, constraints.
 - **Users & Use Cases** — personas, key jobs-to-be-done.
 - **Scope (MoSCoW)** — Must/Should/Could/Won't; crisp, testable statements.
-- **Success Metrics** — baseline → target with **dates**; primary & guardrail metrics.
+- **Success Metrics** — baseline → target; primary & guardrail metrics.
 - **Non-Goals** — what this PRD explicitly excludes.
 - **Requirements** — functional (user stories/acceptance), non-functional (latency, availability, privacy).
 - **Dependencies** — data, services, legal/policy, 3rd-party.
 - **Risks & Mitigations** — top risks, detection, fallback.
-- **Rollout Plan & Timeline** — phases/milestones, entry/exit criteria.
 - **Analytics & Telemetry** — events, dashboards, alert thresholds.
-- **Privacy & Compliance** — data collected, retention, consent, DSRs.
+- **Changelog**
 
 > **Guardrail:** Implementation choices (e.g., Django vs FastAPI) belong in TECH-SPEC/ADRs, not PRD.
 
@@ -37,7 +36,7 @@
 ```md
 # PRD — Article Credibility Score
 **Version:** v1.0.0
-**File:** docs/prds/prd-20250822.md  
+**File:** docs/prds/prd.md  
 **Owners:** PM (A. Lee), Eng (M. Chang)  
 **Last_updated:** 2025-08-22  
 
@@ -80,6 +79,5 @@ LLM drift → nightly evals & alerts; scraping failures → fallback to paste-te
 ## Analytics & Telemetry
 Events: view_badge, open_explain, error_score; dashboards for latency, errors, eval F1.
 
-## Privacy & Compliance
-No PII stored; redact URLs; honor deletion requests; log retention 30d.
+## Changelog
 ```
