@@ -1,9 +1,9 @@
-# VibeFlow-Claud
+# VibeFlow
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/hardness1020/VibeFlow?style=social)](https://github.com/hardness1020/VibeFlow/stargazers)
 
-**A comprehensive, docs-first development workflow template for AI-assisted software engineering with Claude Code.**
+**A comprehensive, docs-first development workflow template for AI-assisted software engineering.**
 
 Transform chaotic AI-assisted development into a structured, predictable process. VibeFlow provides battle-tested workflow rules, documentation templates, and TDD practices that keep your AI assistant aligned with your goals from planning through deployment.
 
@@ -81,9 +81,9 @@ git clone https://github.com/hardness1020/VibeFlow.git
 # Click "Use this template" button on GitHub
 ```
 
-### 2. Point Claude Code to the Rules
+### 2. Point AI Agent to the Rules
 
-Add to your Claude Code project context or configuration:
+Add to your project context or configuration:
 
 ```
 Use the workflow rules in /rules/ for all development activities:
@@ -258,7 +258,7 @@ We welcome contributions! Here's how you can help:
 - Follow the workflow when contributing (meta, right?)
 - Add examples to demonstrate improvements
 - Keep rules concise and actionable
-- Test your changes with Claude Code
+- Test your changes
 
 ---
 
@@ -280,7 +280,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 1. **Star this repository** ⭐ to show support and bookmark for later
 2. **Clone or fork** the template
-3. **Point Claude Code** to the `/rules/` directory
+3. **Point AI Agent** to the `/rules/` directory
 4. **Choose your workflow track** based on change scope
 5. **Start building** with confidence
 
