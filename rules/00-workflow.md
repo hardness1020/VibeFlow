@@ -53,29 +53,50 @@ Instead of 11 individual stops, reviews are grouped into **6 strategic checkpoin
 
 ### Stage B — **Codebase Discovery**
 - **Input:** PRD and initial requirements.
-- **Action:** Search and analyze existing codebase **before** designing new solutions.
-  - **Search for similar features** using Grep, Glob, Read tools
-  - **Identify reusable services/components** (e.g., patterns in `llm_services/`, `generation/services/`)
-  - **Map existing architecture patterns** and layer assignments
-  - **Check for duplicate implementations** that can be consolidated
-  - **Review test coverage** of related code
-  - **Document findings** in discovery notes or FEATURE file
-- **Output:** Discovery findings with:
-  - List of reusable components/services
+- **Action:** Search and analyze existing codebase **before** designing new solutions. Follow comprehensive discovery checklist:
+  1. **Test Impact Analysis** (identify affected tests early)
+     - Identify existing tests affected by the planned change
+     - Mark tests to update/remove/keep (create test update checklist)
+     - Map test coverage of code to be modified (coverage %, gaps)
+     - Document test coverage gaps that need to be addressed
+  2. **Dependency & Side Effect Mapping**
+     - Trace all dependencies (imports, function calls, data flows)
+     - Identify side effects (state changes, external calls, database operations)
+     - Map impact on other components/features
+     - Identify high-risk areas (high-impact + low-test-coverage)
+  3. **Reusable Component Discovery**
+     - **Search for similar features** using Grep, Glob, Read tools
+     - **Identify reusable services/components** (e.g., patterns in `llm_services/`, `generation/services/`)
+     - **Map existing architecture patterns** and layer assignments
+     - **Check for duplicate implementations** that can be consolidated
+- **Output (structured format):** Discovery findings with:
+  - **Test update checklist** (tests to update/remove/add) with file paths
+  - **Test coverage report** (coverage %, gaps, untested paths affected)
+  - List of reusable components/services with file paths
+  - **Dependency graph** (what depends on what, impact radius)
+  - **Side effects inventory** (what changes where, state/DB/API impacts)
   - Architecture patterns to follow (reference: `docs/architecture/patterns.md`)
   - Code that should be refactored/consolidated
   - Layer assignment for new code (base/core/infrastructure/reliability)
-  - Dependencies on existing services
-- **Exit Gate:** Documented analysis confirming no duplicate functionality will be created.
+  - **Risk areas** (high-impact + low-test-coverage zones)
+- **Exit Gate:** Documented analysis with test impact checklist, dependency mapping, and confirmation that no duplicate functionality will be created.
 
 ### Stage C — **Specify (TECH SPECS)**
-- **Action:** Create/update relevant **SPECs** (system/api/frontend/llm). Use versioned single files: `spec-<spec>.md`.
+- **Action:** Update existing SPECs first, create new only if needed. Use versioned single files: `spec-<spec>.md`.
+- **Pre-Check (mandatory):**
+  1. List all existing specs from `docs/specs/index.md`
+  2. For each existing spec, check if change affects it (contracts/topology/framework roles/SLOs)
+  3. **Default: Update existing affected specs FIRST**
+  4. Create new spec **only if** scope doesn't fit any existing spec
+  5. Document spec update justification (why update vs. create)
 - **Architecture (required):** add **diagram (frameworks+relationships)** and **component inventory**; link latest PRD and Stage B discovery findings.
 - **Output (generate file):** relevant SPEC(s) `spec-<spec>.md` with:
   - **Architecture:** comprehensive diagram (frameworks + relationships) **and** component inventory table.
   - Links to latest PRD and discovery findings; Changelog entry; version number.
+  - **Spec update justification** (if creating new spec, explain why existing specs don't fit)
+  - **Cross-spec impact summary** (which other specs are affected)
 - **Rule Compliance:** Generated SPECs must follow `rules/02-tech_spec.md` format and standards.
-- **Exit Gate:** For any change to **contracts/topology/framework roles/SLOs**, SPEC updated with new version and listed as **Current** in `docs/specs/index.md`.
+- **Exit Gate:** For any change to **contracts/topology/framework roles/SLOs**, SPEC updated with new version and listed as **Current** in `docs/specs/index.md`. Spec update/create decision documented.
 
 ### Stage D — **Decide (ADRs)**
 - **Action:** For any non-trivial choice (new dependency, auth model, storage pattern, schema versioning, SLO shifts), add **ADR**.
@@ -96,15 +117,25 @@ Instead of 11 individual stops, reviews are grouped into **6 strategic checkpoin
 - **REVIEW CHECKPOINT #2:** **Design Complete** (FEATURE spec reviewed)
 
 ### Stage F — **Write Unit Tests First (Hybrid TDD - RED Phase)**
-- **Action:** Write **failing unit tests** for the feature/fix per acceptance criteria in FEATURE spec.
+- **Action:** Handle deprecated tests, then write **failing unit tests** for the feature/fix per acceptance criteria in FEATURE spec.
 - **TDD Mandate:** Unit tests MUST be written **before** implementation code. See `rules/05-tdd.md` for detailed Hybrid TDD workflow.
-- **RED Phase Focus:** Use meaningful function names, descriptive assertions, and `NotImplementedError` with helpful messages to clarify requirements and design APIs.
+- **Two Substeps:**
+  1. **Test Cleanup** (using Stage B test update checklist):
+     - Update deprecated tests to align with new feature design
+     - Remove obsolete tests that are no longer relevant
+     - Document why tests were removed/updated
+  2. **Write New Failing Unit Tests:**
+     - Use meaningful function names, descriptive assertions, and `NotImplementedError` with helpful messages
+     - Focus on business logic with all external dependencies mocked
+     - Tests should clarify requirements and design APIs
 - **Test Coverage:** Unit tests for business logic with all external dependencies mocked. **Defer integration tests to Stage H.**
 - **LLM Paths:** For LLM/prompt changes, create unit tests with mocked LLM responses (goldens + eval harness deferred to Stage H).
-- **Output (generate files):** Unit test files with failing tests that define the expected behavior and serve as executable specifications.
+- **Output (generate files):**
+  - Updated/cleaned up test files (deprecated tests handled)
+  - New unit test files with failing tests that define expected behavior
 - **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/05-tdd.md`.
-- **Exit Gate:** Failing unit tests exist that fully specify the expected behavior and clarify API design.
-- **REVIEW CHECKPOINT #3:** **Unit Tests Complete** (failing unit tests reviewed)
+- **Exit Gate:** All deprecated tests handled (updated/removed with justification) + new failing unit tests exist that fully specify the expected behavior.
+- **REVIEW CHECKPOINT #3:** **Unit Tests Complete** (test cleanup + failing unit tests reviewed)
 
 ### Stage G — **Implement to Pass Unit Tests (Hybrid TDD - GREEN Phase)**
 - **Action:** Write **minimal code** to make **unit tests** pass (TDD green phase).
@@ -195,7 +226,11 @@ Instead of 11 individual stops, reviews are grouped into **6 strategic checkpoin
 ## Enforcement (automatic blockers)
 - Code generated **before** required docs exist/updated → **block** and generate the missing doc file(s) first.
 - **Stage B (Codebase Discovery) skipped for Medium/Large changes** → **block** and perform discovery analysis first.
+- **Stage B without test impact analysis for Medium/Large** → **block** and complete test impact checklist (affected tests, coverage gaps, test update plan).
+- **Stage B without dependency & side effect mapping for Medium/Large** → **block** and document dependencies, side effects, and risk areas.
 - **Duplicate code created when reusable components exist** → **block** and refactor to use existing components.
+- **Stage C creating new spec before checking existing specs** → **block** and review existing specs from `docs/specs/index.md` first; update existing if applicable.
+- **Stage F without handling deprecated tests first** → **block** and complete test cleanup (update/remove deprecated tests from Stage B checklist).
 - **Implementation code written before unit tests** → **block** and write failing unit tests first (Hybrid TDD violation).
 - **Unit tests not failing initially** → **block** and verify tests specify new behavior.
 - **Stage H without integration tests for I/O operations** → **block** and write integration tests first (see mandatory list in `rules/05-tdd.md`).
@@ -204,6 +239,7 @@ Instead of 11 individual stops, reviews are grouped into **6 strategic checkpoin
 - Non-trivial choices with no **ADR** → **block merge**.
 - Feature work with no **FEATURE** file → **block merge**.
 - **FEATURE missing discovery findings or reuse analysis** (for Medium/Large) → **block** and complete Stage B first.
+- **FEATURE missing test impact analysis** (for Medium/Large) → **block** and add test update checklist from Stage B.
 - Production-impacting changes with no **OP-NOTE** → **block deployment**.
 - PR missing links (PRD/SPEC/ADR/FEATURE) → request changes.
 - **PR without tests (unit + integration) for new code** → **block merge**.

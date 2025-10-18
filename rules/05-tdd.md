@@ -6,15 +6,22 @@ This rule mandates a Hybrid Test-Driven Development approach for all feature imp
 ## Core Hybrid TDD Cycle: Red → Green → Refactor
 
 ### 1. RED Phase (Stage F: Write Unit Tests First)
-- **Write failing unit test(s)** that define expected behavior and clarify requirements
-- **Focus on business logic and API design** - defer integration tests to refactor phase
-- Tests should **use `NotImplementedError`** because the functionality doesn't exist yet
-- Each test should be **minimal** and test **one thing**
-- **Use meaningful function names** that express intent clearly
-- **Include helper descriptions** to clarify the expected behavior
-- Consider **sync v.s. async**. If not sure, add to description
-- Tests should serve as **executable specifications** that clarify requirements
-- **Mock all external dependencies** (database, APIs, file system)
+- **Two Substeps:**
+  1. **Test Cleanup (using Stage B test update checklist)**
+     - Update deprecated tests to align with new feature design
+     - Remove obsolete tests that are no longer relevant
+     - Document why tests were removed/updated (in commit message or comments)
+     - Ensure remaining tests still pass before proceeding
+  2. **Write New Failing Unit Tests**
+     - **Write failing unit test(s)** that define expected behavior and clarify requirements
+     - **Focus on business logic and API design** - defer integration tests to refactor phase
+     - Tests should **use `NotImplementedError`** because the functionality doesn't exist yet
+     - Each test should be **minimal** and test **one thing**
+     - **Use meaningful function names** that express intent clearly
+     - **Include helper descriptions** to clarify the expected behavior
+     - Consider **sync v.s. async**. If not sure, add to description
+     - Tests should serve as **executable specifications** that clarify requirements
+     - **Mock all external dependencies** (database, APIs, file system)
 
 ### 2. GREEN Phase (Stage G: Implement to Pass Unit Tests)
 - Write **minimal code** to make **unit tests** pass
@@ -120,17 +127,23 @@ def optimize_cv_for_ats(cv_content, job_requirements, optimization_level="standa
 
 ### Stage E (Plan/FEATURE) → Stage F (Write Unit Tests)
 - Review acceptance criteria in FEATURE spec
+- Review **Stage B test update checklist** from FEATURE spec
 - Transform each criterion into one or more failing **unit tests**
 - Focus on business logic and API design
 - Defer integration test planning to Stage H
 
 ### Stage F (Write Unit Tests) → Stage G (Implement)
-- All **unit tests** must be failing (red) and use meaningful function names
-- Tests define the business logic specification with descriptive assertions
-- Functions use `NotImplementedError` with clear messages about expected behavior
-- API design is clarified through test usage (function names, parameters, return types)
-- All external dependencies are mocked
-- No implementation code exists yet
+- **Substep 1 (Test Cleanup) complete:**
+  - All deprecated tests from Stage B checklist are updated/removed
+  - Documentation added for why tests were changed
+  - Remaining existing tests still pass
+- **Substep 2 (New Failing Tests) complete:**
+  - All **new unit tests** are failing (red) and use meaningful function names
+  - Tests define the business logic specification with descriptive assertions
+  - Functions use `NotImplementedError` with clear messages about expected behavior
+  - API design is clarified through test usage (function names, parameters, return types)
+  - All external dependencies are mocked
+  - No implementation code exists yet
 
 ### Stage G (Implement) → Stage H (Write Integration Tests & Refactor)
 - All **unit tests** must be passing (green)

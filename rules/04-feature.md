@@ -17,7 +17,10 @@
 
 ### Required sections (must include)
   - **Header:** ID, file, owner, TECH-SPECs
-  - **Existing Implementation Analysis** (from Stage B discovery) — for Medium/Large features
+  - **Stage B Discovery Findings** (from Stage B codebase discovery) — for Medium/Large features
+    - **Test Impact Analysis** (test update checklist, coverage gaps)
+    - **Existing Implementation Analysis** (reusable components, similar features)
+    - **Dependency & Side Effect Mapping** (dependencies, side effects, risk areas)
   - **Architecture Conformance** (layer assignment, pattern compliance) — for all features
   - **Acceptance Criteria** (clear, testable; Gherkin or checklist)
   - **Design Changes** (UI/API/schema diffs; examples)
@@ -36,7 +39,27 @@
 **Owner:** Marcus
 **TECH-SPECs:** `spec-api.md` (v1.3), `spec-frontend.md` (v2.1)
 
-## Existing Implementation Analysis
+## Stage B Discovery Findings
+
+### Test Impact Analysis
+**Tests to Update:**
+- `tests/llm_services/test_scoring_service.py` - update mocked responses to include rationales
+- `tests/generation/test_views.py` - update endpoint response schema assertions
+
+**Tests to Remove:**
+- None
+
+**Coverage Gaps:**
+- Circuit breaker failure scenarios (coverage: 45%) - need integration tests
+- UI component state transitions (coverage: 60%) - need unit tests
+
+**Test Update Checklist:**
+- [ ] Update `test_scoring_service.py` for new rationales field
+- [ ] Update `test_views.py` for new endpoint response
+- [ ] Add circuit breaker integration tests (Stage H)
+- [ ] Add UI state transition unit tests (Stage F)
+
+### Existing Implementation Analysis
 **Similar Features:**
 - `llm_services/services/core/tailored_content_service.py` - existing LLM scoring pattern
 - `generation/services/bullet_generation_service.py` - retry logic with circuit breaker
@@ -51,9 +74,23 @@
 
 **Code to Refactor:** None (new feature)
 
+### Dependency & Side Effect Mapping
 **Dependencies:**
-- Will use `EmbeddingService` for semantic similarity
-- Will use `CircuitBreaker` for LLM API fault tolerance
+- `EmbeddingService` for semantic similarity
+- `CircuitBreaker` for LLM API fault tolerance
+- `ModelSelector` for model routing
+
+**Side Effects:**
+- Database writes to `scores` table (new table, no impact on existing)
+- Redis cache writes with TTL 24h (no impact on existing cache keys)
+
+**Impact Radius:**
+- Frontend: New UI component (isolated, no impact on existing components)
+- Backend: New endpoint (no changes to existing endpoints)
+
+**Risk Areas:**
+- Circuit breaker state management (low test coverage) - HIGH RISK
+- LLM API timeout handling (untested) - MEDIUM RISK
 
 ## Architecture Conformance
 **Layer Assignment:**
