@@ -26,19 +26,19 @@ Not all changes require the full workflow. Choose the appropriate track based on
 |-----------|-----------|---------------------|-------------|
 | **Micro** | Bug fix, typo, small refactor | F → G (TDD only) | Fix typo in error message, update config value |
 | **Small** | Single feature, no contracts | E → F → G → H | Add field to existing form, UI polish |
-| **Medium** | Multi-component, no new services | B → C → D → E → F → G → H → I | New API endpoint using existing services |
-| **Large** | System change, new contracts/services | Full A → K | New LLM integration, new auth system |
+| **Medium** | Multi-component, no new services | B → C → D → E → F → G → H → I → J | New API endpoint using existing services |
+| **Large** | System change, new contracts/services | Full A → L | New LLM integration, new auth system |
 
 ## Review Checkpoint Strategy
 
-Instead of 11 individual stops, reviews are grouped into **6 strategic checkpoints**:
+Instead of 12 individual stops, reviews are grouped into **6 strategic checkpoints**:
 
-1. **Planning Complete** (after Stage C): PRD + Discovery + SPECs + ADRs reviewed together
+1. **Planning Complete** (after Stage D): PRD + Discovery + SPECs + ADRs reviewed together
 2. **Design Complete** (after Stage E): FEATURE spec reviewed
 3. **Tests Complete** (after Stage F): Failing tests reviewed
 4. **Implementation Complete** (after Stage H): Working + refactored code reviewed
-5. **Release Ready** (after Stage I): OP-NOTE reviewed
-6. **Deployed** (after Stage K): Post-deployment verification
+5. **Release Ready** (after Stage J): OP-NOTE reviewed
+6. **Deployed** (after Stage L): Post-deployment verification
 
 **Note:** Teams can opt into more granular stops if needed, but default is these 6 checkpoints.
 
@@ -53,33 +53,24 @@ Instead of 11 individual stops, reviews are grouped into **6 strategic checkpoin
 
 ### Stage B — **Codebase Discovery**
 - **Input:** PRD and initial requirements.
-- **Action:** Search and analyze existing codebase **before** designing new solutions. Follow comprehensive discovery checklist:
-  1. **Test Impact Analysis** (identify affected tests early)
-     - Identify existing tests affected by the planned change
-     - Mark tests to update/remove/keep (create test update checklist)
-     - Map test coverage of code to be modified (coverage %, gaps)
-     - Document test coverage gaps that need to be addressed
-  2. **Dependency & Side Effect Mapping**
-     - Trace all dependencies (imports, function calls, data flows)
-     - Identify side effects (state changes, external calls, database operations)
-     - Map impact on other components/features
-     - Identify high-risk areas (high-impact + low-test-coverage)
-  3. **Reusable Component Discovery**
-     - **Search for similar features** using Grep, Glob, Read tools
-     - **Identify reusable services/components** (e.g., patterns in `llm_services/`, `generation/services/`)
-     - **Map existing architecture patterns** and layer assignments
-     - **Check for duplicate implementations** that can be consolidated
-- **Output (structured format):** Discovery findings with:
+- **Action:** Search and analyze existing codebase **before** designing new solutions. Follow **spec-driven discovery** approach (specs first, then code validation).
+- **Discovery Phases:** (See `rules/02-discovery.md` for comprehensive guidance)
+  0. **Spec Discovery** (mandatory first) - Analyze existing specs, extract contracts and patterns
+  1. **Spec-Code Validation** - Verify specs match reality, assess confidence, document drift
+  2. **Test Impact Analysis** - Identify affected tests, create test update checklist, map coverage gaps
+  3. **Dependency & Side Effect Mapping** - Trace dependencies, identify side effects, map impact radius
+  4. **Reusable Component Discovery** - Find similar features, identify reusable patterns, prevent duplication
+- **Output (generate file):** `docs/discovery/disco-<ID>.md` with:
+  - **Spec discovery results** (affected specs, confidence assessment, patterns to follow)
+  - **Spec-code validation results** (discrepancies found, required spec updates)
   - **Test update checklist** (tests to update/remove/add) with file paths
   - **Test coverage report** (coverage %, gaps, untested paths affected)
-  - List of reusable components/services with file paths
-  - **Dependency graph** (what depends on what, impact radius)
-  - **Side effects inventory** (what changes where, state/DB/API impacts)
-  - Architecture patterns to follow (reference: `docs/architecture/patterns.md`)
-  - Code that should be refactored/consolidated
-  - Layer assignment for new code (base/core/infrastructure/reliability)
-  - **Risk areas** (high-impact + low-test-coverage zones)
-- **Exit Gate:** Documented analysis with test impact checklist, dependency mapping, and confirmation that no duplicate functionality will be created.
+  - **Dependency map** (inbound/outbound dependencies, impact radius)
+  - **Side effects inventory** (database, API, cache, queue operations)
+  - **Reusable component inventory** (services/patterns to use)
+  - **Risk assessment** (risk level, key risks, mitigations, go/no-go recommendation)
+- **Rule Compliance:** Discovery document must follow `rules/02-discovery.md` format and standards.
+- **Exit Gate:** Discovery document created at `docs/discovery/disco-<ID>.md` with all phases completed, risk assessment, and confirmation that no duplicate functionality will be created.
 
 ### Stage C — **Specify (TECH SPECS)**
 - **Action:** Update existing SPECs first, create new only if needed. Use versioned single files: `spec-<spec>.md`.
@@ -95,13 +86,13 @@ Instead of 11 individual stops, reviews are grouped into **6 strategic checkpoin
   - Links to latest PRD and discovery findings; Changelog entry; version number.
   - **Spec update justification** (if creating new spec, explain why existing specs don't fit)
   - **Cross-spec impact summary** (which other specs are affected)
-- **Rule Compliance:** Generated SPECs must follow `rules/02-tech_spec.md` format and standards.
+- **Rule Compliance:** Generated SPECs must follow `rules/03-tech_spec.md` format and standards.
 - **Exit Gate:** For any change to **contracts/topology/framework roles/SLOs**, SPEC updated with new version and listed as **Current** in `docs/specs/index.md`. Spec update/create decision documented.
 
 ### Stage D — **Decide (ADRs)**
 - **Action:** For any non-trivial choice (new dependency, auth model, storage pattern, schema versioning, SLO shifts), add **ADR**.
 - **Output (generate file):** `docs/adrs/adr-<ID>-<slug>.md` for non-trivial choices (deps, storage, auth, versioning, SLO moves).
-- **Rule Compliance:** Generated ADRs must follow `rules/03-adr.md` format and standards.
+- **Rule Compliance:** Generated ADRs must follow `rules/04-adr.md` format and standards.
 - **Exit Gate:** PR references ADR(s); code relying on the decision cannot merge without an **Accepted** ADR.
 - **REVIEW CHECKPOINT #1:** **Planning Complete** (PRD + Discovery + SPECs + ADRs reviewed together)
 
@@ -112,13 +103,13 @@ Instead of 11 individual stops, reviews are grouped into **6 strategic checkpoin
   - Acceptance criteria; design diffs (UI/API/schema); test & eval plan; risks.
   - **Existing implementation analysis** (from Stage B discovery)
   - **Architecture conformance** (layer assignment, pattern compliance)
-- **Rule Compliance:** Generated FEATURE must follow `rules/04-feature.md` format and standards.
+- **Rule Compliance:** Generated FEATURE must follow `rules/05-feature.md` format and standards.
 - **Exit Gate (DoR):** FEATURE file present with all required sections + links to SPEC + discovery findings + reuse checklist complete.
 - **REVIEW CHECKPOINT #2:** **Design Complete** (FEATURE spec reviewed)
 
 ### Stage F — **Write Unit Tests First (Hybrid TDD - RED Phase)**
 - **Action:** Handle deprecated tests, then write **failing unit tests** for the feature/fix per acceptance criteria in FEATURE spec.
-- **TDD Mandate:** Unit tests MUST be written **before** implementation code. See `rules/05-tdd.md` for detailed Hybrid TDD workflow.
+- **TDD Mandate:** Unit tests MUST be written **before** implementation code. See `rules/06-tdd.md` for detailed Hybrid TDD workflow.
 - **Two Substeps:**
   1. **Test Cleanup** (using Stage B test update checklist):
      - Update deprecated tests to align with new feature design
@@ -133,7 +124,7 @@ Instead of 11 individual stops, reviews are grouped into **6 strategic checkpoin
 - **Output (generate files):**
   - Updated/cleaned up test files (deprecated tests handled)
   - New unit test files with failing tests that define expected behavior
-- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/05-tdd.md`.
+- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/06-tdd.md`.
 - **Exit Gate:** All deprecated tests handled (updated/removed with justification) + new failing unit tests exist that fully specify the expected behavior.
 - **REVIEW CHECKPOINT #3:** **Unit Tests Complete** (test cleanup + failing unit tests reviewed)
 
@@ -143,35 +134,70 @@ Instead of 11 individual stops, reviews are grouped into **6 strategic checkpoin
 - **Docs-first enforcement:** If contracts change unexpectedly, **stop** and update SPEC/ADR first.
 - **Reuse enforcement:** Leverage components identified in Stage B; avoid duplicating existing code.
 - **Output:** Implementation code that makes all unit tests pass.
-- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/05-tdd.md`.
+- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/06-tdd.md`.
 - **Exit Gate:** All unit tests green; no regressions; code follows established patterns from Stage B discovery. **Integration tests not required yet.**
 
 ### Stage H — **Write Integration Tests & Refactor (Hybrid TDD - REFACTOR Phase)**
 - **Action:** Write integration tests for I/O boundaries, pass them, then refactor code while keeping all tests green.
 - **Three Substeps:**
-  1. **Write Integration Tests:** For API endpoints, database operations, external service calls, LLM pipelines, file I/O (see `rules/05-tdd.md` for mandatory list)
+  1. **Write Integration Tests:** For API endpoints, database operations, external service calls, LLM pipelines, file I/O (see `rules/06-tdd.md` for mandatory list)
   2. **Pass Integration Tests:** Implement any missing integration code to make integration tests green
   3. **Refactor:** Clean up code while keeping all tests (unit + integration) green
 - **Clean Code:** Remove duplication, improve naming, optimize algorithms, enhance error handling.
 - **Documentation:** Add inline docs, update API docs if needed.
 - **Pattern Compliance:** Verify code follows architecture patterns identified in Stage B.
 - **Output:** Refactored code with all tests (unit + integration) still passing.
-- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/05-tdd.md`.
+- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/06-tdd.md`.
 - **Exit Gate:** All tests (unit + integration) green; code meets quality standards; performance acceptable.
 - **REVIEW CHECKPOINT #4:** **Implementation Complete** (working + refactored code with full test coverage reviewed)
 
-### Stage I — **Release Preparation (OP-NOTE)**
+### Stage I — **Spec Reconciliation**
+- **Purpose:** Update specs if implementation deviated from design. Ensure specs reflect actual implementation.
+- **Action:** Review implementation against original specs from Stage C; document and justify architectural deviations; update affected specs.
+- **Checklist:**
+  1. **Review implementation vs. design:** Compare final code to specs created in Stage C
+  2. **Identify architectural deviations:**
+     - Interface signatures changed from spec design?
+     - New dependencies added not in original spec?
+     - Configuration schemas extended beyond spec definition?
+     - Performance characteristics different from SLOs?
+  3. **Decision matrix for each deviation:**
+     - Was deviation necessary? (Document reason - becomes ADR if non-trivial)
+     - Should spec be updated? (YES if contract/topology changed)
+     - Should implementation be revised? (YES if violated architectural principles)
+  4. **Update affected specs if contract changes occurred:**
+     - Increment spec version per change-control tripwires
+     - Add changelog entry referencing this feature
+     - Update "Last Verified" metadata to today (if spec includes confidence tracking)
+     - Set confidence level to HIGH (just verified)
+  5. **Update discovery document** (`docs/discovery/disco-<ID>.md`):
+     - Add "Post-Implementation Notes" section
+     - Document lessons learned for future similar changes
+     - Assess discovery accuracy (predictions vs. reality)
+  6. **Update architecture patterns** (`docs/architecture/patterns.md`) if new pattern emerged
+- **Output:**
+  - Updated specs (if contracts/topology changed)
+  - ADRs for non-trivial architectural decisions made during implementation
+  - Updated discovery document with post-implementation notes
+  - Updated architecture patterns (if applicable)
+- **Enforcement:**
+  - **BLOCK:** Contract changes without spec version update
+  - **BLOCK:** Significant architectural deviation without ADR justification
+  - **BLOCK:** Spec marked as affected in Stage C but not reviewed in Stage I
+- **Exit Gate:** All specs updated to reflect final implementation; discovery document includes post-implementation notes; architectural decisions documented.
+
+### Stage J — **Release Preparation (OP-NOTE)**
 - **Action:** Write **OP-NOTE** (per feature or release). Include preflight (migrations/env/flags), deploy steps, monitoring, playbooks, rollback, post-deploy checks.
 - **Output (generate file):** `docs/op-notes/op-<ID>-<slug>.md` or `op-release-<semver>.md` with preflight, deploy steps, monitoring, playbooks, rollback, post-deploy checks.
-- **Rule Compliance:** Generated OP-NOTE must follow `rules/06-op_note.md` format and standards.
+- **Rule Compliance:** Generated OP-NOTE must follow `rules/07-op_note.md` format and standards.
 - **Exit Gate:** OP-NOTE complete with all deployment steps documented.
 - **REVIEW CHECKPOINT #5:** **Release Ready** (OP-NOTE reviewed)
 
-### Stage J — **Deploy & Verify**
+### Stage K — **Deploy & Verify**
 - **Action:** Follow OP-NOTE; canary if specified; run smoke tests; watch dashboards/alerts.
 - **Exit Gate:** Post-deploy checks passed; toggle flags as per OP-NOTE; `docs/op-notes/index.md` updated.
 
-### Stage K — **Close Loop**
+### Stage L — **Close Loop**
 - **Action:** Update `docs/specs/index.md` (mark Current version); ensure PRD/FEATURE/ADR links are reciprocal; tag release; **close issues with "Closes #<ID>"**.
 - **Exit Gate:** Schedule shows **Done**; retrospective TODOs captured (if any).
 - **REVIEW CHECKPOINT #6:** **Deployed** (post-deployment verification)
@@ -233,7 +259,7 @@ Instead of 11 individual stops, reviews are grouped into **6 strategic checkpoin
 - **Stage F without handling deprecated tests first** → **block** and complete test cleanup (update/remove deprecated tests from Stage B checklist).
 - **Implementation code written before unit tests** → **block** and write failing unit tests first (Hybrid TDD violation).
 - **Unit tests not failing initially** → **block** and verify tests specify new behavior.
-- **Stage H without integration tests for I/O operations** → **block** and write integration tests first (see mandatory list in `rules/05-tdd.md`).
+- **Stage H without integration tests for I/O operations** → **block** and write integration tests first (see mandatory list in `rules/06-tdd.md`).
 - Public **contracts** changed with no SPEC update → **block merge**.
 - Material changes with no SPEC **version increment** → **block merge**.
 - Non-trivial choices with no **ADR** → **block merge**.

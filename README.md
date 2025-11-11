@@ -60,7 +60,7 @@ VibeFlow enforces a **docs-first, TDD-driven workflow** with:
 
 ### Strategic Review Checkpoints
 
-1. **Planning Complete** (after Stage C): PRD + Discovery + SPECs + ADRs
+1. **Planning Complete** (after Stage D): PRD + Discovery + SPECs + ADRs
 2. **Design Complete** (after Stage E): FEATURE spec
 3. **Tests Complete** (after Stage F): Failing unit tests
 4. **Implementation Complete** (after Stage H): Working + refactored code
@@ -89,12 +89,12 @@ Add to your project context or configuration:
 Use the workflow rules in /rules/ for all development activities:
 - 00-workflow.md: Main workflow governance
 - 01-prd.md: Product requirements
-- 02-tech_spec.md: Technical specifications
-- 03-adr.md: Architecture decision records
-- 04-feature.md: Feature planning
-- 05-tdd.md: Hybrid TDD practices
-- 06-op_note.md: Operational runbooks
-- design-principles.md: UI/UX standards
+- 02-discovery.md: Codebase discovery and analysis
+- 03-tech_spec.md: Technical specifications
+- 04-adr.md: Architecture decision records
+- 05-feature.md: Feature planning
+- 06-tdd.md: Hybrid TDD practices
+- 07-op_note.md: Operational runbooks
 - markdown.md: Documentation formatting
 ```
 
@@ -122,7 +122,12 @@ Use the workflow rules in /rules/ for all development activities:
 ```
 A. Initiate (PRD)
    ↓
-B. Codebase Discovery (Test Impact + Dependency Analysis + Reuse Discovery)
+B. Codebase Discovery (Spec-Driven Analysis)
+   - Phase 0: Spec Discovery (analyze existing specs first)
+   - Phase 1: Spec-Code Validation (verify specs match reality)
+   - Phase 2: Test Impact Analysis (identify affected tests, coverage gaps)
+   - Phase 3: Dependency & Side Effect Mapping (trace impact radius)
+   - Phase 4: Reusable Component Discovery (prevent duplication)
    ↓
 C. Specify (Tech Specs with Architecture Diagrams)
    ↓
@@ -165,12 +170,12 @@ K. Close Loop (Update Index, Tag Release)
 |------|---------|-------------|
 | `00-workflow.md` | Master governance rule | Always - defines the entire pipeline |
 | `01-prd.md` | Product requirements template | Stage A - for user-facing changes |
-| `02-tech_spec.md` | Technical specifications | Stage C - for contracts/topology/SLOs |
-| `03-adr.md` | Architecture decision records | Stage D - for non-trivial choices |
-| `04-feature.md` | Feature planning template | Stage E - for implementation blueprints |
-| `05-tdd.md` | Hybrid TDD practices | Stages F/G/H - test-driven implementation |
-| `06-op_note.md` | Operational runbooks | Stage I - for deployment/operations |
-| `design-principles.md` | S-Tier UI/UX checklist | For dashboard/interface features |
+| `02-discovery.md` | Codebase discovery template | Stage B - for Medium/Large changes |
+| `03-tech_spec.md` | Technical specifications | Stage C - for contracts/topology/SLOs |
+| `04-adr.md` | Architecture decision records | Stage D - for non-trivial choices |
+| `05-feature.md` | Feature planning template | Stage E - for implementation blueprints |
+| `06-tdd.md` | Hybrid TDD practices | Stages F/G/H - test-driven implementation |
+| `07-op_note.md` | Operational runbooks | Stage I - for deployment/operations |
 | `markdown.md` | Documentation standards | For all markdown files |
 
 ---
@@ -181,7 +186,13 @@ K. Close Loop (Update Index, Tag Release)
 
 **Stage A (PRD)**: Define credibility scoring goals, success metrics (p95 ≤ 400ms, CTR +2pp)
 
-**Stage B (Discovery)**: Find existing LLM services, identify test coverage gaps, map dependencies
+**Stage B (Discovery)**: Comprehensive spec-driven codebase analysis
+- Phase 0: Review `spec-llm.md`, `spec-api.md` for existing LLM patterns and contracts
+- Phase 1: Validate spec accuracy (discovered 4 undocumented endpoints, spec drift detected)
+- Phase 2: Identify 35 affected tests across 4 test files, map coverage gaps in error handling
+- Phase 3: Map dependencies (LLM services, circuit breaker, performance tracker, 12 consumers)
+- Phase 4: Find reusable `BaseLLMService` pattern, prevent duplicate timeout logic
+- Output: `docs/discovery/disco-123.md`
 
 **Stage C (Spec)**: Document new LLM pipeline architecture with diagram, update `spec-llm.md` to v2.0.0
 
@@ -228,6 +239,9 @@ Done! Commit with test + fix together.
 - **Quality Assurance**: Built-in blockers prevent common AI pitfalls
 - **Contract Safety**: Versioned specs prevent breaking changes
 - **Review Points**: Humans approve at strategic checkpoints
+- **Comprehensive Discovery**: AI performs spec-driven codebase analysis before design
+- **Reuse Detection**: Prevents duplicate implementations through automated component discovery
+- **Test Impact Analysis**: Identifies affected tests and coverage gaps proactively
 
 ---
 
