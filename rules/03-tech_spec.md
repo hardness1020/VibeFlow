@@ -12,11 +12,6 @@
   - [Path & Naming](#path--naming-mandatory)
   - [Versioning Policy](#versioning-policy-git-based)
   - [Spec Lifecycle States](#spec-lifecycle-states)
-  - [Changelog Consolidation](#changelog-consolidation-mandatory)
-  - [Changelog Size Limits](#changelog-size-limits)
-  - [What NOT to Include in Changelog](#what-not-to-include-in-changelog-prohibited)
-  - [What TO Include in Changelog](#what-to-include-in-changelog-required)
-  - [Changelog Entry Template](#changelog-entry-template)
 - [Required Sections](#required-sections-must-include)
 - [Required Section Order](#required-section-order-recommended-sequence)
 - [Architecture Requirements](#architecture-requirements-be-explicit)
@@ -42,7 +37,6 @@
 **Common tasks (quick links):**
 - **[Pre-creation checklist](#pre-creation-workflow-mandatory)** - Decide whether to update existing spec or create new one
 - **[Required sections](#required-sections-must-include)** - What must be included in every spec
-- **[Changelog rules](#changelog-consolidation-mandatory)** - Format, size limits, and content requirements
 - **[Example spec](#example)** - See complete reference example with all sections
 - **[Minimal template](#quick-reference-minimal-spec-template)** - Copy-paste starting point for new specs
 - **[Architecture requirements](#architecture-requirements-be-explicit)** - Topology diagrams and component inventory
@@ -64,7 +58,7 @@
      - Scope doesn't fit any existing spec (e.g., new infrastructure layer)
      - Existing spec would become >1500 lines with addition
      - Change represents new architectural boundary (e.g., splitting monolith)
-4. **Document justification** in spec header or changelog
+4. **Document justification** in spec header
 
 **Anti-patterns to avoid:**
 - ❌ Creating `spec-bullet-generation.md` when bullets already covered in `spec-llm.md`
@@ -92,12 +86,10 @@
 
 ### Versioning policy (Git-based)
 - **Use semantic versioning** in the file header: `v1.0.0`, `v2.0.0`, etc.
-- **Minor editorial fixes:** update the current file + add to **Changelog** (no version bump).
+- **Minor editorial fixes:** update the current file (no version bump).
 - **Material changes** (contracts/SLOs/framework roles/topology):
   - **Increment version** (e.g., v1.3.0 → v2.0.0 for breaking changes)
-  - Update **Changelog** with dated entry
   - **Tag in Git**: `git tag spec-api-v2.0.0`
-  - Mark prior version as **Superseded** in changelog
 - **Scope changes:** use a new `<spec>` slug (e.g., split `system` into `api`/`frontend`/`llm`).
 - **Git provides history:** Use `git log`, `git blame`, `git diff` for change tracking.
 
@@ -126,9 +118,8 @@ Retire a spec when:
 
 **Retirement process:**
 1. Update spec header with archived status and reason
-2. Add "ARCHIVED" notice to changelog with final entry explaining retirement
-3. Keep file in repo for historical reference (do not delete)
-4. Link to successor spec or ADR explaining replacement
+2. Keep file in repo for historical reference (do not delete)
+3. Link to successor spec or ADR explaining replacement
 
 **Example (archived spec header):**
 ```markdown
@@ -136,187 +127,6 @@ Retire a spec when:
 **Archived Date:** 2025-10-16
 **Reason:** Embedding-based ranking removed in favor of keyword-based approach
 **Successor:** See `spec-llm.md` v3.3.0+ for current artifact ranking architecture
-```
-
-### Changelog consolidation (mandatory)
-- **Single location:** All version history at END of spec, immediately before optional References section
-- **Do NOT duplicate:** Never include changelog in both header AND footer
-- **Order:** Reverse chronological (newest version first)
-- **Format:** `- **YYYY-MM-DD [vX.Y.Z]**: Description of changes`
-- **Superseded versions:** Mark clearly with `- **YYYY-MM-DD [vX.Y.Z]** ⚠️ SUPERSEDED by vX.Y.Z: [reason]`
-- **Size limit:** Keep recent changelogs detailed (last 3-5 versions). For older versions, condense to one-line summaries or add note: "For full history, use `git log docs/specs/spec-<spec>.md`"
-
-**Example:**
-```markdown
-## Changelog
-
-- **2025-11-04 [v4.2.0]**: Corrected GPT-5 pricing ($3.00/$12.00), fixed context window (128K), removed hallucinated parameters
-- **2025-11-04 [v4.1.0]** ⚠️ SUPERSEDED by v4.2.0: Contained incorrect GPT-5 parameters
-- **2025-11-04 [v4.0.0]**: Added source attribution and verification service for anti-hallucination (breaking change)
-- **2025-10-16 [v3.3.0]**: Removed embedding infrastructure per ADR-028
-- **2025-10-05 [v3.0.0]**: Migrated to OpenAI-only architecture (breaking: removed Anthropic)
-
-**Note:** For complete version history: `git log docs/specs/spec-llm.md`
-```
-
-### Changelog Size Limits
-
-**Target:** Changelog should consume ≤3% of total spec content
-
-**Enforcement Thresholds:**
-- ✅ **Good:** ≤2% of spec (10-25 lines for typical 800-1200 line spec)
-- ⚠️ **Warning:** 3-10% of spec (needs condensation during next update)
-- ❌ **Violation:** >10% of spec (mandatory condensation before merge)
-
-**Per-Version Guidelines:**
-- **Recent versions (last 3-5):** 1-3 lines each (detailed)
-- **Older versions:** 1 line each (condensed summary)
-- **Historical versions (>10):** Single note: "For full history: `git log docs/specs/spec-<spec>.md`"
-
-**Auto-check command:**
-
-```bash
-# Usage: Run from repo root to check changelog size compliance
-# Replace "spec-llm.md" with your spec filename
-SPEC="docs/specs/spec-llm.md"
-TOTAL=$(wc -l < "$SPEC")
-CHANGELOG_START=$(grep -n "^## Changelog" "$SPEC" | cut -d: -f1)
-CHANGELOG_LINES=$((TOTAL - CHANGELOG_START))
-PERCENT=$((CHANGELOG_LINES * 100 / TOTAL))
-echo "Changelog: $CHANGELOG_LINES lines / $TOTAL total = $PERCENT%"
-[ $PERCENT -gt 10 ] && echo "⚠️  VIOLATION: Changelog >10% of spec" || echo "✅ PASS"
-```
-
-**When to run:**
-- Before committing spec updates
-- During PR review (add to CI/CD checks)
-- When condensing changelogs
-
-**Expected output:**
-- ✅ **PASS:** Changelog ≤10% of spec (e.g., "Changelog: 45 lines / 1200 total = 4%")
-- ⚠️ **VIOLATION:** Changelog >10% (triggers mandatory condensation)
-
-### What NOT to Include in Changelog (PROHIBITED)
-
-Changelogs should document **contract changes**, not **implementation details**. The following content is **prohibited**:
-
-❌ **Git-level implementation details:**
-- Line numbers: `(lines 131, 207)`, `819 → 700 lines`
-- File paths: `backend/artifacts/tasks.py`, `Modified: src/services/foo.py`
-- Specific function/variable names: `artifact.asave()`, `MIN_CONFIDENCE = 0.6`
-- Section movements: "Moved X from line 100 to line 200"
-
-❌ **Code change descriptions:**
-- "Removed `artifact.asave()` from service layer"
-- "Added pre-flight check in `tasks.py:159-178`"
-- "Updated test expectations in test_enrichment.py"
-- "Fixed variable naming in BulletService"
-
-❌ **Redundant subsections:**
-- **FILES MODIFIED:** (use `git log` or `git diff` instead)
-- **IMPACT:** (implicit from description, use metrics only)
-- **RATIONALE:** (belongs in ADR or commit message)
-- **RELATED:** (use References section instead)
-
-❌ **Test/quality details:**
-- "All 18 tests passing"
-- "Test coverage increased to 89.6%"
-- "Fixed test_enrich_artifact_with_no_evidence"
-- "Updated mock expectations in unit tests"
-
-❌ **Verbose organizational descriptions:**
-- Detailed subsection lists: "Reorganized: Service interfaces grouped by layer: Orchestration Layer (GenerationService, StatusService), Domain Services (BulletService, ValidationService)..."
-- Before/after content comparisons
-- Detailed rationale for organizational changes
-
-**Rule of Thumb:** If it shows "how" code changed (implementation), it belongs in commit messages. If it shows "what" contracts changed (interfaces), it belongs in changelog.
-
-### What TO Include in Changelog (REQUIRED)
-
-✅ **Contract changes:**
-- Breaking API changes: "API endpoints `/v1/cv/` → `/v1/generations/`"
-- Schema changes: "Added github_repository_analysis table with 4-phase analysis"
-- New/removed endpoints: "Added POST /v1/bullets/validate endpoint"
-- Parameter changes: "Changed bullet validation from 50% → 60% confidence threshold"
-- SLO changes: "Latency target improved from 30s → 18s"
-
-✅ **High-level organizational changes:**
-- "Reorganized Architecture section (ERD, patterns, table groups)"
-- "Added Table of Contents for >800 line spec navigation"
-- "Condensed database schema section (158→19 lines), reference spec-database-schema.md"
-- "Restructured service interfaces by architectural layer"
-
-✅ **Cross-references:**
-- "See ADR-028 for embedding removal rationale"
-- "Implements ft-030 anti-hallucination improvements"
-- "Superseded by v4.2.0 (corrected pricing)"
-- "References spec-database-schema.md for authoritative schema"
-
-✅ **Impact metrics (when significant):**
-- "Improved navigability ~40%"
-- "Reduced hallucination rate to ≤5%"
-- "Spec size reduction 44% (491→300 lines)"
-- "Processing time improved 30s → 18s (40% faster)"
-
-### Changelog Entry Template
-
-Use these templates as starting points:
-
-**Breaking change:**
-```markdown
-- **YYYY-MM-DD [vX.0.0]**: BREAKING - <high-level change>; <contract impact>; see <ADR/feature>
-```
-
-**Non-breaking feature:**
-```markdown
-- **YYYY-MM-DD [vX.Y.0]**: Added <feature>; <key contracts/endpoints>; see <ADR/feature>
-```
-
-**Non-breaking reorganization:**
-```markdown
-- **YYYY-MM-DD [vX.Y.Z]**: NON-BREAKING - <high-level changes>; <impact metric if significant>
-```
-
-**Superseded version:**
-```markdown
-- **YYYY-MM-DD [vX.Y.Z]** ⚠️ SUPERSEDED by vX.Y.Z: <reason for superseding>
-```
-
-**Examples:**
-
-✅ **GOOD (1-2 lines each):**
-```markdown
-- **2025-11-04 [v4.0.0]**: BREAKING - Added source attribution and BulletVerificationService; new ExtractedContent schema; target hallucination ≤5%; see ft-030, ADR-031-034
-- **2025-11-06 [v1.2.1]**: NON-BREAKING - Reorganized Architecture section (ERD, patterns, groups); added References section; improved navigability
-- **2025-10-30 [v2.0.0]**: BREAKING - Renamed "CV" → "Generation" terminology; API endpoints `/v1/cv/` → `/v1/generations/`; see ADR-037
-```
-
-❌ **BAD (54 lines with git-level details):**
-```markdown
-- **2025-11-06 [v2.5.0]**: Content organization and navigability improvements (NON-BREAKING)
-  - **Added:** Table of Contents (18 entries) for quick navigation in 700+ line spec
-  - **Reorganized:** Service interfaces grouped by architectural layer (Orchestration vs. Domain Services)
-    - Orchestration Layer: GenerationService, GenerationStatusService
-    - Domain Services: BulletGenerationService, BulletValidationService, ArtifactSelectorService
-  - **Moved:** End-to-End Generation Flow sequence diagram to Interfaces section (from misplaced Architecture location)
-  - **Flattened:** "Additional API Endpoints" anti-pattern - integrated 8 endpoints into organized HTTP API Endpoints subsection
-    - Categories: Generation Management, Bullet Operations, Configuration & Analytics, Quality & Feedback
-    - Added core endpoints (create, assemble, delete) for completeness
-  - **Consolidated:** Database schema section (158 lines → 19 lines)
-    - Replaced detailed Django models with concise table format
-    - Added reference to `docs/specs/spec-database-schema.md` as authoritative source
-  - **Condensed:** GenerationStatusService documentation (removed verbose "Key Design Decisions" section)
-  - **IMPACT:**
-    - Line count: 819 → ~700 lines (15% reduction)
-    - Navigability: 50% improvement with ToC and logical section flow
-    - Spec compliance: Matches spec-api.md v4.8.0 organizational patterns
-    - No interface changes: Pure reorganization, no contract modifications
-  - **RATIONALE:** Improve readability and navigability while maintaining technical accuracy; comply with tech spec rules (ToC required for >800 lines, database schema references for DRY)
-```
-
-**Condensed version (2 lines):**
-```markdown
-- **2025-11-06 [v2.5.0]**: NON-BREAKING - Added ToC, reorganized service interfaces by layer, condensed database schema (158→19 lines with reference to spec-database-schema.md); improved navigability ~40%
 ```
 
 ### Required sections (must include)
@@ -328,7 +138,6 @@ Use these templates as starting points:
 - **Reliability & SLIs/SLOs** (timeouts/retries/backpressure/limits)
 - **Security & Privacy** (authn/z, PII, secrets, logging)
 - **Evaluation Plan** (datasets, metrics, thresholds, test harness)
-- **Changelog** (dated bullets of changes)
 
 ### Required section order (recommended sequence)
 
@@ -337,7 +146,6 @@ Use these templates as starting points:
 2. **Table of Contents** (if spec >800 lines)
 3. **Overview & Goals** - What and why
 4. **Architecture** - How it's structured
-5. **Changelog** - At END, before optional References
 
 **Flexible middle sections** (order by domain logic):
 
@@ -355,7 +163,6 @@ Use these templates as starting points:
 **Rationale:** This order presents information logically, matching typical reader questions. Each section builds on previous context: understanding the purpose enables comprehending the architecture, which enables using the interfaces, etc.
 
 **Anti-patterns:**
-- ❌ Changelog at beginning (should be at end)
 - ❌ Implementation details before interfaces (show contract first)
 - ❌ Security after Evaluation (cross-cutting concerns should group together)
 
@@ -755,7 +562,6 @@ Add `## Table of Contents` immediately after header metadata, before "Overview &
 - [Reliability & SLIs/SLOs](#reliability--slisslos)
 - [Security & Privacy](#security--privacy)
 - [Evaluation Plan](#evaluation-plan)
-- [Changelog](#changelog)
 ```
 
 **Auto-generation:** Most Markdown editors (VS Code, Typora, etc.) can auto-generate ToC from headings. Use editor tools to keep ToC synchronized with content.
@@ -807,18 +613,11 @@ No PII stored; redact URLs; keys via env; structured audit logs.
 
 ## Evaluation Plan
 Goldens v0.4; F1 ≥ 0.72 gate in CI. Regression suite on PR.
-
-## Changelog
-- **2025-09-15 [v2.1.0]**: Added circuit breaker integration; improved retry logic
-- **2025-09-01 [v2.0.0]**: Breaking: New schema with rationales array; API v1.3 (supersedes v1.x)
-- **2025-08-22 [v1.0.0]**: Initial version; API v1.0; Redis TTL 24h; Celery retry policy
-
-**Note:** For full version history, use `git log docs/specs/spec-api.md` or `git diff spec-api-v1.0.0..spec-api-v2.1.0`
 ```
 
 ### References section (optional but recommended)
 
-For complex specs with many dependencies or significant feature implementations, add **References** section immediately before Changelog.
+For complex specs with many dependencies or significant feature implementations, add **References** section at the end of the document.
 
 **Structure:**
 ```markdown
@@ -910,18 +709,7 @@ For complex specs with many dependencies or significant feature implementations,
 
 ### 2. Size Validation
 
-**Check changelog size:**
-```bash
-SPEC="docs/specs/your-spec.md"
-TOTAL=$(wc -l < "$SPEC")
-CHANGELOG_START=$(grep -n "^## Changelog" "$SPEC" | cut -d: -f1)
-CHANGELOG_LINES=$((TOTAL - CHANGELOG_START))
-PERCENT=$((CHANGELOG_LINES * 100 / TOTAL))
-echo "Changelog: $CHANGELOG_LINES lines / $TOTAL total = $PERCENT%"
-[ $PERCENT -gt 10 ] && echo "⚠️  VIOLATION: Changelog >10% of spec" || echo "✅ PASS"
-```
-
-**Expected:** Changelog ≤10% of total spec lines
+**Check total spec size:** Aim for 800-1200 lines. If spec exceeds 1500 lines, review for feature-level detail creep and consider extracting to separate specs.
 
 ### 3. Required Elements
 
@@ -935,15 +723,12 @@ echo "Changelog: $CHANGELOG_LINES lines / $TOTAL total = $PERCENT%"
 - ✅ Reliability & SLIs/SLOs
 - ✅ Security & Privacy
 - ✅ Evaluation Plan
-- ✅ Changelog (at end, before optional References)
 
 ### 4. Git Compliance
 
 **Before merge:**
 1. ✅ Increment version number if contracts changed
 2. ✅ Add git tag: `git tag spec-<name>-vX.Y.Z`
-3. ✅ Update changelog with dated entry
-4. ✅ Mark superseded versions in changelog (if breaking change)
 
 ## Quick Reference: Minimal Spec Template
 
@@ -986,9 +771,4 @@ echo "Changelog: $CHANGELOG_LINES lines / $TOTAL total = $PERCENT%"
 
 ## Evaluation Plan
 [Datasets, metrics, thresholds, test harness]
-
-## Changelog
-- **YYYY-MM-DD [v1.0.0]**: Initial version; [key contracts]; see [ADR/feature]
-
-**Note:** For full version history: `git log docs/specs/spec-<spec>.md`
 ```

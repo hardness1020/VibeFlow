@@ -89,13 +89,12 @@ Add to your project context or configuration:
 Use the workflow rules in /rules/ for all development activities:
 - 00-workflow.md: Main workflow governance
 - 01-prd.md: Product requirements
-- 02-discovery.md: Codebase discovery and analysis
+- 02-discovery/: Codebase discovery (policy.md + template.md)
 - 03-tech_spec.md: Technical specifications
 - 04-adr.md: Architecture decision records
 - 05-feature.md: Feature planning
-- 06-tdd.md: Hybrid TDD practices
+- 06-tdd/: Hybrid TDD practices (policy.md + guide.md)
 - 07-op_note.md: Operational runbooks
-- markdown.md: Documentation formatting
 ```
 
 ### 3. Choose Your Workflow Track
@@ -170,13 +169,12 @@ K. Close Loop (Update Index, Tag Release)
 |------|---------|-------------|
 | `00-workflow.md` | Master governance rule | Always - defines the entire pipeline |
 | `01-prd.md` | Product requirements template | Stage A - for user-facing changes |
-| `02-discovery.md` | Codebase discovery template | Stage B - for Medium/Large changes |
+| `02-discovery/` | Codebase discovery (policy + template) | Stage B - for Medium/Large changes |
 | `03-tech_spec.md` | Technical specifications | Stage C - for contracts/topology/SLOs |
 | `04-adr.md` | Architecture decision records | Stage D - for non-trivial choices |
 | `05-feature.md` | Feature planning template | Stage E - for implementation blueprints |
-| `06-tdd.md` | Hybrid TDD practices | Stages F/G/H - test-driven implementation |
+| `06-tdd/` | Hybrid TDD practices (policy + guide) | Stages F/G/H - test-driven implementation |
 | `07-op_note.md` | Operational runbooks | Stage I - for deployment/operations |
-| `markdown.md` | Documentation standards | For all markdown files |
 
 ---
 

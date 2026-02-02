@@ -12,8 +12,8 @@
   - **Edit the existing PRD** file directly; maintain only one PRD file per project.
 
 ### Versioning policy
-- **All changes:** update the current file + add to **Changelog** section.
-- **Major updates:** increment version number in header and document changes in changelog.
+- **All changes:** update the current file directly.
+- **Major updates:** increment version number in header.
 
 ### Content Requirements (must include)
 - **Header** — version, file, owners, last_updated
@@ -27,7 +27,6 @@
 - **Dependencies** — data, services, legal/policy, 3rd-party.
 - **Risks & Mitigations** — top risks, detection, fallback.
 - **Analytics & Telemetry** — events, dashboards, alert thresholds.
-- **Changelog**
 
 > **Guardrail:** Implementation choices (e.g., Django vs FastAPI) belong in TECH-SPEC/ADRs, not PRD.
 
@@ -78,6 +77,4 @@ LLM drift → nightly evals & alerts; scraping failures → fallback to paste-te
 
 ## Analytics & Telemetry
 Events: view_badge, open_explain, error_score; dashboards for latency, errors, eval F1.
-
-## Changelog
 ```

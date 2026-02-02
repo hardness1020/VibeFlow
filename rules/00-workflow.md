@@ -8,10 +8,10 @@
 
 
 ## Authoritative Paths & Naming
-- **PRD** → `docs/prds/prd.md` (single PRD file per project; edit directly for all changes; maintain changelog within the file)
+- **PRD** → `docs/prds/prd.md` (single PRD file per project; edit directly for all changes)
 - **SPEC (TECH SPEC)** → `docs/specs/spec-<spec>.md` (no subdirs; `<spec>` in `{system, api, frontend, llm, ...}`; maintain `docs/specs/index.md`)
   - **Architecture section contains only:** (1) **comprehensive diagram** (frameworks + relationships) and (2) **component inventory table**.
-  - Minor edits → update + **Changelog**; material contract/SLO/framework/topology change → **increment version** + Git tag (prior marked **Superseded**).
+  - Minor edits → update file; material contract/SLO/framework/topology change → **increment version** + Git tag.
 - **ADR** → `docs/adrs/adr-<ID>-<slug>.md` (non-trivial decisions; lifecycle: Draft → Accepted | Rejected | Superseded)
 - **FEATURE** → `docs/features/ft-<ID>-<slug>.md` (+ keep `docs/features/schedule.md`)
 - **OP-NOTE (Runbook)** → `docs/op-notes/op-<ID>-<slug>.md` **or** `docs/op-notes/op-release-<semver>.md` (+ `docs/op-notes/index.md`)
@@ -54,7 +54,7 @@ Instead of 12 individual stops, reviews are grouped into **6 strategic checkpoin
 ### Stage B — **Codebase Discovery**
 - **Input:** PRD and initial requirements.
 - **Action:** Search and analyze existing codebase **before** designing new solutions. Follow **spec-driven discovery** approach (specs first, then code validation).
-- **Discovery Phases:** (See `rules/02-discovery.md` for comprehensive guidance)
+- **Discovery Phases:** (See `rules/02-discovery/policy.md` for comprehensive guidance)
   0. **Spec Discovery** (mandatory first) - Analyze existing specs, extract contracts and patterns
   1. **Spec-Code Validation** - Verify specs match reality, assess confidence, document drift
   2. **Test Impact Analysis** - Identify affected tests, create test update checklist, map coverage gaps
@@ -69,7 +69,7 @@ Instead of 12 individual stops, reviews are grouped into **6 strategic checkpoin
   - **Side effects inventory** (database, API, cache, queue operations)
   - **Reusable component inventory** (services/patterns to use)
   - **Risk assessment** (risk level, key risks, mitigations, go/no-go recommendation)
-- **Rule Compliance:** Discovery document must follow `rules/02-discovery.md` format and standards.
+- **Rule Compliance:** Discovery document must follow `rules/02-discovery/policy.md` format and standards.
 - **Exit Gate:** Discovery document created at `docs/discovery/disco-<ID>.md` with all phases completed, risk assessment, and confirmation that no duplicate functionality will be created.
 
 ### Stage C — **Specify (TECH SPECS)**
@@ -83,7 +83,7 @@ Instead of 12 individual stops, reviews are grouped into **6 strategic checkpoin
 - **Architecture (required):** add **diagram (frameworks+relationships)** and **component inventory**; link latest PRD and Stage B discovery findings.
 - **Output (generate file):** relevant SPEC(s) `spec-<spec>.md` with:
   - **Architecture:** comprehensive diagram (frameworks + relationships) **and** component inventory table.
-  - Links to latest PRD and discovery findings; Changelog entry; version number.
+  - Links to latest PRD and discovery findings; version number.
   - **Spec update justification** (if creating new spec, explain why existing specs don't fit)
   - **Cross-spec impact summary** (which other specs are affected)
 - **Rule Compliance:** Generated SPECs must follow `rules/03-tech_spec.md` format and standards.
@@ -108,25 +108,34 @@ Instead of 12 individual stops, reviews are grouped into **6 strategic checkpoin
 - **REVIEW CHECKPOINT #2:** **Design Complete** (FEATURE spec reviewed)
 
 ### Stage F — **Write Unit Tests First (Hybrid TDD - RED Phase)**
-- **Action:** Handle deprecated tests, then write **failing unit tests** for the feature/fix per acceptance criteria in FEATURE spec.
-- **TDD Mandate:** Unit tests MUST be written **before** implementation code. See `rules/06-tdd.md` for detailed Hybrid TDD workflow.
-- **Two Substeps:**
+- **Action:** Handle deprecated tests, create implementation stubs from FEATURE spec API design, then write **failing unit tests** for the feature/fix per acceptance criteria.
+- **TDD Mandate:** Unit tests MUST be written **before** implementation code. See `rules/06-tdd/policy.md` for detailed Hybrid TDD workflow.
+- **Three Substeps:**
   1. **Test Cleanup** (using Stage B test update checklist):
      - Update deprecated tests to align with new feature design
      - Remove obsolete tests that are no longer relevant
      - Document why tests were removed/updated
-  2. **Write New Failing Unit Tests:**
-     - Use meaningful function names, descriptive assertions, and `NotImplementedError` with helpful messages
+  2. **Create Implementation Stubs** (from FEATURE spec API design):
+     - Extract function/class signatures from FEATURE spec "API Design" section
+     - Create stub files with exact function names, parameters, and return types from spec
+     - Use "not implemented" markers with helpful messages describing expected behavior
+     - Verify stubs are importable (if stub creation reveals naming issues → STOP and update FEATURE spec)
+  3. **Write New Failing Unit Tests:**
+     - Import stubs to ensure names resolve correctly
+     - Write tests using exact signatures from FEATURE spec
+     - Use descriptive assertions and verify "not implemented" errors
      - Focus on business logic with all external dependencies mocked
-     - Tests should clarify requirements and design APIs
+     - Tests should clarify requirements and validate API design
+     - Apply proper test categorization tags (unit/fast/module - see `rules/06-tdd/policy.md`)
 - **Test Coverage:** Unit tests for business logic with all external dependencies mocked. **Defer integration tests to Stage H.**
 - **LLM Paths:** For LLM/prompt changes, create unit tests with mocked LLM responses (goldens + eval harness deferred to Stage H).
 - **Output (generate files):**
   - Updated/cleaned up test files (deprecated tests handled)
-  - New unit test files with failing tests that define expected behavior
-- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/06-tdd.md`.
-- **Exit Gate:** All deprecated tests handled (updated/removed with justification) + new failing unit tests exist that fully specify the expected behavior.
-- **REVIEW CHECKPOINT #3:** **Unit Tests Complete** (test cleanup + failing unit tests reviewed)
+  - Implementation stub files with function signatures and "not implemented" markers
+  - New unit test files with failing tests that define expected behavior and use proper tags
+- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/06-tdd/policy.md`.
+- **Exit Gate:** All deprecated tests handled (updated/removed with justification) + implementation stubs created with correct function signatures from FEATURE spec + new failing unit tests exist that use actual implementation names, have proper categorization tags, and fully specify expected behavior + new tests verified failing when run in isolation.
+- **REVIEW CHECKPOINT #3:** **Unit Tests Complete** (test cleanup + stubs + failing unit tests reviewed)
 
 ### Stage G — **Implement to Pass Unit Tests (Hybrid TDD - GREEN Phase)**
 - **Action:** Write **minimal code** to make **unit tests** pass (TDD green phase).
@@ -134,22 +143,111 @@ Instead of 12 individual stops, reviews are grouped into **6 strategic checkpoin
 - **Docs-first enforcement:** If contracts change unexpectedly, **stop** and update SPEC/ADR first.
 - **Reuse enforcement:** Leverage components identified in Stage B; avoid duplicating existing code.
 - **Output:** Implementation code that makes all unit tests pass.
-- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/06-tdd.md`.
+- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/06-tdd/policy.md`.
 - **Exit Gate:** All unit tests green; no regressions; code follows established patterns from Stage B discovery. **Integration tests not required yet.**
 
+### Stage G.1 — **Handling Design Changes During Implementation**
+
+If implementation reveals design flaws or better approaches, follow this protocol to maintain docs-first discipline.
+
+**Purpose:** Ensure design changes are documented before code is written, maintaining contract integrity and traceability.
+
+**Immediate Stop Conditions (BLOCK and go back):**
+
+Contract changes require stopping implementation and updating documentation first:
+- **API/Interface signatures** (function names, parameters, return types, error handling)
+- **Database schemas** (tables, columns, relationships, indexes exposed to other services)
+- **Event formats** (message structure, event types, payload schemas)
+- **External service contracts** (webhook formats, API endpoints, authentication flows)
+- **New external dependencies** (libraries, services, APIs requiring approval/licensing)
+- **SLO changes** (performance targets, availability requirements, error rate thresholds)
+
+**Allowed Without Blocking (handle in Stage I):**
+
+These changes are internal implementation details that don't affect contracts:
+- Internal algorithms and data structures
+- Private function/method names and signatures
+- Error handling improvements (within existing error taxonomy)
+- Performance optimizations (within SLO bounds)
+- Code organization and refactoring (no public API changes)
+- Internal helper functions and utilities
+
+**Protocol for Contract Changes:**
+
+1. **STOP implementation immediately**
+   - Do not write more code
+   - Commit current work if needed (mark as WIP)
+   - Document the discovered issue/better approach
+
+2. **Update SPEC first:**
+   - Document new contract design in affected SPEC file
+   - Increment SPEC version (follow change-control tripwires)
+   - Update architecture diagram if topology changed
+   - Link to ADR if new dependency/framework involved
+   - Set "Last Verified" date and confidence level
+
+3. **Create/Update ADR if needed:**
+   - Non-trivial decisions require ADR (new dependency, storage pattern change, etc.)
+   - Document why change is necessary
+   - Consider alternatives and trade-offs
+   - Mark as "Accepted" before proceeding
+
+4. **Update tests next (return to Stage F):**
+   - Update failing tests to reflect new contract
+   - Ensure tests still use "not implemented" markers (back to RED)
+   - Update test documentation with design change rationale
+   - Update stub implementations if function signatures changed
+   - Apply proper test categorization if test type changed
+
+5. **Resume implementation (Stage G):**
+   - Implement to pass updated tests
+   - Follow new contract from updated SPEC
+   - Reference SPEC version in code comments
+
+**Note:** See `rules/06-tdd/policy.md` for detailed examples of handling design changes during implementation.
+
+**Decision Matrix:**
+
+| Change Type | Example | STOP? | Update Order | Stage |
+|-------------|---------|-------|--------------|-------|
+| API signature | Function params/return type changed | YES | SPEC → ADR → Tests → Code | G.1 → F → G |
+| Database schema | New table/column exposed to API | YES | SPEC → Migration → Tests → Code | G.1 → F → G |
+| Event format | Message structure changed | YES | SPEC → ADR → Tests → Code | G.1 → F → G |
+| New dependency | Adding Redis, Kafka, new library | YES | ADR → SPEC → Tests → Code | G.1 → F → G |
+| SLO change | Latency target changed | YES | SPEC → Tests → Code | G.1 → F → G |
+| Algorithm change | Different sorting approach | NO | Code → Stage I reconciliation | Continue G |
+| Error handling | Better error messages | NO | Code → Stage I reconciliation | Continue G |
+| Private function | Internal helper renamed | NO | Code only | Continue G |
+| Performance opt | Caching added (within SLO) | NO | Code → Stage I reconciliation | Continue G |
+
+**Enforcement:**
+
+The workflow will BLOCK if:
+- Contract changes detected during implementation without SPEC update
+- SPEC version not incremented for material contract changes
+- ADR missing for non-trivial decisions (new dependencies, storage changes)
+- Tests not updated to reflect new contract
+
+**Benefits:**
+- Maintains docs-first discipline even when design flaws discovered late
+- Clear decision trail for why contracts changed
+- Tests always reflect current contract specification
+- No divergence between documentation and implementation
+
 ### Stage H — **Write Integration Tests & Refactor (Hybrid TDD - REFACTOR Phase)**
-- **Action:** Write integration tests for I/O boundaries, pass them, then refactor code while keeping all tests green.
-- **Three Substeps:**
-  1. **Write Integration Tests:** For API endpoints, database operations, external service calls, LLM pipelines, file I/O (see `rules/06-tdd.md` for mandatory list)
-  2. **Pass Integration Tests:** Implement any missing integration code to make integration tests green
+- **Action:** Write integration tests for I/O boundaries, pass them, refactor code, then validate test quality before completion.
+- **Four Substeps:**
+  1. **Write Integration Tests:** For API endpoints, database operations, external service calls, LLM pipelines, file I/O (see `rules/06-tdd/policy.md` for mandatory list) with proper categorization tags
+  2. **Pass Integration Tests:** Implement any missing integration code to make integration tests green, verify new integration tests pass in isolation before running full suite
   3. **Refactor:** Clean up code while keeping all tests (unit + integration) green
+  4. **Test Quality Validation (MANDATORY):** Complete Stage H.4 quality checklist from `rules/06-tdd/policy.md` - validate test organization, usefulness, code quality, categorization, and reliability
 - **Clean Code:** Remove duplication, improve naming, optimize algorithms, enhance error handling.
 - **Documentation:** Add inline docs, update API docs if needed.
 - **Pattern Compliance:** Verify code follows architecture patterns identified in Stage B.
-- **Output:** Refactored code with all tests (unit + integration) still passing.
-- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/06-tdd.md`.
-- **Exit Gate:** All tests (unit + integration) green; code meets quality standards; performance acceptable.
-- **REVIEW CHECKPOINT #4:** **Implementation Complete** (working + refactored code with full test coverage reviewed)
+- **Output:** Refactored code with all tests (unit + integration) passing and validated for quality.
+- **Rule Compliance:** Tests must follow Hybrid TDD practices in `rules/06-tdd/policy.md`.
+- **Exit Gate:** All tests (unit + integration) green + new tests verified passing in isolation before full suite run + Stage H.4 test quality validation completed with fewer than 3 violations + code meets quality standards + performance acceptable.
+- **REVIEW CHECKPOINT #4:** **Implementation Complete** (working + refactored code with full test coverage and validated test quality reviewed)
 
 ### Stage I — **Spec Reconciliation**
 - **Purpose:** Update specs if implementation deviated from design. Ensure specs reflect actual implementation.
@@ -167,7 +265,6 @@ Instead of 12 individual stops, reviews are grouped into **6 strategic checkpoin
      - Should implementation be revised? (YES if violated architectural principles)
   4. **Update affected specs if contract changes occurred:**
      - Increment spec version per change-control tripwires
-     - Add changelog entry referencing this feature
      - Update "Last Verified" metadata to today (if spec includes confidence tracking)
      - Set confidence level to HIGH (just verified)
   5. **Update discovery document** (`docs/discovery/disco-<ID>.md`):
@@ -216,7 +313,7 @@ Instead of 12 individual stops, reviews are grouped into **6 strategic checkpoin
 - **Topology:** components/paths/protocols/trust boundaries (e.g., adding Redis/Celery, async flows).
 - **Framework roles:** Django/DRF, React, Redis (cache vs broker), Celery, Postgres, gateways, SSR/SPA changes.
 - **SLOs:** availability/latency/error-rate/freshness targets.
-→ If any tripwire is hit, **increment SPEC version** (e.g., v1.0.0 → v2.0.0), update changelog, update index, tag in Git, and reference ADRs.
+→ If any tripwire is hit, **increment SPEC version** (e.g., v1.0.0 → v2.0.0), update index, tag in Git, and reference ADRs.
 
 
 ## Git Control Guidelines (User-Driven)
@@ -259,7 +356,14 @@ Instead of 12 individual stops, reviews are grouped into **6 strategic checkpoin
 - **Stage F without handling deprecated tests first** → **block** and complete test cleanup (update/remove deprecated tests from Stage B checklist).
 - **Implementation code written before unit tests** → **block** and write failing unit tests first (Hybrid TDD violation).
 - **Unit tests not failing initially** → **block** and verify tests specify new behavior.
-- **Stage H without integration tests for I/O operations** → **block** and write integration tests first (see mandatory list in `rules/06-tdd.md`).
+- **Stage E (FEATURE) without API Design section** → **block** and add function/class signatures with exact names, parameters, and return types.
+- **Stage F without creating implementation stubs** → **block** and create stub files with function signatures from FEATURE spec before writing tests.
+- **Stage F tests without proper categorization tags** → **block** and add speed/scope tags (unit/integration/e2e) + module tags (see `rules/06-tdd/policy.md`).
+- **Stage F tests using names not in FEATURE spec or stubs** → **block** and update FEATURE spec or use correct stub names.
+- **Stage G contract changes without following Stage G.1 protocol** → **block** and update SPEC → ADR → Tests before resuming implementation.
+- **Stage H without integration tests for I/O operations** → **block** and write integration tests first (see mandatory list in `rules/06-tdd/policy.md`).
+- **Stage H without test quality validation (Stage H.4)** → **block** and complete quality checklist before proceeding to Stage I.
+- **Stage H test quality validation with 6+ violations or 2+ major violations** → **block** and refactor tests before proceeding to Stage I.
 - Public **contracts** changed with no SPEC update → **block merge**.
 - Material changes with no SPEC **version increment** → **block merge**.
 - Non-trivial choices with no **ADR** → **block merge**.

@@ -15,6 +15,12 @@
   - **TECH-SPECs:** `docs/specs/spec-<spec>.md` (with version number, e.g., v1.3)
   - **Stage B Discovery Findings:** Reference codebase analysis from Stage B
 
+### API Design Contract
+- **API Design section defines the contract for Stage F (test writing)**
+- Function/class signatures specified here will be used to create implementation stubs before writing tests
+- Exact names, parameters, and return types from this section become the contract that implementation must follow
+- If API design needs to change during implementation, SPEC must be updated first (see Stage G.1 in `rules/00-workflow.md`)
+
 ### Required sections (must include)
   - **Header:** ID, file, owner, TECH-SPECs
   - **Stage B Discovery Findings** (from Stage B codebase discovery) — for Medium/Large features
@@ -22,6 +28,12 @@
     - **Existing Implementation Analysis** (reusable components, similar features)
     - **Dependency & Side Effect Mapping** (dependencies, side effects, risk areas)
   - **Architecture Conformance** (layer assignment, pattern compliance) — for all features
+  - **API Design** (function/class/method signatures) — for all features with new/modified code
+    - Exact function/class names (used to create implementation stubs in Stage F)
+    - Parameters with types and default values
+    - Return types with structure
+    - Brief description of purpose
+    - API endpoints if applicable (method, path, request/response schemas)
   - **Acceptance Criteria** (clear, testable; Gherkin or checklist)
   - **Design Changes** (UI/API/schema diffs; examples)
   - **Test & Eval Plan** (unit/integration + AI eval thresholds & goldens)
@@ -107,6 +119,38 @@
 - `llm_services.services.reliability.CircuitBreaker` (composition)
 - `llm_services.services.infrastructure.ModelSelector` (composition)
 
+## API Design
+
+### CredibilityService.calculate_credibility_score()
+- **Signature:** `calculate_credibility_score(artifact: Artifact, job_requirements: str) -> CredibilityScore`
+- **Purpose:** Calculate credibility score for artifact relative to job requirements using LLM evaluation
+- **Parameters:**
+  - `artifact`: Artifact object to evaluate
+  - `job_requirements`: Job description text for relevance scoring
+- **Returns:** CredibilityScore object with:
+  - `score` (float, 0.0-1.0): Overall credibility score
+  - `rationales` (list[str], max 3): Top rationales for score
+  - `confidence` (float, 0.0-1.0): Model confidence in assessment
+
+### API Endpoint: POST /api/v1/credibility/score
+- **Method:** POST
+- **Path:** `/api/v1/credibility/score`
+- **Request Body:**
+  ```json
+  {
+    "artifact_id": int,
+    "job_requirements": string
+  }
+  ```
+- **Response Body:**
+  ```json
+  {
+    "score": float,
+    "rationales": string[],
+    "confidence": float
+  }
+  ```
+
 ## Acceptance Criteria
 - [ ] Badge shows G/Y/R ≤200ms with cache hit
 - [ ] Tooltip lists top-3 rationales
@@ -142,6 +186,31 @@ Circuit breaker open → serve stale cached results or neutral state
 **Layer Assignment:** Update to existing `export/services/document_service.py`
 **Pattern Compliance:** Follows existing export service pattern ✓
 **Dependencies:** None (isolated change)
+
+## API Design
+
+### DocumentService.generate_export()
+- **Signature:** `generate_export(cv_generation_id: int, format: str, filename: str = None) -> ExportResult`
+- **Purpose:** Generate exported CV document with optional custom filename
+- **Parameters:**
+  - `cv_generation_id`: ID of CV generation to export
+  - `format`: Export format ("pdf" or "docx")
+  - `filename`: Optional custom filename (default: auto-generated with date)
+- **Returns:** ExportResult object with:
+  - `file_path` (str): Path to generated file
+  - `download_url` (str): URL for downloading the file
+
+### API Endpoint: POST /api/v1/export
+- **Changes:** Add optional `filename` parameter to request body
+- **Request Body:**
+  ```json
+  {
+    "cv_generation_id": int,
+    "format": string,
+    "filename": string  // NEW: optional custom filename
+  }
+  ```
+- **Response:** Unchanged (returns download URL)
 
 ## Acceptance Criteria
 - [ ] User can specify custom filename for exported CV

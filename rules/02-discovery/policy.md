@@ -110,7 +110,6 @@ For each spec, check if your planned change falls within its scope:
 - **Scope/Covered Areas** - Does this change fit within this spec's scope?
 - **Architecture** - Does this change affect topology shown in diagrams?
 - **Contracts** - Does this change interact with defined APIs/schemas/events?
-- **Changelog** - Have similar changes been made before? Learn from history.
 
 **Common affected specs by change type:**
 
@@ -767,7 +766,7 @@ Identify established patterns to follow:
 - **Implementation:** Use `@track_performance` decorator
 
 **4. TDD Pattern (MANDATORY)**
-- **Source:** rules/06-tdd.md
+- **Source:** rules/06-tdd/policy.md
 - **Apply to:** Write failing tests BEFORE implementation
 - **Sequence:** Test cleanup → Write failing tests → Implement → Refactor
 ```
@@ -938,7 +937,7 @@ Discovery documents must include:
 
 **Related Files:**
 - Reference from FEATURE specs: `docs/features/ft-<ID>-<slug>.md`
-- Reference from TECH SPECS: `docs/specs/spec-<spec>.md` (in changelog if applicable)
+- Reference from TECH SPECS: `docs/specs/spec-<spec>.md`
 - Reference from ADRs: `docs/adrs/adr-<ID>-<slug>.md` (if discovery informed decision)
 
 **Example Cross-References:**
@@ -947,12 +946,6 @@ In `docs/features/ft-030-anti-hallucination.md`:
 ```markdown
 **Stage B Discovery:** See `docs/discovery/disco-030.md` for comprehensive
 discovery findings including spec validation, test impact, and reusable components.
-```
-
-In `docs/specs/spec-llm.md` changelog:
-```markdown
-- **2025-11-04 [v4.0.0]**: Added source attribution architecture
-  (disco-030 Phase 1 identified spec-code discrepancies)
 ```
 
 ---
