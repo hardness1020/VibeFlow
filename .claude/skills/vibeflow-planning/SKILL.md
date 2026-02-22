@@ -31,14 +31,37 @@ This skill helps create and validate planning documents:
 - **Tech Specs** (Stage C) — System specifications
 - **ADRs** (Stage D) — Architectural decisions
 
-## Triggers
+## Workflow
 
-Use this skill when:
-- User asks to "create PRD", "write PRD", "product requirements"
-- User asks for "discovery", "analyze codebase", "Stage B"
-- User asks for "tech spec", "specification", "Stage C"
-- User asks for "ADR", "decision record", "Stage D"
-- User says "plan feature", "planning phase"
+```
+Stage A: Initiate
+    │
+    ├── Create/update PRD
+    ├── Define problem, users, scope
+    └── Set success metrics
+    │
+    ▼
+Stage B: Discovery
+    │
+    ├── Analyze existing specs and code
+    ├── Validate spec-code alignment
+    ├── Map dependencies and side effects
+    └── Identify reusable components
+    │
+    ▼
+Stage C: Specify
+    │
+    ├── Create/update Tech Specs
+    ├── Define architecture and interfaces
+    └── Document data contracts and SLOs
+    │
+    ▼
+Stage D: Decide
+    │
+    ├── Create ADRs for non-trivial decisions
+    ├── Document alternatives and consequences
+    └── Include rollback plans
+```
 
 ## Usage
 
@@ -149,7 +172,7 @@ Required sections:
 - Rollback Plan
 - Links (PRD/SPEC/FEATURE references)
 
-## Validation Scripts
+## Validation
 
 The following scripts validate planning documents:
 
@@ -158,24 +181,23 @@ The following scripts validate planning documents:
 - `scripts/validate_techspec.py` — Validate tech spec
 - `scripts/validate_adr.py` — Validate ADR
 
-## Templates
+## References
 
 See `assets/` for document templates:
-
 - `prd-template.md` — PRD template
-- `discovery-guide.md` — Discovery phases guide
 - `techspec-template.md` — Tech spec template
 - `adr-template.md` — ADR template
 
-## Checkpoint #1
+See `references/` for guides:
+- `discovery-guide.md` — Discovery phases guide
 
-After completing Stages A-D, validate with:
+## Checkpoints
 
+**Checkpoint #1 (Planning Complete):**
 ```
 /vibeflow-validate checkpoint 1
 ```
-
-This validates:
+Validates:
 - PRD exists with all sections
 - Discovery completed (Medium/Large)
 - Tech Specs have architecture diagram and inventory

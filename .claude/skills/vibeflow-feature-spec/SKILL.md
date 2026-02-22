@@ -25,13 +25,18 @@ This skill creates Feature Spec documents that:
 - Include test and evaluation plan
 - Reference discovery findings and specs
 
-## Triggers
+## Workflow
 
-Use this skill when:
-- User asks to "create feature spec", "write feature", "design feature"
-- User asks for "acceptance criteria", "API design"
-- User mentions "Stage E", "feature planning"
-- After completing planning phase (Stages A-D)
+```
+Stage E: Feature Spec
+    │
+    ├── Define API Design (exact signatures)
+    ├── Write testable acceptance criteria
+    ├── Document design changes (UI/API/schema)
+    ├── Create test and evaluation plan
+    ├── Map telemetry and metrics
+    └── Reference discovery findings and specs
+```
 
 ## Usage
 
@@ -114,7 +119,7 @@ The API Design section defines the contract for Stage F (test writing):
     "result": "type"
   }
   ```
-```
+
 
 **Why This Matters:**
 - Stage F creates implementation stubs from these signatures
@@ -139,25 +144,25 @@ When [action]
 Then [expected outcome]
 ```
 
-## Validation Scripts
+## Validation
 
 - `scripts/validate_feature.py` — Validate feature spec structure and API Design
 
-## Templates
+## References
 
 See `assets/`:
 - `feature-template.md` — Complete feature spec template
+
+See `references/`:
 - `api-design-guide.md` — API Design section guidance
 
-## Checkpoint #2
+## Checkpoints
 
-After completing Stage E, validate with:
-
+**Checkpoint #2 (Design Complete):**
 ```
 /vibeflow-validate checkpoint 2
 ```
-
-This validates:
+Validates:
 - Feature spec exists with all sections
 - API Design has exact signatures
 - Acceptance criteria are testable

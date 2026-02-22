@@ -25,13 +25,32 @@ This skill guides the TDD cycle:
 - **Stage G (GREEN)**: Implement minimal code to pass tests
 - **Stage H (REFACTOR)**: Write integration tests + refactor + quality validation
 
-## Triggers
+## Workflow
 
-Use this skill when:
-- User asks to "implement feature", "start TDD", "write tests"
-- User mentions "Stage F", "Stage G", "Stage H"
-- User asks for "RED phase", "GREEN phase", "REFACTOR phase"
-- After completing design phase (Stage E)
+```
+Stage F: RED
+    │
+    ├── Create stubs from Feature Spec API Design
+    ├── Write failing unit tests
+    ├── Tests fail with NotImplementedError
+    └── Checkpoint #3: Tests Complete
+    │
+    ▼
+Stage G: GREEN
+    │
+    ├── Implement minimal code to pass tests
+    ├── If contracts change → Stage G.1
+    └── All unit tests pass
+    │
+    ▼
+Stage H: REFACTOR
+    │
+    ├── Write integration tests for I/O
+    ├── Pass integration tests
+    ├── Refactor with tests green
+    ├── Complete H.4 quality validation
+    └── Checkpoint #4: Implementation Complete
+```
 
 ## Usage
 
@@ -89,52 +108,16 @@ Runs test quality validation (Stage H.4 checklist).
 
 Guides through Stage G.1 protocol when implementation reveals contract changes.
 
-## TDD Cycle Overview
-
-```
-┌─────────────────────────────────────────────────────┐
-│                    Stage F: RED                      │
-│  1. Create stubs from Feature Spec API Design        │
-│  2. Write failing unit tests                         │
-│  3. Tests fail with NotImplementedError              │
-│                         ↓                            │
-│              Checkpoint #3: Tests Complete           │
-└─────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────┐
-│                   Stage G: GREEN                     │
-│  1. Implement minimal code to pass tests             │
-│  2. If contracts change → Stage G.1                  │
-│  3. All unit tests pass                              │
-└─────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────┐
-│                  Stage H: REFACTOR                   │
-│  1. Write integration tests for I/O                  │
-│  2. Pass integration tests                           │
-│  3. Refactor with tests green                        │
-│  4. Complete H.4 quality validation                  │
-│                         ↓                            │
-│           Checkpoint #4: Implementation Complete     │
-└─────────────────────────────────────────────────────┘
-```
-
 ## Stage G.1: Design Changes Protocol
 
-If implementation reveals contract changes:
+If implementation reveals contract changes, **STOP IMMEDIATELY** and follow these steps:
 
-```
-STOP IMMEDIATELY
-         ↓
-┌─────────────────────────────────────────────────────┐
-│  1. Document the discovered issue                    │
-│  2. Update SPEC first (increment version)            │
-│  3. Create/update ADR if non-trivial                │
-│  4. Update Feature Spec API Design                   │
-│  5. Update tests to new contract                     │
-│  6. Resume implementation                            │
-└─────────────────────────────────────────────────────┘
-```
+1. Document the discovered issue
+2. Update SPEC first (increment version)
+3. Create/update ADR if non-trivial
+4. Update Feature Spec API Design
+5. Update tests to new contract
+6. Resume implementation
 
 **Contract changes that trigger G.1:**
 - API/Interface signature changes
@@ -195,14 +178,14 @@ Before completing Stage H, validate:
 - 3-5 violations: CONDITIONAL
 - 6+ violations OR 2+ major: FAIL
 
-## Validation Scripts
+## Validation
 
 - `scripts/validate_red.py` — Validate Stage F (tests failing correctly)
 - `scripts/validate_green.py` — Validate Stage G (tests passing)
 - `scripts/validate_refactor.py` — Validate Stage H (integration + quality)
 - `scripts/check_coverage.py` — Report test coverage
 
-## Templates and Guides
+## References
 
 See `references/`:
 - `tdd-policy.md` — TDD policy and requirements
@@ -211,12 +194,21 @@ See `references/`:
 
 ## Checkpoints
 
-**Checkpoint #3 (after Stage F):**
+**Checkpoint #3 (Tests Complete):**
 ```
 /vibeflow-validate checkpoint 3
 ```
+Validates:
+- Failing unit tests exist for all acceptance criteria
+- Implementation stubs created from Feature Spec API Design
+- Tests fail with NotImplementedError (not syntax errors)
 
-**Checkpoint #4 (after Stage H):**
+**Checkpoint #4 (Implementation Complete):**
 ```
 /vibeflow-validate checkpoint 4
 ```
+Validates:
+- All unit tests passing
+- Integration tests passing for I/O boundaries
+- H.4 quality validation completed
+- Test categorization tags applied

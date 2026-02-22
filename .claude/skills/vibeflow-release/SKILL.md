@@ -15,26 +15,17 @@ metadata:
     - release checklist
 ---
 
-# VibeFlow Release Skill
+# vibeflow-release
+
+Release preparation for Stages I-L of the VibeFlow docs-first workflow.
 
 ## Purpose
 
-Guides release preparation through Stages I-L of the VibeFlow workflow:
+This skill guides release preparation through Stages I-L:
 - **Stage I**: Spec Reconciliation (sync docs with implementation)
 - **Stage J**: OP-NOTE Creation (deployment documentation)
 - **Stage K**: Deploy (execute deployment)
 - **Stage L**: Close Loop (update indices, retrospective)
-
-## Triggers
-
-Invoke this skill when you hear:
-- "prepare release"
-- "deployment"
-- "OP-NOTE"
-- "close loop"
-- "spec reconciliation"
-- "Stage I/J/K/L"
-- "release checklist"
 
 ## Workflow
 
@@ -71,21 +62,31 @@ Stage L: Close Loop
     └── Archive or link documentation
 ```
 
-## Commands
+## Usage
 
 ### Check Release Readiness
-```bash
-# Validate OP-NOTE completeness
-python scripts/validate_opnote.py --json
 
-# Check spec reconciliation status
-python scripts/reconcile_specs.py --json
+```
+/vibeflow-release check
 ```
 
+Validates OP-NOTE completeness and spec reconciliation status.
+
 ### Create OP-NOTE
-1. Copy template from `assets/opnote-template.md`
-2. Fill in all required sections
-3. Run validation: `python scripts/validate_opnote.py`
+
+```
+/vibeflow-release opnote <feature-slug>
+```
+
+Creates `docs/op-notes/op-<feature-slug>.md` from template with all required sections.
+
+### Reconcile Specs
+
+```
+/vibeflow-release reconcile <feature-id>
+```
+
+Compares Feature Spec vs actual implementation and updates divergent docs.
 
 ## Stage Details
 
@@ -99,11 +100,6 @@ python scripts/reconcile_specs.py --json
 3. Review SPEC documents for accuracy
 4. Update ADRs if decisions changed during implementation
 5. Document any deviations discovered
-
-**Validation**:
-```bash
-python scripts/reconcile_specs.py --feature-id <FEATURE-ID>
-```
 
 ### Stage J: OP-NOTE Creation
 
@@ -119,11 +115,6 @@ python scripts/reconcile_specs.py --feature-id <FEATURE-ID>
 - Post-Deploy Checks (smoke tests, owners)
 
 **Location**: `docs/op-notes/op-<feature-slug>.md`
-
-**Validation**:
-```bash
-python scripts/validate_opnote.py --path docs/op-notes/op-<feature>.md
-```
 
 ### Stage K: Deploy
 
@@ -159,39 +150,6 @@ python scripts/validate_opnote.py --path docs/op-notes/op-<feature>.md
 - SPEC index with version updates
 - ADR index with new decisions
 
-## Gate Requirements
-
-**Checkpoint #5 (Release Ready)**:
-- [ ] OP-NOTE exists with all required sections
-- [ ] Spec reconciliation complete
-- [ ] Rollback procedure documented
-- [ ] Monitoring configured
-
-**Checkpoint #6 (Deployed)**:
-- [ ] Deployment successful
-- [ ] Post-deploy checks passing
-- [ ] Indices updated
-- [ ] Git tag created
-
-## Files
-
-```
-vibeflow-release/
-├── SKILL.md                          # This file
-├── scripts/
-│   ├── validate_opnote.py           # OP-NOTE validation
-│   └── reconcile_specs.py           # Spec reconciliation checker
-└── assets/
-    └── opnote-template.md           # OP-NOTE template
-```
-
-## Integration
-
-This skill integrates with:
-- **vibeflow-validate**: Use `/validate checkpoint 5` and `/validate checkpoint 6`
-- **vibeflow-tdd-implementation**: Follows after Stage H complete
-- **vibeflow-planning**: References SPECs and ADRs created in planning
-
 ## Best Practices
 
 1. **Never deploy without OP-NOTE**: Gate production deployments
@@ -199,3 +157,35 @@ This skill integrates with:
 3. **Test rollback procedures**: Don't assume they work
 4. **Update indices promptly**: Don't let documentation lag
 5. **Reconcile specs honestly**: Document what was actually built
+
+## Validation
+
+- `scripts/validate_opnote.py` — Validate OP-NOTE completeness
+- `scripts/reconcile_specs.py` — Check spec reconciliation status
+
+## References
+
+See `assets/`:
+- `opnote-template.md` — OP-NOTE template
+
+## Checkpoints
+
+**Checkpoint #5 (Release Ready):**
+```
+/vibeflow-validate checkpoint 5
+```
+Validates:
+- OP-NOTE exists with all required sections
+- Spec reconciliation complete
+- Rollback procedure documented
+- Monitoring configured
+
+**Checkpoint #6 (Deployed):**
+```
+/vibeflow-validate checkpoint 6
+```
+Validates:
+- Deployment successful
+- Post-deploy checks passing
+- Indices updated
+- Git tag created

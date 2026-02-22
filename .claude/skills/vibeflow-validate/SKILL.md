@@ -17,26 +17,35 @@ Checkpoint validation and guardrail enforcement for the VibeFlow docs-first deve
 
 ## Purpose
 
-This skill validates that each checkpoint in the VibeFlow workflow has been properly completed before allowing progression to the next stage. It enforces the docs-first mandate and ensures quality gates are met.
+This skill validates checkpoint completion before stage progression:
+- Checks that required artifacts exist with all sections
+- Enforces the docs-first mandate
+- Runs validation scripts and reports pass/fail/warn status
+- Returns structured JSON reports with blocking issues
 
-## Triggers
+## Workflow
 
-Use this skill when:
-- User asks "validate checkpoint", "check gate", "am I ready"
-- User wants to verify they can proceed to the next stage
-- User needs to check if all required documents exist
-- User asks "can I start implementing", "can I deploy"
-
-## Checkpoints
-
-| # | Checkpoint | After Stage | Validates |
-|---|------------|-------------|-----------|
-| 1 | Planning Complete | D | PRD, Discovery, SPECs, ADRs |
-| 2 | Design Complete | E | FEATURE spec with API Design |
-| 3 | Tests Complete | F | Failing unit tests with stubs |
-| 4 | Implementation Complete | H | Passing tests, quality validation |
-| 5 | Release Ready | J | OP-NOTE with all sections |
-| 6 | Deployed | L | Deployment verified, indices updated |
+```
+Validate Request
+    │
+    ├── Determine checkpoint or document type
+    ├── Locate required artifacts
+    └── Select validation script
+    │
+    ▼
+Run Validation
+    │
+    ├── Execute validation checks
+    ├── Collect errors and warnings
+    └── Generate JSON report
+    │
+    ▼
+Report Results
+    │
+    ├── Output pass/fail summary
+    ├── List blocking issues
+    └── Return exit code (0=pass, 1=fail, 2=warn)
+```
 
 ## Usage
 
@@ -69,7 +78,18 @@ This auto-detects the current stage and validates the appropriate checkpoint.
 /vibeflow-validate opnote <ID>
 ```
 
-## Validation Scripts
+## Checkpoints
+
+| # | Checkpoint | After Stage | Validates |
+|---|------------|-------------|-----------|
+| 1 | Planning Complete | D | PRD, Discovery, SPECs, ADRs |
+| 2 | Design Complete | E | FEATURE spec with API Design |
+| 3 | Tests Complete | F | Failing unit tests with stubs |
+| 4 | Implementation Complete | H | Passing tests, quality validation |
+| 5 | Release Ready | J | OP-NOTE with all sections |
+| 6 | Deployed | L | Deployment verified, indices updated |
+
+## Scripts
 
 The following scripts are available in `scripts/`:
 

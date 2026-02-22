@@ -25,22 +25,23 @@ This skill helps navigate the VibeFlow workflow by:
 - Guiding through the complete pipeline
 - Showing workflow status and next steps
 
-## Triggers
+## Workflow
 
-Use this skill when:
-- User says "start vibeflow", "begin workflow", "new feature"
-- User asks "workflow status", "where am I", "what stage"
-- User asks "what track", "select track", "which workflow"
-- User needs guidance on next steps in the workflow
-
-## Workflow Tracks
-
-| Track | Scope | Stages | Example |
-|-------|-------|--------|---------|
-| **Micro** | Bug fix, typo, small refactor | F → G | Fix typo, update config |
-| **Small** | Single feature, no contracts | E → F → G → H | Add form field, UI polish |
-| **Medium** | Multi-component, no new services | B → C → D → E → F → G → H → I → J | New API endpoint |
-| **Large** | System change, new contracts/services | Full A → L | New LLM integration |
+```
+Track Selection
+    │
+    ├── Assess change scope
+    ├── Select track (Micro/Small/Medium/Large)
+    └── Determine starting stage
+    │
+    ▼
+Stage Navigation
+    │
+    ├── Detect current stage from artifacts
+    ├── Validate checkpoint completion
+    ├── Route to appropriate skill
+    └── Guide to next stage
+```
 
 ## Usage
 
@@ -74,6 +75,15 @@ Example:
 ```
 
 This will help determine the appropriate track based on the change scope.
+
+## Workflow Tracks
+
+| Track | Scope | Stages | Example |
+|-------|-------|--------|---------|
+| **Micro** | Bug fix, typo, small refactor | F → G | Fix typo, update config |
+| **Small** | Single feature, no contracts | E → F → G → H | Add form field, UI polish |
+| **Medium** | Multi-component, no new services | B → C → D → E → F → G → H → I → J | New API endpoint |
+| **Large** | System change, new contracts/services | Full A → L | New LLM integration |
 
 ## Stage Overview
 
@@ -135,6 +145,6 @@ The orchestrator guides you to use other VibeFlow skills:
 - `/vibeflow-release` - For Stages I-L
 - `/vibeflow-validate` - For checkpoint validation
 
-## Quick Reference
+## References
 
 See `references/workflow-summary.md` for a condensed workflow overview.
