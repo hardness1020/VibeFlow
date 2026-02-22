@@ -160,7 +160,7 @@ The following scripts validate planning documents:
 
 ## Templates
 
-See `references/` for document templates:
+See `assets/` for document templates:
 
 - `prd-template.md` — PRD template
 - `discovery-guide.md` — Discovery phases guide

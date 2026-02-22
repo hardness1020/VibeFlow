@@ -145,7 +145,7 @@ Then [expected outcome]
 
 ## Templates
 
-See `references/`:
+See `assets/`:
 - `feature-template.md` — Complete feature spec template
 - `api-design-guide.md` — API Design section guidance
 

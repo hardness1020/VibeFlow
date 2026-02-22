@@ -83,7 +83,7 @@ python scripts/reconcile_specs.py --json
 ```
 
 ### Create OP-NOTE
-1. Copy template from `references/opnote-template.md`
+1. Copy template from `assets/opnote-template.md`
 2. Fill in all required sections
 3. Run validation: `python scripts/validate_opnote.py`
 
@@ -181,7 +181,7 @@ vibeflow-release/
 ├── scripts/
 │   ├── validate_opnote.py           # OP-NOTE validation
 │   └── reconcile_specs.py           # Spec reconciliation checker
-└── references/
+└── assets/
     └── opnote-template.md           # OP-NOTE template
 ```
 
