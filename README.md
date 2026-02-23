@@ -7,9 +7,7 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
 
 ---
 
-## Built with VibeFlow
-
-**Using VibeFlow in your project? Open a PR to add it here! 🤩**
+## Using VibeFlow in your project? Open a PR to add it here! 🤩
 
 | [![CV-Tailor](assets/CV-Tailor.png)](https://github.com/hardness1020/CV-Tailor) |
 |:--:|
