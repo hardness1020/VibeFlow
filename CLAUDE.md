@@ -2,11 +2,11 @@
 
 ## Project Identity
 
-VibeFlow is a workflow template that enforces docs-first, TDD-driven development for AI-assisted software engineering. It uses Claude Code skills, hooks, and subagents to ensure documentation stays current and tests drive implementation.
+VibeFlow is a workflow template that enforces docs-first, TDD-driven development for AI-assisted software engineering. It uses Claude Code skills and hooks to ensure documentation stays current and tests drive implementation.
 
 ## Core Principle: Docs-First Mandate
 
-**All documentation MUST exist and be validated BEFORE any code is written.** Stages A-E produce documents; Stages F-H implement code that must match those documents. The review-agent validates that implementation conforms to the Feature Spec.
+**All documentation MUST exist and be validated BEFORE any code is written.** Stages A-E produce documents; Stages F-H implement code that must match those documents.
 
 ## Workflow Structure
 
@@ -82,14 +82,6 @@ docs/
 | `/vibeflow-tdd-implementation` | F-H | TDD cycle: RED → GREEN → REFACTOR |
 | `/vibeflow-release` | I-L | Reconcile, OP-NOTE, deploy, close |
 | `/vibeflow-validate` | Checkpoints | Checkpoint validation and enforcement |
-
-## Subagents
-
-| Agent | Purpose |
-|-------|---------|
-| `discovery-agent` | Stage B codebase exploration (read-only) |
-| `validation-agent` | Run checkpoint validation scripts |
-| `review-agent` | Code review against Feature Spec |
 
 ## Quick Reference
 

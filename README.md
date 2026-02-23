@@ -12,8 +12,6 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
 - **Branch-locked development**: Hooks block all prompts unless you're on a `feat/<slug>` branch for an active work item
 - **Docs-before-code workflow**: Planning stages A-E produce documentation; implementation stages F-H must conform to it
 - **Checkpoint gates prevent shortcuts**: Orchestrator validates checkpoints before advancing; hook blocks advance/close prompts as a safety net
-- **Autonomous codebase discovery**: Discovery agent runs read-only 5-phase analysis before you write a line of code
-- **AI-powered code review**: Review agent validates implementation against the Feature Spec before close
 - **Living documentation**: Auto-validate hook checks doc-code sync after every edit
 - **Decisions are traceable**: IDs link docs → branches → PRs → code across the full lifecycle
 
@@ -55,6 +53,8 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
      │              │
      └──► Close/Done ──► merge feat/<slug> → main
 ```
+
+
 
 | Stage | Name | Output |
 |-------|------|--------|
@@ -149,16 +149,6 @@ Hooks run automatically and deterministically — all are read-only (no file mut
 
 ---
 
-## Agents
-
-Agents run in isolated context windows with restricted tools. Skills delegate heavy work to them.
-
-| Agent | Used By | When | What It Does | Tools |
-|-------|---------|------|--------------|-------|
-| `discovery-agent` | `/vibeflow-planning discovery` | Stage B | Read-only 5-phase codebase analysis → risk assessment + Go/No-Go | Read, Glob, Grep, git |
-| `validation-agent` | `/vibeflow-validate` | Checkpoints | Runs validation scripts → PASS/FAIL report with blocking issues | Read, Glob, Grep, python3 |
-| `review-agent` | Before close/merge | Stage H | Reviews code vs Feature Spec → APPROVED / CHANGES_REQUESTED | Read, Glob, Grep, git diff |
-
 ```
   User Prompt
        │
@@ -169,10 +159,6 @@ Agents run in isolated context windows with restricted tools. Skills delegate he
                           ▼
   ┌─ Skills (on demand) ─────────────────────────────────┐
   │  orchestrator │ planning │ feature-spec │ tdd │ …    │
-  └───────────────────────┬──────────────────────────────┘
-                          ▼ delegates to
-  ┌─ Agents (isolated) ──────────────────────────────────┐
-  │  discovery-agent │ validation-agent │ review-agent   │
   └───────────────────────┬──────────────────────────────┘
                           ▼
   ┌─ Hooks (Stop) ───────────────────────────────────────┐
