@@ -7,6 +7,14 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
 
 ---
 
+## Built with VibeFlow
+
+Projects using VibeFlow to power their development workflow:
+
+- **[CV-Tailor](https://github.com/hardness1020/CV-Tailor)** — A full-stack app that transforms work artifacts (GitHub repos, PDFs, web content) into customized, job-specific CVs and cover letters using OpenAI API.
+
+---
+
 ## Benefits
 
 - **Branch-locked development**: Hooks block all prompts unless you're on a `feat/<slug>` branch for an active work item
