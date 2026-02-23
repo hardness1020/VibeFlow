@@ -135,6 +135,11 @@ All validation scripts output JSON with this structure:
 - `1` - Validation failed (blocking issues found)
 - `2` - Warnings only (can proceed with caution)
 
+## Manifest Update
+
+After a checkpoint passes, update the work item's entry in `docs/workflow-state.yaml`:
+- Set `checkpoint` to the checkpoint number that passed (1-6)
+
 ## References
 
 See `references/checkpoint-criteria.md` for detailed validation criteria for each checkpoint.

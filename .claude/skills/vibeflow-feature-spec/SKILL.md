@@ -156,6 +156,13 @@ See `assets/`:
 See `references/`:
 - `api-design-guide.md` — API Design section guidance
 
+## Manifest Update
+
+After creating the Feature Spec, update the work item's entry in `docs/workflow-state.yaml`:
+- Set `stage` to `E`
+- Set `docs.feature` to the Feature Spec path (e.g., `docs/features/ft-030-anti-hallucination.md`)
+- Update `checkpoint` to `2` after passing Checkpoint #2 (Design Complete)
+
 ## Checkpoints
 
 **Checkpoint #2 (Design Complete):**

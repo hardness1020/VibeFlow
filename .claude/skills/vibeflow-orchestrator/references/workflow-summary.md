@@ -69,7 +69,7 @@ docs/
 ├── prds/
 │   └── prd.md                    # Single PRD file
 ├── discovery/
-│   └── disco-<ID>.md             # Discovery per feature
+│   └── disco-<ID>.md             # Discovery per work item
 ├── specs/
 │   ├── index.md                  # Spec index
 │   └── spec-<name>.md            # Tech specs
@@ -113,6 +113,32 @@ Use consistent IDs everywhere:
 - **Branch:** `feat/ft-123-<slug>`
 - **Commits:** `feat(scope): subject (#ft-123)`
 - **PR:** `[ft-123] Title`
+
+## Multi-Work-Item Tracking
+
+VibeFlow tracks multiple work items simultaneously using a manifest file at `docs/workflow-state.yaml`. Each work item has its own entry with ID, description, track, current stage, last checkpoint passed, and document paths produced at each stage.
+
+```yaml
+workitems:
+  add-anti-hallucination-guardrails:
+    id: 030
+    description: "Add anti-hallucination guardrails"
+    track: medium
+    stage: G
+    started: 2025-02-20
+    checkpoint: 3
+    docs:
+      prd: docs/prds/prd.md
+      discovery: docs/discovery/disco-030.md
+      specs:
+        - docs/specs/spec-llm.md
+      adrs:
+        - docs/adrs/adr-030-prompt-strategy.md
+      feature: docs/features/ft-030-anti-hallucination.md
+      opnote: null
+```
+
+Use `/vibeflow-orchestrator status` to see all work items, or `/vibeflow-orchestrator status <ID>` for one work item. Every stage skill updates the manifest after completing its work.
 
 ## Quick Commands
 

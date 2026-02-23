@@ -192,6 +192,13 @@ See `references/`:
 - `tdd-guide.md` — TDD workflow guidance
 - `stage-g1-protocol.md` — Design change handling protocol
 
+## Manifest Update
+
+After completing each TDD phase, update the work item's entry in `docs/workflow-state.yaml`:
+- Set `stage` to the completed phase letter (F, G, or H)
+- Update `checkpoint` to `3` after Stage F (Checkpoint #3: Tests Complete)
+- Update `checkpoint` to `4` after Stage H (Checkpoint #4: Implementation Complete)
+
 ## Checkpoints
 
 **Checkpoint #3 (Tests Complete):**

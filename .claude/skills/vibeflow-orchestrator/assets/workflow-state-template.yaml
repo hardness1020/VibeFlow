@@ -1,0 +1,49 @@
+# VibeFlow Workflow State Manifest
+#
+# This file is the single source of truth for work item lifecycle state.
+# Each work item has its own entry tracking its workflow track, current stage,
+# last checkpoint passed, and documents produced at each stage.
+#
+# Location: docs/workflow-state.yaml (in the project root)
+# Updated by: vibeflow-orchestrator (register/advance) and each stage skill
+# Git-tracked: Yes — provides team visibility and history
+#
+# Fields:
+#   id:          Numeric trace ID linking to doc naming conventions (disco-030.md, ft-030-*.md)
+#   description: Human-readable sentence explaining what to do
+#   track:       micro | small | medium | large
+#   stage:       Current stage letter (A-L)
+#   started:     Date the work item was registered (YYYY-MM-DD)
+#   checkpoint:  Last checkpoint passed (0-6, 0 = none yet)
+#   docs:        Document paths produced at each stage
+#     prd:       Path to PRD (Stage A) or null
+#     discovery: Path to discovery doc (Stage B) or null
+#     specs:     List of tech spec paths (Stage C)
+#     adrs:      List of ADR paths (Stage D)
+#     feature:   Path to Feature Spec (Stage E) or null
+#     opnote:    Path to OP-NOTE (Stage J) or null
+#
+# Track starting stages:
+#   micro:  F
+#   small:  E
+#   medium: B
+#   large:  A
+
+workitems:
+  # Example entry:
+  # add-anti-hallucination-guardrails:
+  #   id: 030
+  #   description: "Add anti-hallucination guardrails"
+  #   track: medium
+  #   stage: G
+  #   started: 2025-02-20
+  #   checkpoint: 3
+  #   docs:
+  #     prd: docs/prds/prd.md
+  #     discovery: docs/discovery/disco-030.md
+  #     specs:
+  #       - docs/specs/spec-llm.md
+  #     adrs:
+  #       - docs/adrs/adr-030-prompt-strategy.md
+  #     feature: docs/features/ft-030-anti-hallucination.md
+  #     opnote: null

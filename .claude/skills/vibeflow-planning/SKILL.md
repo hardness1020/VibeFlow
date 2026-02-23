@@ -191,6 +191,17 @@ See `assets/` for document templates:
 See `references/` for guides:
 - `discovery-guide.md` — Discovery phases guide
 
+## Manifest Update
+
+After completing a planning stage, update the work item's entry in `docs/workflow-state.yaml`:
+- Set `stage` to the completed stage letter (A, B, C, or D)
+- Update `checkpoint` to `1` if Stage D is complete (Checkpoint #1: Planning Complete)
+- Record document paths in the `docs` hierarchy:
+  - Stage A: set `docs.prd` to the PRD path (e.g., `docs/prds/prd.md`)
+  - Stage B: set `docs.discovery` to the discovery doc path (e.g., `docs/discovery/disco-030.md`)
+  - Stage C: append spec paths to `docs.specs[]` (e.g., `docs/specs/spec-llm.md`)
+  - Stage D: append ADR paths to `docs.adrs[]` (e.g., `docs/adrs/adr-030-prompt-strategy.md`)
+
 ## Checkpoints
 
 **Checkpoint #1 (Planning Complete):**

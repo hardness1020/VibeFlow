@@ -168,6 +168,14 @@ Compares Feature Spec vs actual implementation and updates divergent docs.
 See `assets/`:
 - `opnote-template.md` — OP-NOTE template
 
+## Manifest Update
+
+After completing each release stage, update the work item's entry in `docs/workflow-state.yaml`:
+- Set `stage` to the completed stage letter (I, J, K, or L)
+- At Stage J, set `docs.opnote` to the OP-NOTE path (e.g., `docs/op-notes/op-030-anti-hallucination.md`)
+- Update `checkpoint` to `5` after Stage J (Checkpoint #5: Release Ready)
+- Update `checkpoint` to `6` after Stage L (Checkpoint #6: Deployed)
+
 ## Checkpoints
 
 **Checkpoint #5 (Release Ready):**
