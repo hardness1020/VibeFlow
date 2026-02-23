@@ -1,6 +1,6 @@
 ---
 name: vibeflow-planning
-description: Create planning documents for Stages A-D of the VibeFlow docs-first workflow
+description: Create PRDs, run codebase discovery, write tech specs, document ADRs for Stages A-D of the VibeFlow docs-first workflow
 metadata:
   triggers:
     - create PRD
@@ -193,23 +193,27 @@ See `references/` for guides:
 
 ## Manifest Update
 
-After completing a planning stage, update the work item's entry in `docs/workflow-state.yaml`:
-- Set `stage` to the completed stage letter (A, B, C, or D)
-- Update `checkpoint` to `1` if Stage D is complete (Checkpoint #1: Planning Complete)
-- Record document paths in the `docs` hierarchy:
-  - Stage A: set `docs.prd` to the PRD path (e.g., `docs/prds/prd.md`)
-  - Stage B: set `docs.discovery` to the discovery doc path (e.g., `docs/discovery/disco-030.md`)
-  - Stage C: append spec paths to `docs.specs[]` (e.g., `docs/specs/spec-llm.md`)
-  - Stage D: append ADR paths to `docs.adrs[]` (e.g., `docs/adrs/adr-030-prompt-strategy.md`)
+After completing each stage, update `docs/workflow-state.yaml`:
 
-## Checkpoints
+**Stage A:**
+- Set `stage: A`
+- Set `docs.prd: docs/prds/prd.md`
 
-**Checkpoint #1 (Planning Complete):**
-```
-/vibeflow-validate checkpoint 1
-```
-Validates:
-- PRD exists with all sections
-- Discovery completed (Medium/Large)
-- Tech Specs have architecture diagram and inventory
-- ADRs exist for non-trivial decisions
+**Stage B:**
+- Set `stage: B`
+- Set `docs.discovery: docs/discovery/disco-<ID>.md`
+
+**Stage C:**
+- Set `stage: C`
+- Append to `docs.specs[]`: `docs/specs/spec-<name>.md`
+
+**Stage D:**
+- Set `stage: D`
+- Append to `docs.adrs[]`: `docs/adrs/adr-<ID>-<slug>.md`
+
+**Checkpoint #1 (after Stage D):**
+- Set `checkpoint: 1` after passing validation
+- Criteria: PRD exists with all required sections, discovery doc exists, at least one tech spec, at least one ADR
+
+To advance to the next stage: `/vibeflow-orchestrator advance <ID>`
+To check readiness: `/vibeflow-validate checkpoint 1`

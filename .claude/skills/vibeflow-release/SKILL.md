@@ -170,30 +170,28 @@ See `assets/`:
 
 ## Manifest Update
 
-After completing each release stage, update the work item's entry in `docs/workflow-state.yaml`:
-- Set `stage` to the completed stage letter (I, J, K, or L)
-- At Stage J, set `docs.opnote` to the OP-NOTE path (e.g., `docs/op-notes/op-030-anti-hallucination.md`)
-- Update `checkpoint` to `5` after Stage J (Checkpoint #5: Release Ready)
-- Update `checkpoint` to `6` after Stage L (Checkpoint #6: Deployed)
+After completing each stage, update `docs/workflow-state.yaml`:
 
-## Checkpoints
+**Stage I (Reconcile):**
+- Set `stage: I`
 
-**Checkpoint #5 (Release Ready):**
-```
-/vibeflow-validate checkpoint 5
-```
-Validates:
-- OP-NOTE exists with all required sections
-- Spec reconciliation complete
-- Rollback procedure documented
-- Monitoring configured
+**Stage J (OP-NOTE):**
+- Set `stage: J`
+- Set `docs.opnote: docs/op-notes/op-<slug>.md`
 
-**Checkpoint #6 (Deployed):**
-```
-/vibeflow-validate checkpoint 6
-```
-Validates:
-- Deployment successful
-- Post-deploy checks passing
-- Indices updated
-- Git tag created
+**Checkpoint #5 (after Stage J):**
+- Set `checkpoint: 5` after passing validation
+- Criteria: OP-NOTE exists with all required sections, spec reconciliation complete
+
+**Stage K (Deploy):**
+- Set `stage: K`
+
+**Stage L (Close):**
+- Set `stage: L`
+
+**Checkpoint #6 (after Stage L):**
+- Set `checkpoint: 6` after passing validation
+- Criteria: Deployment verified, indices updated, git tag created
+
+To advance to the next stage: `/vibeflow-orchestrator advance <ID>`
+To check readiness: `/vibeflow-validate checkpoint 5` (after OP-NOTE) or `/vibeflow-validate checkpoint 6` (after deploy)

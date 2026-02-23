@@ -158,19 +158,14 @@ See `references/`:
 
 ## Manifest Update
 
-After creating the Feature Spec, update the work item's entry in `docs/workflow-state.yaml`:
-- Set `stage` to `E`
-- Set `docs.feature` to the Feature Spec path (e.g., `docs/features/ft-030-anti-hallucination.md`)
-- Update `checkpoint` to `2` after passing Checkpoint #2 (Design Complete)
+After completing Stage E, update `docs/workflow-state.yaml`:
 
-## Checkpoints
+- Set `stage: E`
+- Set `docs.feature: docs/features/ft-<ID>-<slug>.md`
 
-**Checkpoint #2 (Design Complete):**
-```
-/vibeflow-validate checkpoint 2
-```
-Validates:
-- Feature spec exists with all sections
-- API Design has exact signatures
-- Acceptance criteria are testable
-- Links to TECH-SPECs with versions
+**Checkpoint #2 (after Stage E):**
+- Set `checkpoint: 2` after passing validation
+- Criteria: Feature spec exists with all required sections, API Design section has exact signatures, acceptance criteria are testable
+
+To advance to the next stage: `/vibeflow-orchestrator advance <ID>`
+To check readiness: `/vibeflow-validate checkpoint 2`

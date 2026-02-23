@@ -1,6 +1,6 @@
 ---
 name: vibeflow-tdd-implementation
-description: TDD implementation cycle for Stages F-H of the VibeFlow docs-first workflow
+description: Write failing unit tests (RED), implement minimal code (GREEN), refactor with quality validation for Stages F-H of the VibeFlow docs-first workflow
 metadata:
   triggers:
     - implement feature
@@ -194,28 +194,24 @@ See `references/`:
 
 ## Manifest Update
 
-After completing each TDD phase, update the work item's entry in `docs/workflow-state.yaml`:
-- Set `stage` to the completed phase letter (F, G, or H)
-- Update `checkpoint` to `3` after Stage F (Checkpoint #3: Tests Complete)
-- Update `checkpoint` to `4` after Stage H (Checkpoint #4: Implementation Complete)
+After completing each stage, update `docs/workflow-state.yaml`:
 
-## Checkpoints
+**Stage F (RED):**
+- Set `stage: F`
 
-**Checkpoint #3 (Tests Complete):**
-```
-/vibeflow-validate checkpoint 3
-```
-Validates:
-- Failing unit tests exist for all acceptance criteria
-- Implementation stubs created from Feature Spec API Design
-- Tests fail with NotImplementedError (not syntax errors)
+**Checkpoint #3 (after Stage F):**
+- Set `checkpoint: 3` after passing validation
+- Criteria: Stubs exist matching Feature Spec API Design, unit tests exist and fail with NotImplementedError
 
-**Checkpoint #4 (Implementation Complete):**
-```
-/vibeflow-validate checkpoint 4
-```
-Validates:
-- All unit tests passing
-- Integration tests passing for I/O boundaries
-- H.4 quality validation completed
-- Test categorization tags applied
+**Stage G (GREEN):**
+- Set `stage: G`
+
+**Stage H (REFACTOR):**
+- Set `stage: H`
+
+**Checkpoint #4 (after Stage H):**
+- Set `checkpoint: 4` after passing validation
+- Criteria: All unit tests pass, integration tests pass, H.4 quality validation passes
+
+To advance to the next stage: `/vibeflow-orchestrator advance <ID>`
+To check readiness: `/vibeflow-validate checkpoint 3` (after RED) or `/vibeflow-validate checkpoint 4` (after REFACTOR)

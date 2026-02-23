@@ -1,6 +1,6 @@
 ---
 name: vibeflow-orchestrator
-description: Master workflow navigation and track selection for the VibeFlow docs-first development workflow
+description: Register work items, create feature branches, track and advance stages, close work items in the VibeFlow docs-first development workflow
 metadata:
   triggers:
     - start vibeflow
@@ -17,14 +17,15 @@ metadata:
 
 # vibeflow-orchestrator
 
-Master workflow navigation and track selection for the VibeFlow docs-first development workflow.
+Register work items, create feature branches, track and advance stages, close work items in the VibeFlow docs-first development workflow.
 
 ## Purpose
 
 This skill tracks multiple work items through the VibeFlow workflow by:
-- Registering work items with their workflow track (Micro/Small/Medium/Large)
+- Registering work items with their workflow track and creating `feat/<slug>` branches
 - Tracking each work item's current stage independently
 - Advancing work items through stages and routing to the appropriate skill
+- Closing work items as DONE after Checkpoint #4 (release is optional)
 - Providing a dashboard view of all in-flight work items
 
 ## Workflow
@@ -33,7 +34,8 @@ This skill tracks multiple work items through the VibeFlow workflow by:
 Register Work Item
     │
     ├── Assign ID, generate slug from description, and assign track
-    ├── Create entry in docs/workflow-state.yaml
+    ├── Create entry in docs/workflow-state.yaml (with branch field)
+    ├── Create git branch: feat/<slug>
     └── Determine starting stage from track
     │
     ▼
@@ -49,6 +51,13 @@ Advance & Route
     ├── Mark work item as advancing to next stage
     ├── Recommend the appropriate skill command
     └── Update manifest with new stage
+    │
+    ▼
+Close Work Item (after Checkpoint #4)
+    │
+    ├── Mark stage as DONE (terminal state)
+    ├── Branch ready for merge to main
+    └── Alternative: advance to Stage I for release track
 ```
 
 ## Usage
@@ -59,12 +68,20 @@ Advance & Route
 /vibeflow-orchestrator register "<description>" <ID> <track>
 ```
 
-Registers a work item in `docs/workflow-state.yaml` and determines the starting stage. Claude generates the kebab-case slug from the description.
+Registers a work item in `docs/workflow-state.yaml`, determines the starting stage, and creates a git branch `feat/<slug>`.
+
+Steps:
+1. Generate kebab-case slug from description
+2. Add entry to manifest with `branch: feat/<slug>`
+3. Create and checkout git branch: `git checkout -b feat/<slug>`
 
 Example:
 ```
 /vibeflow-orchestrator register "Add anti-hallucination guardrails" 030 medium
+# Creates branch: feat/add-anti-hallucination-guardrails
+
 /vibeflow-orchestrator register "Export data to CSV" 031 small
+# Creates branch: feat/export-data-to-csv
 ```
 
 ### Status Dashboard
@@ -101,10 +118,33 @@ Shows detailed status for one work item including:
 ```
 
 Marks a work item as advancing to the next stage in its track:
+- Validates checkpoint if at a checkpoint boundary (blocks if failed)
 - Updates `stage` in `docs/workflow-state.yaml`
 - Updates `checkpoint` if a checkpoint boundary was crossed
-- Updates `docs` with any new document paths produced
+- Updates `docs` paths with any documents produced at the completed stage
 - Shows what the next stage requires
+- **After Checkpoint #4 (Stage H):** Offers two paths:
+  - `advance` → proceed to Stage I (release track)
+  - `close` → mark as DONE (see Close command below)
+
+### Close a Work Item
+
+```
+/vibeflow-orchestrator close <ID>
+```
+
+Marks a work item as DONE after passing Checkpoint #4 (Implementation Complete):
+- Validates Checkpoint #4 if not yet passed (runs `validate_checkpoint.py 4 --json --project-root <root>`)
+- Requires work item to be at stage H or later with checkpoint >= 4
+- Sets `stage: DONE` in `docs/workflow-state.yaml`
+- Branch `feat/<slug>` is ready for merge to main
+- Blocked if Checkpoint #4 validation fails
+
+Example:
+```
+/vibeflow-orchestrator close 030
+# Sets stage: DONE, branch feat/add-anti-hallucination-guardrails ready for merge
+```
 
 ### Next Steps for a Work Item
 
@@ -119,12 +159,12 @@ Shows the recommended next action for a work item:
 
 ## Workflow Tracks
 
-| Track | Scope | Stages | Example |
-|-------|-------|--------|---------|
-| **Micro** | Bug fix, typo, small refactor | F → G | Fix typo, update config |
-| **Small** | Single feature, no contracts | E → F → G → H | Add form field, UI polish |
-| **Medium** | Multi-component, no new services | B → C → D → E → F → G → H → I → J | New API endpoint |
-| **Large** | System change, new contracts/services | Full A → L | New LLM integration |
+| Track | Scope | Stages | Release | Example |
+|-------|-------|--------|---------|---------|
+| **Micro** | Bug fix, typo, small refactor | F → G → DONE | No | Fix typo, update config |
+| **Small** | Single feature, no contracts | E → F → G → H → DONE | Optional (I-L) | Add form field, UI polish |
+| **Medium** | Multi-component, no new services | B → C → D → E → F → G → H → DONE | Optional (I-L) | New API endpoint |
+| **Large** | System change, new contracts/services | A → B → C → D → E → F → G → H → DONE | Optional (I-L) | New LLM integration |
 
 ## Stage Overview
 
@@ -168,7 +208,8 @@ workitems:
     id: 030
     description: "Add anti-hallucination guardrails"
     track: medium        # micro | small | medium | large
-    stage: G             # current stage letter (A-L)
+    stage: G             # current stage letter (A-L) or DONE
+    branch: feat/add-anti-hallucination-guardrails  # git branch
     started: 2025-02-20  # date work item was registered
     checkpoint: 3        # last checkpoint passed (1-6)
     docs:
@@ -185,6 +226,7 @@ workitems:
     description: "Export data to CSV"
     track: small
     stage: E
+    branch: feat/export-data-to-csv  # git branch
     started: 2025-02-22
     checkpoint: 2
     docs:
@@ -199,13 +241,18 @@ workitems:
 When registering a new work item:
 1. Create `docs/workflow-state.yaml` if it doesn't exist (use `assets/workflow-state-template.yaml`)
 2. Generate a kebab-case slug from the description (e.g., "Add anti-hallucination guardrails" → `add-anti-hallucination-guardrails`)
-3. Add the work item entry with `id`, `description`, `track`, `stage` (first stage for the track), `started` (today), `checkpoint: 0`, and empty `docs` hierarchy
+3. Add the work item entry with `id`, `description`, `track`, `stage` (first stage for the track), `branch` (`feat/<slug>`), `started` (today), `checkpoint: 0`, and empty `docs` hierarchy
+4. Create and checkout git branch: `git checkout -b feat/<slug>`
 
 When advancing a work item:
 1. Read `docs/workflow-state.yaml`
-2. Update the `stage` field to the next stage in the track
-3. Update `checkpoint` if a checkpoint boundary was crossed
-4. Update `docs` with any document paths produced at the completed stage
+2. Check if current stage is a checkpoint boundary (D→E=CP#1, E→F=CP#2, F→G=CP#3, H→I=CP#4, J→K=CP#5, L→done=CP#6)
+3. If checkpoint boundary: run `python3 .claude/skills/vibeflow-validate/scripts/validate_checkpoint.py <N> --json --project-root <root>`
+   - If exit code 1 (failed): STOP. Report errors. Do NOT update manifest.
+   - If exit code 0 or 2 (passed/warnings): proceed
+4. Update `stage` field to the next stage in the track
+5. Update `checkpoint` if a checkpoint boundary was crossed
+6. Update `docs` with any document paths produced at the completed stage
 
 ## Skill Routing
 

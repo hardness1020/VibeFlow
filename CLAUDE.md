@@ -1,0 +1,103 @@
+# VibeFlow — AI-Assisted Docs-First Development Workflow
+
+## Project Identity
+
+VibeFlow is a workflow template that enforces docs-first, TDD-driven development for AI-assisted software engineering. It uses Claude Code skills, hooks, and subagents to ensure documentation stays current and tests drive implementation.
+
+## Core Principle: Docs-First Mandate
+
+**All documentation MUST exist and be validated BEFORE any code is written.** Stages A-E produce documents; Stages F-H implement code that must match those documents. The review-agent validates that implementation conforms to the Feature Spec.
+
+## Workflow Structure
+
+See `README.md` for the full pipeline diagram. Summary:
+
+- **Stages A-D** (Planning): PRD, Discovery, Tech Specs, ADRs
+- **Stage E** (Design): Feature Spec with API Design
+- **Stages F-H** (Implementation): TDD cycle — RED, GREEN, REFACTOR
+- **Stages I-L** (Release): Reconcile, OP-NOTE, Deploy, Close — **optional**
+- **DONE**: Terminal state after Checkpoint #4 (can close without release)
+
+Six checkpoints gate progression between phases.
+
+## Tracks
+
+| Track | Start | End | Planning | Release |
+|-------|-------|-----|----------|---------|
+| Micro | F | G → DONE | None | No |
+| Small | E | H → DONE or I-L | Feature spec | Optional |
+| Medium | B | H → DONE or I-L | Full planning | Optional |
+| Large | A | H → DONE or I-L | Full + PRD | Optional |
+
+## Branch Convention
+
+Every work item is bound to a dedicated git branch:
+
+- **Format:** `feat/<slug>` (e.g., `feat/add-anti-hallucination-guardrails`)
+- **Slug:** The work item key from `docs/workflow-state.yaml` (kebab-case from description)
+- **Lifecycle:** Register creates branch → all work happens on branch → close/merge to main
+- **Enforcement:** Hook blocks edits on `main` and on branches not matching an active work item
+
+## Enforcement Rules
+
+These rules are **deterministic** — enforced by hooks and skills:
+
+1. **Branch binding (UserPromptSubmit hook):** All prompts blocked unless current branch is `feat/<slug>` for an active work item. Orchestrator commands are exempted so users can register new work items from main.
+2. **Checkpoint gates (two layers):**
+   - **UserPromptSubmit hook:** `checkpoint-gate.py` blocks prompts containing "advance"/"close" if checkpoint not passed (deterministic safety net)
+   - **Orchestrator skill:** `advance` and `close` commands validate checkpoints before updating the manifest (skill-instructed, redundant backup)
+3. **Exception:** Prompts are always allowed when no manifest exists (initial project setup) or when no active work items are present
+4. **All hooks are read-only** — no hook mutates any file. All manifest updates happen in skills.
+
+## File Naming Conventions
+
+- **Manifest:** `docs/workflow-state.yaml` (single source of truth)
+- **PRD:** `docs/prds/prd.md`
+- **Discovery:** `docs/discovery/disco-<ID>.md`
+- **Tech Specs:** `docs/specs/spec-<name>.md`
+- **ADRs:** `docs/adrs/adr-<ID>-<slug>.md`
+- **Feature Specs:** `docs/features/ft-<ID>-<slug>.md`
+- **OP-NOTEs:** `docs/op-notes/op-<slug>.md`
+
+## Document Hierarchy
+
+```
+docs/
+  workflow-state.yaml    # Manifest — source of truth
+  prds/prd.md            # Product Requirements
+  discovery/disco-*.md   # Codebase Analysis
+  specs/spec-*.md        # Tech Specifications
+  adrs/adr-*.md          # Architecture Decisions
+  features/ft-*.md       # Feature Specifications
+  op-notes/op-*.md       # Deployment Runbooks
+```
+
+## Skills
+
+| Skill | Stages | Purpose |
+|-------|--------|---------|
+| `/vibeflow-orchestrator` | All | Register, track, advance, close work items |
+| `/vibeflow-planning` | A-D | PRDs, discovery, tech specs, ADRs |
+| `/vibeflow-feature-spec` | E | Feature specs with acceptance criteria |
+| `/vibeflow-tdd-implementation` | F-H | TDD cycle: RED → GREEN → REFACTOR |
+| `/vibeflow-release` | I-L | Reconcile, OP-NOTE, deploy, close |
+| `/vibeflow-validate` | Checkpoints | Checkpoint validation and enforcement |
+
+## Subagents
+
+| Agent | Purpose |
+|-------|---------|
+| `discovery-agent` | Stage B codebase exploration (read-only) |
+| `validation-agent` | Run checkpoint validation scripts |
+| `review-agent` | Code review against Feature Spec |
+
+## Quick Reference
+
+```
+/vibeflow-orchestrator register "<desc>" <ID> <track>   # Create work item + branch
+/vibeflow-orchestrator status [<ID>]                     # Dashboard or detail view
+/vibeflow-orchestrator advance <ID>                      # Move to next stage
+/vibeflow-orchestrator close <ID>                        # Mark DONE after CP#4
+/vibeflow-orchestrator next <ID>                         # Show next action
+/vibeflow-validate checkpoint <N>                        # Validate checkpoint
+```

@@ -12,7 +12,8 @@
 #   id:          Numeric trace ID linking to doc naming conventions (disco-030.md, ft-030-*.md)
 #   description: Human-readable sentence explaining what to do
 #   track:       micro | small | medium | large
-#   stage:       Current stage letter (A-L)
+#   stage:       Current stage letter (A-L) or DONE (terminal state)
+#   branch:      Git branch name (feat/<slug>)
 #   started:     Date the work item was registered (YYYY-MM-DD)
 #   checkpoint:  Last checkpoint passed (0-6, 0 = none yet)
 #   docs:        Document paths produced at each stage
@@ -36,6 +37,7 @@ workitems:
   #   description: "Add anti-hallucination guardrails"
   #   track: medium
   #   stage: G
+  #   branch: feat/add-anti-hallucination-guardrails
   #   started: 2025-02-20
   #   checkpoint: 3
   #   docs:
