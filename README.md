@@ -17,11 +17,13 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
 
 ## Benefits
 
-- **Branch-locked development**: Hooks block all prompts unless you're on a `feat/<slug>` branch for an active work item
-- **Docs-before-code workflow**: Planning stages A-E produce documentation; implementation stages F-H must conform to it
-- **Checkpoint gates prevent shortcuts**: Manage-work skill validates checkpoints before advancing; hook blocks advance/close prompts as a safety net
-- **Living documentation**: Auto-validate hook checks doc-code sync after every edit
-- **Decisions are traceable**: IDs link docs → branches → PRs → code across the full lifecycle
+- **Specs drive tests, tests drive code** — feature specs define contracts, tests enforce them, code must pass
+- **Every prompt is tied to a work item** — dedicated `feat/<slug>` branch, work on `main` is blocked
+- **Checkpoints are validated, not self-reported** — validation scripts confirm completeness before you can advance
+- **Docs stay in sync automatically** — schema validation at conversation end gives pass/fail feedback
+- **Decisions are traceable** — ADRs capture the *why*; IDs link docs → branches → PRs → code
+- **Agents stay in their lane** — test-writers can't touch source, implementers can't touch tests
+- **Right-sized planning** — four tracks (Micro → Large) so a typo fix skips what a system change requires
 
 ---
 
