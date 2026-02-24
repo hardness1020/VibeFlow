@@ -163,7 +163,6 @@ Hooks run automatically and deterministically — all are read-only (no file mut
 | `workitem-branch-guard.py` | Every prompt | `UserPromptSubmit` | **Blocks** if branch ≠ active `feat/<slug>` (manage-work/clarify-demand exempt) | Manifest |
 | `checkpoint-gate.py` | Every prompt | `UserPromptSubmit` | **Blocks** advance/close if checkpoint not passed | Manifest + `validate_checkpoint.py` |
 | `git-push-guard.py` | Bash with `git push` | `PreToolUse` | **Advisory**: warns if branch/checkpoint issues before push | Manifest |
-| `post-tool-quality.py` | Write/Edit/Bash | `PostToolUse` | **Advisory**: warns on debug artifacts and push status | Source files + Manifest |
 | `auto-validate.py` | Conversation end | `Stop` | Shows doc validation pass/fail feedback | Validation scripts |
 | `doc-path-tracker.py` | Conversation end | `Stop` | **Warns** if document paths missing from manifest | Manifest |
 | `stage-transition-update.py` | Conversation end | `Stop` | Reminds to advance if artifacts exist | Manifest |
@@ -185,10 +184,6 @@ Hooks run automatically and deterministically — all are read-only (no file mut
   ┌─ Skills (on demand) ─────────────────────────────────┐
   │  manage-work │ define-prd │ create-feature-spec │ run-tdd │ …    │
   └───────────────────────┬──────────────────────────────┘
-                          ▼
-  ┌─ Hooks (PostToolUse) ──────────────────────────────────┐
-  │  post-tool-quality (advisory)                          │
-  └───────────────────────┬────────────────────────────────┘
                           ▼
   ┌─ Hooks (Stop) ───────────────────────────────────────┐
   │  auto-validate │ doc-path-tracker │ stage-transition │
