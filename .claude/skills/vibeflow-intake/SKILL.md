@@ -18,7 +18,7 @@ Conversational demand clarification and feasibility research before formal work 
 
 ## Purpose
 
-This skill helps users go from a vague idea to a concrete work item registration. It runs **before** `/vibeflow-orchestrator register` to ensure the right track, scope, and description are chosen.
+This skill helps users go from a vague idea to a concrete work item registration. It runs **before** `/vibeflow-workitem register` to ensure the right track, scope, and description are chosen.
 
 Works on any branch (including `main`).
 
@@ -69,7 +69,7 @@ Produce an **Intake Brief** (displayed in conversation, not persisted to disk):
 Present the Intake Brief to the user. If they confirm:
 
 ```
-/vibeflow-orchestrator register "<description>" <ID> <track>
+/vibeflow-workitem register "<description>" <ID> <track>
 ```
 
 If they want changes, loop back to the relevant phase.

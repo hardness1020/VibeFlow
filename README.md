@@ -19,7 +19,7 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
 
 - **Branch-locked development**: Hooks block all prompts unless you're on a `feat/<slug>` branch for an active work item
 - **Docs-before-code workflow**: Planning stages A-E produce documentation; implementation stages F-H must conform to it
-- **Checkpoint gates prevent shortcuts**: Orchestrator validates checkpoints before advancing; hook blocks advance/close prompts as a safety net
+- **Checkpoint gates prevent shortcuts**: Workitem skill validates checkpoints before advancing; hook blocks advance/close prompts as a safety net
 - **Living documentation**: Auto-validate hook checks doc-code sync after every edit
 - **Decisions are traceable**: IDs link docs → branches → PRs → code across the full lifecycle
 
@@ -95,27 +95,27 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
 git clone https://github.com/hardness1020/VibeFlow.git
 ```
 
-Start with `/vibeflow-intake` to clarify an idea, or `/vibeflow-orchestrator` to register directly.
+Start with `/vibeflow-intake` to clarify an idea, or `/vibeflow-workitem` to register directly.
 
 ```
-/vibeflow-orchestrator register "<description>" <ID> <track>
-/vibeflow-orchestrator status [<ID>]
-/vibeflow-orchestrator advance <ID>
-/vibeflow-orchestrator close <ID>
-/vibeflow-orchestrator next <ID>
+/vibeflow-workitem register "<description>" <ID> <track>
+/vibeflow-workitem status [<ID>]
+/vibeflow-workitem advance <ID>
+/vibeflow-workitem close <ID>
+/vibeflow-workitem next <ID>
 ```
 
 ### Quick Workflow
 
 ```
-/vibeflow-orchestrator register "Add search feature" 1 small
+/vibeflow-workitem register "Add search feature" 1 small
 /vibeflow-feature-spec 1 add-search-feature
 /vibeflow-validate checkpoint 2
 /vibeflow-tdd-implementation red
 /vibeflow-tdd-implementation green
 /vibeflow-tdd-implementation refactor
 /vibeflow-validate checkpoint 4
-/vibeflow-orchestrator close 1
+/vibeflow-workitem close 1
 ```
 
 ### Workflow Tracks
@@ -133,7 +133,7 @@ Start with `/vibeflow-intake` to clarify an idea, or `/vibeflow-orchestrator` to
 
 | Skill | Purpose | Stages |
 |-------|---------|--------|
-| `/vibeflow-orchestrator` | Select workflow track, navigate between stages, coordinate handoffs, enforce stage gates | All |
+| `/vibeflow-workitem` | Select workflow track, navigate between stages, coordinate handoffs, enforce stage gates | All |
 | `/vibeflow-planning` | Create PRDs with success metrics, run spec-driven codebase discovery, write tech specs with diagrams, document ADRs with trade-offs | A-D |
 | `/vibeflow-feature-spec` | Generate feature specs with acceptance criteria, design API contracts, create test plans with golden files | E |
 | `/vibeflow-tdd-implementation` | Write failing unit tests first (RED), implement minimal code (GREEN), add integration tests and refactor (REFACTOR) | F-H |
@@ -150,7 +150,7 @@ Hooks run automatically and deterministically — all are read-only (no file mut
 | Hook | Trigger | Fires On | Outcome | Reads |
 |------|---------|----------|---------|-------|
 | `workflow-state-inject.py` | Every prompt | `UserPromptSubmit` | Injects `[VibeFlow] Active: <slug> (Stage X, feat/<slug>)` | Manifest |
-| `workitem-branch-guard.py` | Every prompt | `UserPromptSubmit` | **Blocks** if branch ≠ active `feat/<slug>` (orchestrator/intake exempt) | Manifest |
+| `workitem-branch-guard.py` | Every prompt | `UserPromptSubmit` | **Blocks** if branch ≠ active `feat/<slug>` (workitem/intake exempt) | Manifest |
 | `checkpoint-gate.py` | Every prompt | `UserPromptSubmit` | **Blocks** advance/close if checkpoint not passed | Manifest + `validate_checkpoint.py` |
 | `git-push-guard.py` | Bash with `git push` | `PreToolUse` | **Advisory**: warns if branch/checkpoint issues before push | Manifest |
 | `post-tool-quality.py` | Write/Edit/Bash | `PostToolUse` | **Advisory**: warns on debug artifacts and push status | Source files + Manifest |
@@ -173,7 +173,7 @@ Hooks run automatically and deterministically — all are read-only (no file mut
   └───────────────────────┬────────────────────────────────┘
                           ▼
   ┌─ Skills (on demand) ─────────────────────────────────┐
-  │  orchestrator │ planning │ feature-spec │ tdd │ …    │
+  │  workitem │ planning │ feature-spec │ tdd │ …    │
   └───────────────────────┬──────────────────────────────┘
                           ▼
   ┌─ Hooks (PostToolUse) ──────────────────────────────────┐

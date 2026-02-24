@@ -140,7 +140,7 @@ All validation scripts output JSON with this structure:
 After a checkpoint passes, update `docs/workflow-state.yaml`:
 - Set `checkpoint` to the number that passed (e.g., `checkpoint: 2` after CP#2 passes)
 
-Stage advancement is handled by: `/vibeflow-orchestrator advance <ID>`
+Stage advancement is handled by: `/vibeflow-workitem advance <ID>`
 
 ## References
 

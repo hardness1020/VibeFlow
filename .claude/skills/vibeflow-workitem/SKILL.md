@@ -1,5 +1,5 @@
 ---
-name: vibeflow-orchestrator
+name: vibeflow-workitem
 description: Register work items, create feature branches, track and advance stages, close work items in the VibeFlow docs-first development workflow
 metadata:
   triggers:
@@ -15,7 +15,7 @@ metadata:
     - advance work item
 ---
 
-# vibeflow-orchestrator
+# vibeflow-workitem
 
 Register work items, create feature branches, track and advance stages, close work items in the VibeFlow docs-first development workflow.
 
@@ -65,7 +65,7 @@ Close Work Item (after Checkpoint #4)
 ### Register a New Work Item
 
 ```
-/vibeflow-orchestrator register "<description>" <ID> <track>
+/vibeflow-workitem register "<description>" <ID> <track>
 ```
 
 Registers a work item in `docs/workflow-state.yaml`, determines the starting stage, and creates a git branch `feat/<slug>`.
@@ -77,17 +77,17 @@ Steps:
 
 Example:
 ```
-/vibeflow-orchestrator register "Add anti-hallucination guardrails" 030 medium
+/vibeflow-workitem register "Add anti-hallucination guardrails" 030 medium
 # Creates branch: feat/add-anti-hallucination-guardrails
 
-/vibeflow-orchestrator register "Export data to CSV" 031 small
+/vibeflow-workitem register "Export data to CSV" 031 small
 # Creates branch: feat/export-data-to-csv
 ```
 
 ### Status Dashboard
 
 ```
-/vibeflow-orchestrator status
+/vibeflow-workitem status
 ```
 
 Shows all registered work items with their current stage, track, and last checkpoint.
@@ -102,7 +102,7 @@ export-data-to-csv                 Small    E      2           2025-02-22
 ### Detailed Work Item Status
 
 ```
-/vibeflow-orchestrator status <ID>
+/vibeflow-workitem status <ID>
 ```
 
 Shows detailed status for one work item including:
@@ -114,7 +114,7 @@ Shows detailed status for one work item including:
 ### Advance a Work Item
 
 ```
-/vibeflow-orchestrator advance <ID>
+/vibeflow-workitem advance <ID>
 ```
 
 Marks a work item as advancing to the next stage in its track:
@@ -130,7 +130,7 @@ Marks a work item as advancing to the next stage in its track:
 ### Close a Work Item
 
 ```
-/vibeflow-orchestrator close <ID>
+/vibeflow-workitem close <ID>
 ```
 
 Marks a work item as DONE after passing Checkpoint #4 (Implementation Complete):
@@ -142,14 +142,14 @@ Marks a work item as DONE after passing Checkpoint #4 (Implementation Complete):
 
 Example:
 ```
-/vibeflow-orchestrator close 030
+/vibeflow-workitem close 030
 # Sets stage: DONE, branch feat/add-anti-hallucination-guardrails ready for merge
 ```
 
 ### Next Steps for a Work Item
 
 ```
-/vibeflow-orchestrator next <ID>
+/vibeflow-workitem next <ID>
 ```
 
 Shows the recommended next action for a work item:

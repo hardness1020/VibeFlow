@@ -5,7 +5,7 @@ UserPromptSubmit hook: Block prompts unless current git branch matches an active
 Enforces:
 - No work on main/master branch (must register a work item first)
 - No work on branches that don't match an active work item's feat/<slug>
-- Allows orchestrator/register commands on main (so users can create work items)
+- Allows workitem/register commands on main (so users can create work items)
 - Allows when no manifest exists (initial project setup)
 
 Fails open: on any error, allows the action (never blocks due to script bugs).
@@ -24,9 +24,9 @@ try:
     hook_input = json.loads(sys.stdin.read())
     user_prompt = hook_input.get("user_prompt", "").lower()
 
-    # Allow orchestrator commands on any branch (needed to register/manage work items)
-    orchestrator_keywords = ["orchestrator", "register", "/vibeflow", "intake"]
-    if any(kw in user_prompt for kw in orchestrator_keywords):
+    # Allow workitem commands on any branch (needed to register/manage work items)
+    workitem_keywords = ["workitem", "register", "/vibeflow", "intake"]
+    if any(kw in user_prompt for kw in workitem_keywords):
         print(json.dumps({"decision": "allow"}))
         sys.exit(0)
 
@@ -116,7 +116,7 @@ try:
         active_list = ", ".join(sorted(active_branches))
         print(json.dumps({
             "decision": "block",
-            "reason": f"[VibeFlow] Work blocked on '{current_branch}'. Switch to an active work item branch ({active_list}) or register a new one: /vibeflow-orchestrator register \"<description>\" <ID> <track>"
+            "reason": f"[VibeFlow] Work blocked on '{current_branch}'. Switch to an active work item branch ({active_list}) or register a new one: /vibeflow-workitem register \"<description>\" <ID> <track>"
         }))
         sys.exit(0)
 

@@ -3,7 +3,7 @@
 UserPromptSubmit hook: Block advance/close prompts when checkpoint validation fails.
 
 Intercepts user prompts that contain "advance" or "close" and validates that
-the checkpoint gate is satisfied before allowing the orchestrator to process them.
+the checkpoint gate is satisfied before allowing the workitem skill to process them.
 
 Fails open: on any error, allows the prompt.
 
@@ -51,7 +51,7 @@ try:
         print(json.dumps({"decision": "allow"}))
         sys.exit(0)
 
-    # Determine if this looks like an orchestrator advance or close command
+    # Determine if this looks like a workitem advance or close command
     is_advance = "advance" in message_lower
     is_close = "close" in message_lower
 

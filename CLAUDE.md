@@ -42,10 +42,10 @@ Every work item is bound to a dedicated git branch:
 
 These rules are **deterministic** — enforced by hooks and skills:
 
-1. **Branch binding (UserPromptSubmit hook):** All prompts blocked unless current branch is `feat/<slug>` for an active work item. Orchestrator commands are exempted so users can register new work items from main.
+1. **Branch binding (UserPromptSubmit hook):** All prompts blocked unless current branch is `feat/<slug>` for an active work item. Workitem commands are exempted so users can register new work items from main.
 2. **Checkpoint gates (two layers):**
    - **UserPromptSubmit hook:** `checkpoint-gate.py` blocks prompts containing "advance"/"close" if checkpoint not passed (deterministic safety net)
-   - **Orchestrator skill:** `advance` and `close` commands validate checkpoints before updating the manifest (skill-instructed, redundant backup)
+   - **Workitem skill:** `advance` and `close` commands validate checkpoints before updating the manifest (skill-instructed, redundant backup)
 3. **Exception:** Prompts are always allowed when no manifest exists (initial project setup) or when no active work items are present
 4. **All hooks are read-only** — no hook mutates any file. All manifest updates happen in skills.
 
@@ -76,7 +76,7 @@ docs/
 
 | Skill | Stages | Purpose |
 |-------|--------|---------|
-| `/vibeflow-orchestrator` | All | Register, track, advance, close work items |
+| `/vibeflow-workitem` | All | Register, track, advance, close work items |
 | `/vibeflow-planning` | A-D | PRDs, discovery, tech specs, ADRs |
 | `/vibeflow-feature-spec` | E | Feature specs with acceptance criteria |
 | `/vibeflow-tdd-implementation` | F-H | TDD cycle: RED → GREEN → REFACTOR |
@@ -101,11 +101,11 @@ Agent definitions live in `.claude/agents/`. Enforcement hooks exit 2 to block, 
 ## Quick Reference
 
 ```
-/vibeflow-orchestrator register "<desc>" <ID> <track>   # Create work item + branch
-/vibeflow-orchestrator status [<ID>]                     # Dashboard or detail view
-/vibeflow-orchestrator advance <ID>                      # Move to next stage
-/vibeflow-orchestrator close <ID>                        # Mark DONE after CP#4
-/vibeflow-orchestrator next <ID>                         # Show next action
+/vibeflow-workitem register "<desc>" <ID> <track>   # Create work item + branch
+/vibeflow-workitem status [<ID>]                     # Dashboard or detail view
+/vibeflow-workitem advance <ID>                      # Move to next stage
+/vibeflow-workitem close <ID>                        # Mark DONE after CP#4
+/vibeflow-workitem next <ID>                         # Show next action
 /vibeflow-validate checkpoint <N>                        # Validate checkpoint
 /vibeflow-intake                                         # Clarify idea → register
 ```

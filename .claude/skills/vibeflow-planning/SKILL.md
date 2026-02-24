@@ -215,5 +215,5 @@ After completing each stage, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 1` after passing validation
 - Criteria: PRD exists with all required sections, discovery doc exists, at least one tech spec, at least one ADR
 
-To advance to the next stage: `/vibeflow-orchestrator advance <ID>`
+To advance to the next stage: `/vibeflow-workitem advance <ID>`
 To check readiness: `/vibeflow-validate checkpoint 1`

@@ -138,7 +138,7 @@ workitems:
       opnote: null
 ```
 
-Use `/vibeflow-orchestrator status` to see all work items, or `/vibeflow-orchestrator status <ID>` for one work item. Every stage skill updates the manifest after completing its work.
+Use `/vibeflow-workitem status` to see all work items, or `/vibeflow-workitem status <ID>` for one work item. Every stage skill updates the manifest after completing its work.
 
 ## Quick Commands
 
@@ -147,7 +147,7 @@ Use `/vibeflow-orchestrator status` to see all work items, or `/vibeflow-orchest
 python vibeflow-validate/scripts/validate_checkpoint.py
 
 # Detect workflow state
-python vibeflow-orchestrator/scripts/detect_track.py
+python vibeflow-workitem/scripts/detect_track.py
 
 # Validate specific document
 python vibeflow-validate/scripts/check_planning.py
@@ -157,7 +157,7 @@ python vibeflow-validate/scripts/check_planning.py
 
 | Skill | Purpose | Stages |
 |-------|---------|--------|
-| vibeflow-orchestrator | Navigation, track selection | All |
+| vibeflow-workitem | Navigation, track selection | All |
 | vibeflow-planning | PRD, Discovery, Specs, ADRs | A-D |
 | vibeflow-feature-spec | Feature Spec with API Design | E |
 | vibeflow-tdd-implementation | TDD cycle | F-H |

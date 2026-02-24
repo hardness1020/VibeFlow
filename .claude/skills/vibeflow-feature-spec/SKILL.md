@@ -167,5 +167,5 @@ After completing Stage E, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 2` after passing validation
 - Criteria: Feature spec exists with all required sections, API Design section has exact signatures, acceptance criteria are testable
 
-To advance to the next stage: `/vibeflow-orchestrator advance <ID>`
+To advance to the next stage: `/vibeflow-workitem advance <ID>`
 To check readiness: `/vibeflow-validate checkpoint 2`

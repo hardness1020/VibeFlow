@@ -213,5 +213,5 @@ After completing each stage, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 4` after passing validation
 - Criteria: All unit tests pass, integration tests pass, H.4 quality validation passes
 
-To advance to the next stage: `/vibeflow-orchestrator advance <ID>`
+To advance to the next stage: `/vibeflow-workitem advance <ID>`
 To check readiness: `/vibeflow-validate checkpoint 3` (after RED) or `/vibeflow-validate checkpoint 4` (after REFACTOR)

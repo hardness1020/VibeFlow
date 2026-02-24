@@ -114,11 +114,11 @@ try:
             if artifact_pattern.endswith("/"):
                 # Directory — check if any files exist
                 if os.path.isdir(artifact_path) and os.listdir(artifact_path):
-                    print(f"[VibeFlow] Reminder: '{matched_slug}' is at Stage {matched_stage} but artifacts for this stage exist. Consider advancing: /vibeflow-orchestrator advance {matched_slug}")
+                    print(f"[VibeFlow] Reminder: '{matched_slug}' is at Stage {matched_stage} but artifacts for this stage exist. Consider advancing: /vibeflow-workitem advance {matched_slug}")
                     break
             else:
                 if os.path.exists(artifact_path):
-                    print(f"[VibeFlow] Reminder: '{matched_slug}' is at Stage {matched_stage} but artifacts for this stage exist. Consider advancing: /vibeflow-orchestrator advance {matched_slug}")
+                    print(f"[VibeFlow] Reminder: '{matched_slug}' is at Stage {matched_stage} but artifacts for this stage exist. Consider advancing: /vibeflow-workitem advance {matched_slug}")
                     break
 
 except Exception:

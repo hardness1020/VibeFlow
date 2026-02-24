@@ -193,5 +193,5 @@ After completing each stage, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 6` after passing validation
 - Criteria: Deployment verified, indices updated, git tag created
 
-To advance to the next stage: `/vibeflow-orchestrator advance <ID>`
+To advance to the next stage: `/vibeflow-workitem advance <ID>`
 To check readiness: `/vibeflow-validate checkpoint 5` (after OP-NOTE) or `/vibeflow-validate checkpoint 6` (after deploy)
