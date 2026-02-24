@@ -144,14 +144,16 @@ Start with `/vibeflow-orchestrator` to navigate the workflow.
 
 ## Enforcement (Hooks)
 
-Hooks run automatically and deterministically — all are read-only (no file mutations). Two block invalid actions, four provide context/feedback. All fail open.
+Hooks run automatically and deterministically — all are read-only (no file mutations). All fail open.
 
 | Hook | Trigger | Fires On | Outcome | Reads |
 |------|---------|----------|---------|-------|
 | `workflow-state-inject.py` | Every prompt | `UserPromptSubmit` | Injects `[VibeFlow] Active: <slug> (Stage X, feat/<slug>)` | Manifest |
-| `workitem-branch-guard.py` | Every prompt | `UserPromptSubmit` | **Blocks** if branch ≠ active `feat/<slug>` (orchestrator commands exempt) | Manifest |
+| `workitem-branch-guard.py` | Every prompt | `UserPromptSubmit` | **Blocks** if branch ≠ active `feat/<slug>` (orchestrator/intake exempt) | Manifest |
 | `checkpoint-gate.py` | Every prompt | `UserPromptSubmit` | **Blocks** advance/close if checkpoint not passed | Manifest + `validate_checkpoint.py` |
-| `auto-validate.sh` | Conversation end | `Stop` | Shows doc validation pass/fail feedback | Validation scripts |
+| `git-push-guard.py` | Bash with `git push` | `PreToolUse` | **Advisory**: warns if branch/checkpoint issues before push | Manifest |
+| `post-tool-quality.py` | Write/Edit/Bash | `PostToolUse` | **Advisory**: warns on debug artifacts and push status | Source files + Manifest |
+| `auto-validate.py` | Conversation end | `Stop` | Shows doc validation pass/fail feedback | Validation scripts |
 | `doc-path-tracker.py` | Conversation end | `Stop` | **Warns** if document paths missing from manifest | Manifest |
 | `stage-transition-update.py` | Conversation end | `Stop` | Reminds to advance if artifacts exist | Manifest |
 
@@ -165,14 +167,38 @@ Hooks run automatically and deterministically — all are read-only (no file mut
   │  state-inject │ branch-guard │ checkpoint-gate       │
   └───────────────────────┬──────────────────────────────┘
                           ▼
+  ┌─ Hooks (PreToolUse) ───────────────────────────────────┐
+  │  git-push-guard (advisory)                             │
+  └───────────────────────┬────────────────────────────────┘
+                          ▼
   ┌─ Skills (on demand) ─────────────────────────────────┐
   │  orchestrator │ planning │ feature-spec │ tdd │ …    │
   └───────────────────────┬──────────────────────────────┘
+                          ▼
+  ┌─ Hooks (PostToolUse) ──────────────────────────────────┐
+  │  post-tool-quality (advisory)                          │
+  └───────────────────────┬────────────────────────────────┘
                           ▼
   ┌─ Hooks (Stop) ───────────────────────────────────────┐
   │  auto-validate │ doc-path-tracker │ stage-transition │
   └──────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Agents
+
+Specialized subagents with tool restrictions enforced by scoped PreToolUse hooks. Each agent can only write to its designated file types.
+
+| Agent | Stages | Tools | Scoped Hook | Purpose |
+|-------|--------|-------|-------------|---------|
+| `codebase-analyst` | B | Read, Grep, Glob | — | Analyze codebase, map dependencies |
+| `spec-drafter` | C-D | Read, Grep, Glob, Write, Edit | `enforce-docs-only.py` | Draft specs and ADRs (`docs/` only) |
+| `api-researcher` | E | Read, Grep, Glob | — | Analyze existing API patterns |
+| `test-writer` | F | Read, Grep, Glob, Write, Edit, Bash | `enforce-test-files-only.py` | Create stubs + write failing tests |
+| `implementer` | G | Read, Grep, Glob, Write, Edit, Bash | `enforce-no-test-no-doc.py` | Implement to pass tests (source only) |
+
+Agent definitions: `.claude/agents/`
 
 ---
 
