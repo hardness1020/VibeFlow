@@ -1,5 +1,5 @@
 ---
-name: vibeflow-workitem
+name: workitem
 description: Register work items, create feature branches, track and advance stages, close work items in the VibeFlow docs-first development workflow
 metadata:
   triggers:
@@ -15,7 +15,7 @@ metadata:
     - advance work item
 ---
 
-# vibeflow-workitem
+# workitem
 
 Register work items, create feature branches, track and advance stages, close work items in the VibeFlow docs-first development workflow.
 
@@ -65,7 +65,7 @@ Close Work Item (after Checkpoint #4)
 ### Register a New Work Item
 
 ```
-/vibeflow-workitem register "<description>" <ID> <track>
+/workitem register "<description>" <ID> <track>
 ```
 
 Registers a work item in `docs/workflow-state.yaml`, determines the starting stage, and creates a git branch `feat/<slug>`.
@@ -77,17 +77,17 @@ Steps:
 
 Example:
 ```
-/vibeflow-workitem register "Add anti-hallucination guardrails" 030 medium
+/workitem register "Add anti-hallucination guardrails" 030 medium
 # Creates branch: feat/add-anti-hallucination-guardrails
 
-/vibeflow-workitem register "Export data to CSV" 031 small
+/workitem register "Export data to CSV" 031 small
 # Creates branch: feat/export-data-to-csv
 ```
 
 ### Status Dashboard
 
 ```
-/vibeflow-workitem status
+/workitem status
 ```
 
 Shows all registered work items with their current stage, track, and last checkpoint.
@@ -102,7 +102,7 @@ export-data-to-csv                 Small    E      2           2025-02-22
 ### Detailed Work Item Status
 
 ```
-/vibeflow-workitem status <ID>
+/workitem status <ID>
 ```
 
 Shows detailed status for one work item including:
@@ -114,7 +114,7 @@ Shows detailed status for one work item including:
 ### Advance a Work Item
 
 ```
-/vibeflow-workitem advance <ID>
+/workitem advance <ID>
 ```
 
 Marks a work item as advancing to the next stage in its track:
@@ -130,7 +130,7 @@ Marks a work item as advancing to the next stage in its track:
 ### Close a Work Item
 
 ```
-/vibeflow-workitem close <ID>
+/workitem close <ID>
 ```
 
 Marks a work item as DONE after passing Checkpoint #4 (Implementation Complete):
@@ -142,19 +142,19 @@ Marks a work item as DONE after passing Checkpoint #4 (Implementation Complete):
 
 Example:
 ```
-/vibeflow-workitem close 030
+/workitem close 030
 # Sets stage: DONE, branch feat/add-anti-hallucination-guardrails ready for merge
 ```
 
 ### Next Steps for a Work Item
 
 ```
-/vibeflow-workitem next <ID>
+/workitem next <ID>
 ```
 
 Shows the recommended next action for a work item:
 - What the current stage requires
-- Which `/vibeflow-*` command to run
+- Which skill command to run
 - Whether a checkpoint validation is needed first
 
 ## Workflow Tracks
@@ -247,7 +247,7 @@ When registering a new work item:
 When advancing a work item:
 1. Read `docs/workflow-state.yaml`
 2. Check if current stage is a checkpoint boundary (D→E=CP#1, E→F=CP#2, F→G=CP#3, H→I=CP#4, J→K=CP#5, L→done=CP#6)
-3. If checkpoint boundary: run `python3 .claude/skills/vibeflow-validate/scripts/validate_checkpoint.py <N> --json --project-root <root>`
+3. If checkpoint boundary: run `python3 .claude/skills/validate/scripts/validate_checkpoint.py <N> --json --project-root <root>`
    - If exit code 1 (failed): STOP. Report errors. Do NOT update manifest.
    - If exit code 0 or 2 (passed/warnings): proceed
 4. Update `stage` field to the next stage in the track
@@ -260,20 +260,20 @@ Each stage maps to a specific skill. After determining the current stage for a w
 
 | Stage | Skill | Recommended Command |
 |-------|-------|--------------------|
-| A | vibeflow-planning | `/vibeflow-planning prd` |
-| B | vibeflow-planning | `/vibeflow-planning discovery <ID>` |
-| C | vibeflow-planning | `/vibeflow-planning spec <name>` |
-| D | vibeflow-planning | `/vibeflow-planning adr <ID> <slug>` |
-| E | vibeflow-feature-spec | `/vibeflow-feature-spec <ID> <slug>` |
-| F | vibeflow-tdd-implementation | `/vibeflow-tdd-implementation red` |
-| G | vibeflow-tdd-implementation | `/vibeflow-tdd-implementation green` |
-| H | vibeflow-tdd-implementation | `/vibeflow-tdd-implementation refactor` |
-| I | vibeflow-release | `/vibeflow-release reconcile <ID>` |
-| J | vibeflow-release | `/vibeflow-release opnote <slug>` |
-| K | vibeflow-release | `/vibeflow-release check` |
-| L | vibeflow-release | `/vibeflow-release check` |
+| A | plan | `/plan prd` |
+| B | plan | `/plan discovery <ID>` |
+| C | plan | `/plan spec <name>` |
+| D | plan | `/plan adr <ID> <slug>` |
+| E | spec | `/spec <ID> <slug>` |
+| F | tdd | `/tdd red` |
+| G | tdd | `/tdd green` |
+| H | tdd | `/tdd refactor` |
+| I | release | `/release reconcile <ID>` |
+| J | release | `/release opnote <slug>` |
+| K | release | `/release check` |
+| L | release | `/release check` |
 
-**Checkpoint boundaries** — recommend `/vibeflow-validate checkpoint <N>` before advancing past:
+**Checkpoint boundaries** — recommend `/validate checkpoint <N>` before advancing past:
 - Stage D → E (Checkpoint #1)
 - Stage E → F (Checkpoint #2)
 - Stage F → G (Checkpoint #3)

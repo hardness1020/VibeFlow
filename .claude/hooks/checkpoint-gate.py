@@ -152,7 +152,7 @@ try:
         if matched_checkpoint < required_cp:
             # Try running the validator
             validator_path = os.path.join(
-                project_root, ".claude", "skills", "vibeflow-validate",
+                project_root, ".claude", "skills", "validate",
                 "scripts", "validate_checkpoint.py"
             )
 
@@ -174,7 +174,7 @@ try:
 
                     print(json.dumps({
                         "decision": "block",
-                        "reason": f"[VibeFlow] Cannot advance '{matched_slug}' past Stage {matched_stage} — {summary}. Run '/vibeflow-validate checkpoint {required_cp}' for details."
+                        "reason": f"[VibeFlow] Cannot advance '{matched_slug}' past Stage {matched_stage} — {summary}. Run '/validate checkpoint {required_cp}' for details."
                     }))
                     sys.exit(0)
 

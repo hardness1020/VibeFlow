@@ -5,7 +5,7 @@
 # last checkpoint passed, and documents produced at each stage.
 #
 # Location: docs/workflow-state.yaml (in the project root)
-# Updated by: vibeflow-workitem (register/advance) and each stage skill
+# Updated by: workitem (register/advance) and each stage skill
 # Git-tracked: Yes — provides team visibility and history
 #
 # Fields:

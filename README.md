@@ -95,27 +95,27 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
 git clone https://github.com/hardness1020/VibeFlow.git
 ```
 
-Start with `/vibeflow-intake` to clarify an idea, or `/vibeflow-workitem` to register directly.
+Start with `/intake` to clarify an idea, or `/workitem` to register directly.
 
 ```
-/vibeflow-workitem register "<description>" <ID> <track>
-/vibeflow-workitem status [<ID>]
-/vibeflow-workitem advance <ID>
-/vibeflow-workitem close <ID>
-/vibeflow-workitem next <ID>
+/workitem register "<description>" <ID> <track>
+/workitem status [<ID>]
+/workitem advance <ID>
+/workitem close <ID>
+/workitem next <ID>
 ```
 
 ### Quick Workflow
 
 ```
-/vibeflow-workitem register "Add search feature" 1 small
-/vibeflow-feature-spec 1 add-search-feature
-/vibeflow-validate checkpoint 2
-/vibeflow-tdd-implementation red
-/vibeflow-tdd-implementation green
-/vibeflow-tdd-implementation refactor
-/vibeflow-validate checkpoint 4
-/vibeflow-workitem close 1
+/workitem register "Add search feature" 1 small
+/spec 1 add-search-feature
+/validate checkpoint 2
+/tdd red
+/tdd green
+/tdd refactor
+/validate checkpoint 4
+/workitem close 1
 ```
 
 ### Workflow Tracks
@@ -133,13 +133,13 @@ Start with `/vibeflow-intake` to clarify an idea, or `/vibeflow-workitem` to reg
 
 | Skill | Purpose | Stages |
 |-------|---------|--------|
-| `/vibeflow-workitem` | Select workflow track, navigate between stages, coordinate handoffs, enforce stage gates | All |
-| `/vibeflow-planning` | Create PRDs with success metrics, run spec-driven codebase discovery, write tech specs with diagrams, document ADRs with trade-offs | A-D |
-| `/vibeflow-feature-spec` | Generate feature specs with acceptance criteria, design API contracts, create test plans with golden files | E |
-| `/vibeflow-tdd-implementation` | Write failing unit tests first (RED), implement minimal code (GREEN), add integration tests and refactor (REFACTOR) | F-H |
-| `/vibeflow-release` | Reconcile specs with implementation, create OP-NOTE deployment runbooks, deploy and verify, close loop and tag release | I-L |
-| `/vibeflow-validate` | Verify checkpoint completion, enforce blockers, check doc-code sync, validate test coverage | 1-6 |
-| `/vibeflow-intake` | Clarify demand, assess feasibility, recommend track, hand off to register | Pre-register |
+| `/workitem` | Select workflow track, navigate between stages, coordinate handoffs, enforce stage gates | All |
+| `/plan` | Create PRDs with success metrics, run spec-driven codebase discovery, write tech specs with diagrams, document ADRs with trade-offs | A-D |
+| `/spec` | Generate feature specs with acceptance criteria, design API contracts, create test plans with golden files | E |
+| `/tdd` | Write failing unit tests first (RED), implement minimal code (GREEN), add integration tests and refactor (REFACTOR) | F-H |
+| `/release` | Reconcile specs with implementation, create OP-NOTE deployment runbooks, deploy and verify, close loop and tag release | I-L |
+| `/validate` | Verify checkpoint completion, enforce blockers, check doc-code sync, validate test coverage | 1-6 |
+| `/intake` | Clarify demand, assess feasibility, recommend track, hand off to register | A (optional) |
 
 ---
 

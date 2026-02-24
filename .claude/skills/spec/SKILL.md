@@ -1,5 +1,5 @@
 ---
-name: vibeflow-feature-spec
+name: spec
 description: Create Feature Specs for Stage E of the VibeFlow docs-first workflow
 metadata:
   triggers:
@@ -12,7 +12,7 @@ metadata:
     - feature planning
 ---
 
-# vibeflow-feature-spec
+# spec
 
 Create Feature Specs for Stage E of the VibeFlow docs-first workflow.
 
@@ -43,20 +43,20 @@ Stage E: Feature Spec
 ### Create Feature Spec
 
 ```
-/vibeflow-feature-spec <ID> <slug>
+/spec <ID> <slug>
 ```
 
 Creates `docs/features/ft-<ID>-<slug>.md` with required sections.
 
 Example:
 ```
-/vibeflow-feature-spec 030 anti-hallucination
+/spec 030 anti-hallucination
 ```
 
 ### Validate Feature Spec
 
 ```
-/vibeflow-feature-spec validate <ID>
+/spec validate <ID>
 ```
 
 Validates that the feature spec has all required sections.
@@ -64,7 +64,7 @@ Validates that the feature spec has all required sections.
 ### Update Schedule
 
 ```
-/vibeflow-feature-spec schedule
+/spec schedule
 ```
 
 Updates `docs/features/schedule.md` with feature status.
@@ -167,5 +167,5 @@ After completing Stage E, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 2` after passing validation
 - Criteria: Feature spec exists with all required sections, API Design section has exact signatures, acceptance criteria are testable
 
-To advance to the next stage: `/vibeflow-workitem advance <ID>`
-To check readiness: `/vibeflow-validate checkpoint 2`
+To advance to the next stage: `/workitem advance <ID>`
+To check readiness: `/validate checkpoint 2`

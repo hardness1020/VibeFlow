@@ -25,7 +25,7 @@ try:
     user_prompt = hook_input.get("user_prompt", "").lower()
 
     # Allow workitem commands on any branch (needed to register/manage work items)
-    workitem_keywords = ["workitem", "register", "/vibeflow", "intake"]
+    workitem_keywords = ["workitem", "register", "intake"]
     if any(kw in user_prompt for kw in workitem_keywords):
         print(json.dumps({"decision": "allow"}))
         sys.exit(0)
@@ -116,7 +116,7 @@ try:
         active_list = ", ".join(sorted(active_branches))
         print(json.dumps({
             "decision": "block",
-            "reason": f"[VibeFlow] Work blocked on '{current_branch}'. Switch to an active work item branch ({active_list}) or register a new one: /vibeflow-workitem register \"<description>\" <ID> <track>"
+            "reason": f"[VibeFlow] Work blocked on '{current_branch}'. Switch to an active work item branch ({active_list}) or register a new one: /workitem register \"<description>\" <ID> <track>"
         }))
         sys.exit(0)
 

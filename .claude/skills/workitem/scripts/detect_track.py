@@ -366,71 +366,71 @@ def get_stage_guidance(stage: str, track: str) -> List[str]:
         guidance = [
             "Create or update the PRD at docs/prds/prd.md",
             "Include: Summary, Problem, Users, Scope (MoSCoW), Success Metrics",
-            "Run: /vibeflow-planning to create PRD"
+            "Run: /plan to create PRD"
         ]
     elif stage == "B":
         guidance = [
             "Perform codebase discovery before designing",
             "Create docs/discovery/disco-<ID>.md",
             "Complete all 5 phases: Spec Discovery, Validation, Test Impact, Dependencies, Reusable Components",
-            "Run: /vibeflow-planning to create discovery doc"
+            "Run: /plan to create discovery doc"
         ]
     elif stage == "C":
         guidance = [
             "Update existing specs or create new ones",
             "Include: Architecture diagram, Component inventory, Interfaces",
             "Check docs/specs/index.md first",
-            "Run: /vibeflow-planning to update specs"
+            "Run: /plan to update specs"
         ]
     elif stage == "D":
         guidance = [
             "Create ADRs for non-trivial decisions",
             "Include: Context, Decision, Consequences, Alternatives, Rollback",
-            "Run: /vibeflow-planning to create ADRs",
-            "After completion: /vibeflow-validate checkpoint 1"
+            "Run: /plan to create ADRs",
+            "After completion: /validate checkpoint 1"
         ]
     elif stage == "E":
         guidance = [
             "Create Feature Spec at docs/features/ft-<ID>-<slug>.md",
             "Include: API Design with exact signatures, Acceptance Criteria",
-            "Run: /vibeflow-feature-spec to create feature",
-            "After completion: /vibeflow-validate checkpoint 2"
+            "Run: /spec to create feature",
+            "After completion: /validate checkpoint 2"
         ]
     elif stage == "F":
         guidance = [
             "Create implementation stubs from Feature Spec API Design",
             "Write failing unit tests (RED phase)",
             "Ensure tests fail with NotImplementedError",
-            "Run: /vibeflow-tdd-implementation to begin TDD",
-            "After completion: /vibeflow-validate checkpoint 3"
+            "Run: /tdd to begin TDD",
+            "After completion: /validate checkpoint 3"
         ]
     elif stage == "G":
         guidance = [
             "Implement minimal code to pass tests (GREEN phase)",
             "Do not change contracts without updating specs first",
-            "Run: /vibeflow-tdd-implementation"
+            "Run: /tdd"
         ]
     elif stage == "H":
         guidance = [
             "Write integration tests for I/O boundaries",
             "Refactor while keeping tests green",
             "Complete Stage H.4 quality validation",
-            "Run: /vibeflow-tdd-implementation",
-            "After completion: /vibeflow-validate checkpoint 4"
+            "Run: /tdd",
+            "After completion: /validate checkpoint 4"
         ]
     elif stage == "I":
         guidance = [
             "Reconcile specs with actual implementation",
             "Update specs if implementation deviated",
             "Add Post-Implementation Notes to discovery doc",
-            "Run: /vibeflow-release"
+            "Run: /release"
         ]
     elif stage == "J":
         guidance = [
             "Create OP-NOTE at docs/op-notes/op-<ID>-<slug>.md",
             "Include: Preflight, Deploy Steps, Monitoring, Rollback",
-            "Run: /vibeflow-release to create OP-NOTE",
-            "After completion: /vibeflow-validate checkpoint 5"
+            "Run: /release to create OP-NOTE",
+            "After completion: /validate checkpoint 5"
         ]
     elif stage == "K":
         guidance = [
@@ -444,7 +444,7 @@ def get_stage_guidance(stage: str, track: str) -> List[str]:
             "Update docs/features/schedule.md to Done",
             "Tag release in Git",
             "Close issues with 'Closes #<ID>'",
-            "After completion: /vibeflow-validate checkpoint 6"
+            "After completion: /validate checkpoint 6"
         ]
 
     return guidance

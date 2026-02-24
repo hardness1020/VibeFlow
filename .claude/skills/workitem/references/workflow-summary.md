@@ -138,28 +138,28 @@ workitems:
       opnote: null
 ```
 
-Use `/vibeflow-workitem status` to see all work items, or `/vibeflow-workitem status <ID>` for one work item. Every stage skill updates the manifest after completing its work.
+Use `/workitem status` to see all work items, or `/workitem status <ID>` for one work item. Every stage skill updates the manifest after completing its work.
 
 ## Quick Commands
 
 ```bash
 # Validate current checkpoint
-python vibeflow-validate/scripts/validate_checkpoint.py
+python validate/scripts/validate_checkpoint.py
 
 # Detect workflow state
-python vibeflow-workitem/scripts/detect_track.py
+python workitem/scripts/detect_track.py
 
 # Validate specific document
-python vibeflow-validate/scripts/check_planning.py
+python validate/scripts/check_planning.py
 ```
 
 ## Skills Reference
 
 | Skill | Purpose | Stages |
 |-------|---------|--------|
-| vibeflow-workitem | Navigation, track selection | All |
-| vibeflow-planning | PRD, Discovery, Specs, ADRs | A-D |
-| vibeflow-feature-spec | Feature Spec with API Design | E |
-| vibeflow-tdd-implementation | TDD cycle | F-H |
-| vibeflow-release | OP-NOTE, Deploy, Close | I-L |
-| vibeflow-validate | Checkpoint validation | All |
+| workitem | Navigation, track selection | All |
+| plan | PRD, Discovery, Specs, ADRs | A-D |
+| spec | Feature Spec with API Design | E |
+| tdd | TDD cycle | F-H |
+| release | OP-NOTE, Deploy, Close | I-L |
+| validate | Checkpoint validation | All |

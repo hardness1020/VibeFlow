@@ -76,13 +76,13 @@ docs/
 
 | Skill | Stages | Purpose |
 |-------|--------|---------|
-| `/vibeflow-workitem` | All | Register, track, advance, close work items |
-| `/vibeflow-planning` | A-D | PRDs, discovery, tech specs, ADRs |
-| `/vibeflow-feature-spec` | E | Feature specs with acceptance criteria |
-| `/vibeflow-tdd-implementation` | F-H | TDD cycle: RED → GREEN → REFACTOR |
-| `/vibeflow-release` | I-L | Reconcile, OP-NOTE, deploy, close |
-| `/vibeflow-validate` | Checkpoints | Checkpoint validation and enforcement |
-| `/vibeflow-intake` | Pre-register | Demand clarification + feasibility → register handoff |
+| `/workitem` | All | Register, track, advance, close work items |
+| `/plan` | A-D | PRDs, discovery, tech specs, ADRs |
+| `/spec` | E | Feature specs with acceptance criteria |
+| `/tdd` | F-H | TDD cycle: RED → GREEN → REFACTOR |
+| `/release` | I-L | Reconcile, OP-NOTE, deploy, close |
+| `/validate` | Checkpoints | Checkpoint validation and enforcement |
+| `/intake` | A (optional) | Demand clarification + feasibility → register handoff |
 
 ## Agents
 
@@ -101,11 +101,11 @@ Agent definitions live in `.claude/agents/`. Enforcement hooks exit 2 to block, 
 ## Quick Reference
 
 ```
-/vibeflow-workitem register "<desc>" <ID> <track>   # Create work item + branch
-/vibeflow-workitem status [<ID>]                     # Dashboard or detail view
-/vibeflow-workitem advance <ID>                      # Move to next stage
-/vibeflow-workitem close <ID>                        # Mark DONE after CP#4
-/vibeflow-workitem next <ID>                         # Show next action
-/vibeflow-validate checkpoint <N>                        # Validate checkpoint
-/vibeflow-intake                                         # Clarify idea → register
+/workitem register "<desc>" <ID> <track>   # Create work item + branch
+/workitem status [<ID>]                     # Dashboard or detail view
+/workitem advance <ID>                      # Move to next stage
+/workitem close <ID>                        # Mark DONE after CP#4
+/workitem next <ID>                         # Show next action
+/validate checkpoint <N>                    # Validate checkpoint
+/intake                                     # Clarify idea → register
 ```

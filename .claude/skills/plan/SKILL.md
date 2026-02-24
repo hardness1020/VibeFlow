@@ -1,5 +1,5 @@
 ---
-name: vibeflow-planning
+name: plan
 description: Create PRDs, run codebase discovery, write tech specs, document ADRs for Stages A-D of the VibeFlow docs-first workflow
 metadata:
   triggers:
@@ -19,7 +19,7 @@ metadata:
     - planning phase
 ---
 
-# vibeflow-planning
+# plan
 
 Create planning documents for Stages A-D of the VibeFlow docs-first workflow.
 
@@ -68,7 +68,7 @@ Stage D: Decide
 ### Create PRD
 
 ```
-/vibeflow-planning prd
+/plan prd
 ```
 
 Creates or updates `docs/prds/prd.md` with required sections.
@@ -76,47 +76,47 @@ Creates or updates `docs/prds/prd.md` with required sections.
 ### Create Discovery Document
 
 ```
-/vibeflow-planning discovery <ID>
+/plan discovery <ID>
 ```
 
 Creates `docs/discovery/disco-<ID>.md` with all 5 phases.
 
 Example:
 ```
-/vibeflow-planning discovery 030
+/plan discovery 030
 ```
 
 ### Create/Update Tech Spec
 
 ```
-/vibeflow-planning spec <spec-name>
+/plan spec <spec-name>
 ```
 
 Creates or updates `docs/specs/spec-<name>.md`.
 
 Example:
 ```
-/vibeflow-planning spec api
-/vibeflow-planning spec llm
+/plan spec api
+/plan spec llm
 ```
 
 ### Create ADR
 
 ```
-/vibeflow-planning adr <ID> <slug>
+/plan adr <ID> <slug>
 ```
 
 Creates `docs/adrs/adr-<ID>-<slug>.md`.
 
 Example:
 ```
-/vibeflow-planning adr 001 backend-framework
+/plan adr 001 backend-framework
 ```
 
 ### Validate Planning
 
 ```
-/vibeflow-planning validate
+/plan validate
 ```
 
 Runs Checkpoint #1 validation on all planning documents.
@@ -215,5 +215,5 @@ After completing each stage, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 1` after passing validation
 - Criteria: PRD exists with all required sections, discovery doc exists, at least one tech spec, at least one ADR
 
-To advance to the next stage: `/vibeflow-workitem advance <ID>`
-To check readiness: `/vibeflow-validate checkpoint 1`
+To advance to the next stage: `/workitem advance <ID>`
+To check readiness: `/validate checkpoint 1`
