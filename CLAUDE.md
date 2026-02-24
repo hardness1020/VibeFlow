@@ -42,10 +42,10 @@ Every work item is bound to a dedicated git branch:
 
 These rules are **deterministic** — enforced by hooks and skills:
 
-1. **Branch binding (UserPromptSubmit hook):** All prompts blocked unless current branch is `feat/<slug>` for an active work item. Workitem commands are exempted so users can register new work items from main.
+1. **Branch binding (UserPromptSubmit hook):** All prompts blocked unless current branch is `feat/<slug>` for an active work item. Manage-work commands are exempted so users can register new work items from main.
 2. **Checkpoint gates (two layers):**
    - **UserPromptSubmit hook:** `checkpoint-gate.py` blocks prompts containing "advance"/"close" if checkpoint not passed (deterministic safety net)
-   - **Workitem skill:** `advance` and `close` commands validate checkpoints before updating the manifest (skill-instructed, redundant backup)
+   - **Manage-work skill:** `advance` and `close` commands validate checkpoints before updating the manifest (skill-instructed, redundant backup)
 3. **Exception:** Prompts are always allowed when no manifest exists (initial project setup) or when no active work items are present
 4. **All hooks are read-only** — no hook mutates any file. All manifest updates happen in skills.
 
@@ -74,15 +74,25 @@ docs/
 
 ## Skills
 
-| Skill | Stages | Purpose |
-|-------|--------|---------|
-| `/workitem` | All | Register, track, advance, close work items |
-| `/plan` | A-D | PRDs, discovery, tech specs, ADRs |
-| `/spec` | E | Feature specs with acceptance criteria |
-| `/tdd` | F-H | TDD cycle: RED → GREEN → REFACTOR |
-| `/release` | I-L | Reconcile, OP-NOTE, deploy, close |
-| `/validate` | Checkpoints | Checkpoint validation and enforcement |
-| `/intake` | A (optional) | Demand clarification + feasibility → register handoff |
+### Workflow Management
+
+| Skill | Purpose |
+|-------|---------|
+| `/manage-work` | Register, track, advance, close work items |
+| `/clarify-demand` | Pre-register demand clarification |
+| `/validate-checkpoint` | Checkpoint validation and enforcement |
+
+### Stage Skills
+
+| Skill | Stage | Purpose |
+|-------|-------|---------|
+| `/define-prd` | A | PRDs with success metrics |
+| `/analyze-codebase` | B | Codebase discovery and analysis |
+| `/define-tech-spec` | C | Tech specs with architecture |
+| `/record-decision` | D | ADRs for non-trivial choices |
+| `/create-feature-spec` | E | Feature specs with acceptance criteria |
+| `/run-tdd` | F-H | TDD cycle: RED → GREEN → REFACTOR |
+| `/prepare-release` | I-L | Reconcile, OP-NOTE, deploy, close |
 
 ## Agents
 
@@ -101,11 +111,11 @@ Agent definitions live in `.claude/agents/`. Enforcement hooks exit 2 to block, 
 ## Quick Reference
 
 ```
-/workitem register "<desc>" <ID> <track>   # Create work item + branch
-/workitem status [<ID>]                     # Dashboard or detail view
-/workitem advance <ID>                      # Move to next stage
-/workitem close <ID>                        # Mark DONE after CP#4
-/workitem next <ID>                         # Show next action
-/validate checkpoint <N>                    # Validate checkpoint
-/intake                                     # Clarify idea → register
+/manage-work register "<desc>" <ID> <track>   # Create work item + branch
+/manage-work status [<ID>]                     # Dashboard or detail view
+/manage-work advance <ID>                      # Move to next stage
+/manage-work close <ID>                        # Mark DONE after CP#4
+/manage-work next <ID>                         # Show next action
+/validate-checkpoint <N>                       # Validate checkpoint
+/clarify-demand                                # Clarify idea → register
 ```

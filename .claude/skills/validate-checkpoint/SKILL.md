@@ -1,5 +1,5 @@
 ---
-name: validate
+name: validate-checkpoint
 description: Checkpoint validation and guardrail enforcement for the VibeFlow docs-first development workflow
 metadata:
   triggers:
@@ -11,7 +11,7 @@ metadata:
     - can I deploy
 ---
 
-# validate
+# validate-checkpoint
 
 Checkpoint validation and guardrail enforcement for the VibeFlow docs-first development workflow.
 
@@ -52,18 +52,18 @@ Report Results
 ### Validate a Specific Checkpoint
 
 ```
-/validate checkpoint <number>
+/validate-checkpoint <number>
 ```
 
 Example:
 ```
-/validate checkpoint 1
+/validate-checkpoint 1
 ```
 
 ### Validate Current State
 
 ```
-/validate
+/validate-checkpoint
 ```
 
 This auto-detects the current stage and validates the appropriate checkpoint.
@@ -71,11 +71,11 @@ This auto-detects the current stage and validates the appropriate checkpoint.
 ### Validate Specific Document
 
 ```
-/validate prd
-/validate discovery <ID>
-/validate spec <spec-name>
-/validate feature <ID>
-/validate opnote <ID>
+/validate-checkpoint prd
+/validate-checkpoint discovery <ID>
+/validate-checkpoint spec <spec-name>
+/validate-checkpoint feature <ID>
+/validate-checkpoint opnote <ID>
 ```
 
 ## Checkpoints
@@ -140,7 +140,7 @@ All validation scripts output JSON with this structure:
 After a checkpoint passes, update `docs/workflow-state.yaml`:
 - Set `checkpoint` to the number that passed (e.g., `checkpoint: 2` after CP#2 passes)
 
-Stage advancement is handled by: `/workitem advance <ID>`
+Stage advancement is handled by: `/manage-work advance <ID>`
 
 ## References
 

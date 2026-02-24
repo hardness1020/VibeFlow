@@ -41,7 +41,7 @@ try:
         sys.exit(0)
 
     scripts_dir = os.path.join(
-        project_root, ".claude", "skills", "validate", "scripts"
+        project_root, ".claude", "skills", "validate-checkpoint", "scripts"
     )
 
     # Collect changed files (modified + staged + untracked)

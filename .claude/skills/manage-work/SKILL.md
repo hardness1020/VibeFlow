@@ -1,5 +1,5 @@
 ---
-name: workitem
+name: manage-work
 description: Register work items, create feature branches, track and advance stages, close work items in the VibeFlow docs-first development workflow
 metadata:
   triggers:
@@ -15,7 +15,7 @@ metadata:
     - advance work item
 ---
 
-# workitem
+# manage-work
 
 Register work items, create feature branches, track and advance stages, close work items in the VibeFlow docs-first development workflow.
 
@@ -65,7 +65,7 @@ Close Work Item (after Checkpoint #4)
 ### Register a New Work Item
 
 ```
-/workitem register "<description>" <ID> <track>
+/manage-work register "<description>" <ID> <track>
 ```
 
 Registers a work item in `docs/workflow-state.yaml`, determines the starting stage, and creates a git branch `feat/<slug>`.
@@ -77,17 +77,17 @@ Steps:
 
 Example:
 ```
-/workitem register "Add anti-hallucination guardrails" 030 medium
+/manage-work register "Add anti-hallucination guardrails" 030 medium
 # Creates branch: feat/add-anti-hallucination-guardrails
 
-/workitem register "Export data to CSV" 031 small
+/manage-work register "Export data to CSV" 031 small
 # Creates branch: feat/export-data-to-csv
 ```
 
 ### Status Dashboard
 
 ```
-/workitem status
+/manage-work status
 ```
 
 Shows all registered work items with their current stage, track, and last checkpoint.
@@ -102,7 +102,7 @@ export-data-to-csv                 Small    E      2           2025-02-22
 ### Detailed Work Item Status
 
 ```
-/workitem status <ID>
+/manage-work status <ID>
 ```
 
 Shows detailed status for one work item including:
@@ -114,7 +114,7 @@ Shows detailed status for one work item including:
 ### Advance a Work Item
 
 ```
-/workitem advance <ID>
+/manage-work advance <ID>
 ```
 
 Marks a work item as advancing to the next stage in its track:
@@ -130,7 +130,7 @@ Marks a work item as advancing to the next stage in its track:
 ### Close a Work Item
 
 ```
-/workitem close <ID>
+/manage-work close <ID>
 ```
 
 Marks a work item as DONE after passing Checkpoint #4 (Implementation Complete):
@@ -142,14 +142,14 @@ Marks a work item as DONE after passing Checkpoint #4 (Implementation Complete):
 
 Example:
 ```
-/workitem close 030
+/manage-work close 030
 # Sets stage: DONE, branch feat/add-anti-hallucination-guardrails ready for merge
 ```
 
 ### Next Steps for a Work Item
 
 ```
-/workitem next <ID>
+/manage-work next <ID>
 ```
 
 Shows the recommended next action for a work item:
@@ -247,7 +247,7 @@ When registering a new work item:
 When advancing a work item:
 1. Read `docs/workflow-state.yaml`
 2. Check if current stage is a checkpoint boundary (D→E=CP#1, E→F=CP#2, F→G=CP#3, H→I=CP#4, J→K=CP#5, L→done=CP#6)
-3. If checkpoint boundary: run `python3 .claude/skills/validate/scripts/validate_checkpoint.py <N> --json --project-root <root>`
+3. If checkpoint boundary: run `python3 .claude/skills/validate-checkpoint/scripts/validate_checkpoint.py <N> --json --project-root <root>`
    - If exit code 1 (failed): STOP. Report errors. Do NOT update manifest.
    - If exit code 0 or 2 (passed/warnings): proceed
 4. Update `stage` field to the next stage in the track
@@ -260,20 +260,20 @@ Each stage maps to a specific skill. After determining the current stage for a w
 
 | Stage | Skill | Recommended Command |
 |-------|-------|--------------------|
-| A | plan | `/plan prd` |
-| B | plan | `/plan discovery <ID>` |
-| C | plan | `/plan spec <name>` |
-| D | plan | `/plan adr <ID> <slug>` |
-| E | spec | `/spec <ID> <slug>` |
-| F | tdd | `/tdd red` |
-| G | tdd | `/tdd green` |
-| H | tdd | `/tdd refactor` |
-| I | release | `/release reconcile <ID>` |
-| J | release | `/release opnote <slug>` |
-| K | release | `/release check` |
-| L | release | `/release check` |
+| A | define-prd | `/define-prd` |
+| B | analyze-codebase | `/analyze-codebase <ID>` |
+| C | define-tech-spec | `/define-tech-spec <name>` |
+| D | record-decision | `/record-decision <ID> <slug>` |
+| E | create-feature-spec | `/create-feature-spec <ID> <slug>` |
+| F | run-tdd | `/run-tdd red` |
+| G | run-tdd | `/run-tdd green` |
+| H | run-tdd | `/run-tdd refactor` |
+| I | prepare-release | `/prepare-release reconcile <ID>` |
+| J | prepare-release | `/prepare-release opnote <slug>` |
+| K | prepare-release | `/prepare-release check` |
+| L | prepare-release | `/prepare-release check` |
 
-**Checkpoint boundaries** — recommend `/validate checkpoint <N>` before advancing past:
+**Checkpoint boundaries** — recommend `/validate-checkpoint <N>` before advancing past:
 - Stage D → E (Checkpoint #1)
 - Stage E → F (Checkpoint #2)
 - Stage F → G (Checkpoint #3)

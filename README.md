@@ -19,7 +19,7 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
 
 - **Branch-locked development**: Hooks block all prompts unless you're on a `feat/<slug>` branch for an active work item
 - **Docs-before-code workflow**: Planning stages A-E produce documentation; implementation stages F-H must conform to it
-- **Checkpoint gates prevent shortcuts**: Workitem skill validates checkpoints before advancing; hook blocks advance/close prompts as a safety net
+- **Checkpoint gates prevent shortcuts**: Manage-work skill validates checkpoints before advancing; hook blocks advance/close prompts as a safety net
 - **Living documentation**: Auto-validate hook checks doc-code sync after every edit
 - **Decisions are traceable**: IDs link docs → branches → PRs → code across the full lifecycle
 
@@ -95,27 +95,27 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
 git clone https://github.com/hardness1020/VibeFlow.git
 ```
 
-Start with `/intake` to clarify an idea, or `/workitem` to register directly.
+Start with `/clarify-demand` to clarify an idea, or `/manage-work` to register directly.
 
 ```
-/workitem register "<description>" <ID> <track>
-/workitem status [<ID>]
-/workitem advance <ID>
-/workitem close <ID>
-/workitem next <ID>
+/manage-work register "<description>" <ID> <track>
+/manage-work status [<ID>]
+/manage-work advance <ID>
+/manage-work close <ID>
+/manage-work next <ID>
 ```
 
 ### Quick Workflow
 
 ```
-/workitem register "Add search feature" 1 small
-/spec 1 add-search-feature
-/validate checkpoint 2
-/tdd red
-/tdd green
-/tdd refactor
-/validate checkpoint 4
-/workitem close 1
+/manage-work register "Add search feature" 1 small
+/create-feature-spec 1 add-search-feature
+/validate-checkpoint 2
+/run-tdd red
+/run-tdd green
+/run-tdd refactor
+/validate-checkpoint 4
+/manage-work close 1
 ```
 
 ### Workflow Tracks
@@ -131,15 +131,25 @@ Start with `/intake` to clarify an idea, or `/workitem` to register directly.
 
 ## Skills
 
-| Skill | Purpose | Stages |
-|-------|---------|--------|
-| `/workitem` | Select workflow track, navigate between stages, coordinate handoffs, enforce stage gates | All |
-| `/plan` | Create PRDs with success metrics, run spec-driven codebase discovery, write tech specs with diagrams, document ADRs with trade-offs | A-D |
-| `/spec` | Generate feature specs with acceptance criteria, design API contracts, create test plans with golden files | E |
-| `/tdd` | Write failing unit tests first (RED), implement minimal code (GREEN), add integration tests and refactor (REFACTOR) | F-H |
-| `/release` | Reconcile specs with implementation, create OP-NOTE deployment runbooks, deploy and verify, close loop and tag release | I-L |
-| `/validate` | Verify checkpoint completion, enforce blockers, check doc-code sync, validate test coverage | 1-6 |
-| `/intake` | Clarify demand, assess feasibility, recommend track, hand off to register | A (optional) |
+### Workflow Management
+
+| Skill | Purpose |
+|-------|---------|
+| `/manage-work` | Register, track, advance, close work items |
+| `/clarify-demand` | Pre-register demand clarification |
+| `/validate-checkpoint` | Checkpoint validation and enforcement |
+
+### Stage Skills
+
+| Skill | Stage | Purpose |
+|-------|-------|---------|
+| `/define-prd` | A | PRDs with success metrics |
+| `/analyze-codebase` | B | Codebase discovery and analysis |
+| `/define-tech-spec` | C | Tech specs with architecture |
+| `/record-decision` | D | ADRs for non-trivial choices |
+| `/create-feature-spec` | E | Feature specs with acceptance criteria |
+| `/run-tdd` | F-H | TDD cycle: RED → GREEN → REFACTOR |
+| `/prepare-release` | I-L | Reconcile, OP-NOTE, deploy, close |
 
 ---
 
@@ -150,7 +160,7 @@ Hooks run automatically and deterministically — all are read-only (no file mut
 | Hook | Trigger | Fires On | Outcome | Reads |
 |------|---------|----------|---------|-------|
 | `workflow-state-inject.py` | Every prompt | `UserPromptSubmit` | Injects `[VibeFlow] Active: <slug> (Stage X, feat/<slug>)` | Manifest |
-| `workitem-branch-guard.py` | Every prompt | `UserPromptSubmit` | **Blocks** if branch ≠ active `feat/<slug>` (workitem/intake exempt) | Manifest |
+| `workitem-branch-guard.py` | Every prompt | `UserPromptSubmit` | **Blocks** if branch ≠ active `feat/<slug>` (manage-work/clarify-demand exempt) | Manifest |
 | `checkpoint-gate.py` | Every prompt | `UserPromptSubmit` | **Blocks** advance/close if checkpoint not passed | Manifest + `validate_checkpoint.py` |
 | `git-push-guard.py` | Bash with `git push` | `PreToolUse` | **Advisory**: warns if branch/checkpoint issues before push | Manifest |
 | `post-tool-quality.py` | Write/Edit/Bash | `PostToolUse` | **Advisory**: warns on debug artifacts and push status | Source files + Manifest |
@@ -173,7 +183,7 @@ Hooks run automatically and deterministically — all are read-only (no file mut
   └───────────────────────┬────────────────────────────────┘
                           ▼
   ┌─ Skills (on demand) ─────────────────────────────────┐
-  │  workitem │ planning │ feature-spec │ tdd │ …    │
+  │  manage-work │ define-prd │ create-feature-spec │ run-tdd │ …    │
   └───────────────────────┬──────────────────────────────┘
                           ▼
   ┌─ Hooks (PostToolUse) ──────────────────────────────────┐

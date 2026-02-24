@@ -1,5 +1,5 @@
 ---
-name: intake
+name: clarify-demand
 description: Conversational demand clarification and feasibility research before formal work item registration
 metadata:
   triggers:
@@ -12,13 +12,13 @@ metadata:
     - pre-register
 ---
 
-# intake
+# clarify-demand
 
 Conversational demand clarification and feasibility research before formal work item registration.
 
 ## Purpose
 
-This skill helps users go from a vague idea to a concrete work item registration. It runs **before** `/workitem register` to ensure the right track, scope, and description are chosen.
+This skill helps users go from a vague idea to a concrete work item registration. It runs **before** `/manage-work register` to ensure the right track, scope, and description are chosen.
 
 Works on any branch (including `main`).
 
@@ -69,7 +69,7 @@ Produce an **Intake Brief** (displayed in conversation, not persisted to disk):
 Present the Intake Brief to the user. If they confirm:
 
 ```
-/workitem register "<description>" <ID> <track>
+/manage-work register "<description>" <ID> <track>
 ```
 
 If they want changes, loop back to the relevant phase.

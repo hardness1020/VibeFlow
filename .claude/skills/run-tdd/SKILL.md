@@ -1,5 +1,5 @@
 ---
-name: tdd
+name: run-tdd
 description: Write failing unit tests (RED), implement minimal code (GREEN), refactor with quality validation for Stages F-H of the VibeFlow docs-first workflow
 metadata:
   triggers:
@@ -14,7 +14,7 @@ metadata:
     - REFACTOR phase
 ---
 
-# tdd
+# run-tdd
 
 TDD implementation cycle for Stages F-H of the VibeFlow docs-first workflow.
 
@@ -57,7 +57,7 @@ Stage H: REFACTOR
 ### Start TDD Cycle
 
 ```
-/tdd start
+/run-tdd start
 ```
 
 Guides through the full TDD cycle starting with Stage F.
@@ -65,7 +65,7 @@ Guides through the full TDD cycle starting with Stage F.
 ### Stage F: RED Phase
 
 ```
-/tdd red
+/run-tdd red
 ```
 
 1. Create implementation stubs from Feature Spec API Design
@@ -75,7 +75,7 @@ Guides through the full TDD cycle starting with Stage F.
 ### Stage G: GREEN Phase
 
 ```
-/tdd green
+/run-tdd green
 ```
 
 1. Implement minimal code to pass unit tests
@@ -85,7 +85,7 @@ Guides through the full TDD cycle starting with Stage F.
 ### Stage H: REFACTOR Phase
 
 ```
-/tdd refactor
+/run-tdd refactor
 ```
 
 1. Write integration tests for I/O boundaries
@@ -95,7 +95,7 @@ Guides through the full TDD cycle starting with Stage F.
 ### Validate Tests
 
 ```
-/tdd validate
+/run-tdd validate
 ```
 
 Runs test quality validation (Stage H.4 checklist).
@@ -103,7 +103,7 @@ Runs test quality validation (Stage H.4 checklist).
 ### Handle Design Changes
 
 ```
-/tdd g1
+/run-tdd g1
 ```
 
 Guides through Stage G.1 protocol when implementation reveals contract changes.
@@ -213,5 +213,5 @@ After completing each stage, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 4` after passing validation
 - Criteria: All unit tests pass, integration tests pass, H.4 quality validation passes
 
-To advance to the next stage: `/workitem advance <ID>`
-To check readiness: `/validate checkpoint 3` (after RED) or `/validate checkpoint 4` (after REFACTOR)
+To advance to the next stage: `/manage-work advance <ID>`
+To check readiness: `/validate-checkpoint 3` (after RED) or `/validate-checkpoint 4` (after REFACTOR)

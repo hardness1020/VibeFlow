@@ -138,28 +138,39 @@ workitems:
       opnote: null
 ```
 
-Use `/workitem status` to see all work items, or `/workitem status <ID>` for one work item. Every stage skill updates the manifest after completing its work.
+Use `/manage-work status` to see all work items, or `/manage-work status <ID>` for one work item. Every stage skill updates the manifest after completing its work.
 
 ## Quick Commands
 
 ```bash
 # Validate current checkpoint
-python validate/scripts/validate_checkpoint.py
+python validate-checkpoint/scripts/validate_checkpoint.py
 
 # Detect workflow state
-python workitem/scripts/detect_track.py
+python manage-work/scripts/detect_track.py
 
 # Validate specific document
-python validate/scripts/check_planning.py
+python validate-checkpoint/scripts/check_planning.py
 ```
 
 ## Skills Reference
 
-| Skill | Purpose | Stages |
-|-------|---------|--------|
-| workitem | Navigation, track selection | All |
-| plan | PRD, Discovery, Specs, ADRs | A-D |
-| spec | Feature Spec with API Design | E |
-| tdd | TDD cycle | F-H |
-| release | OP-NOTE, Deploy, Close | I-L |
-| validate | Checkpoint validation | All |
+### Workflow Management
+
+| Skill | Purpose |
+|-------|---------|
+| manage-work | Register, track, advance, close work items |
+| clarify-demand | Pre-register demand clarification |
+| validate-checkpoint | Checkpoint validation and enforcement |
+
+### Stage Skills
+
+| Skill | Stage | Purpose |
+|-------|-------|---------|
+| define-prd | A | PRDs with success metrics |
+| analyze-codebase | B | Codebase discovery and analysis |
+| define-tech-spec | C | Tech specs with architecture |
+| record-decision | D | ADRs for non-trivial choices |
+| create-feature-spec | E | Feature specs with acceptance criteria |
+| run-tdd | F-H | TDD cycle: RED, GREEN, REFACTOR |
+| prepare-release | I-L | Reconcile, OP-NOTE, deploy, close |

@@ -1,5 +1,5 @@
 ---
-name: release
+name: prepare-release
 description: Release preparation for Stages I-L of the VibeFlow docs-first workflow
 metadata:
   triggers:
@@ -15,7 +15,7 @@ metadata:
     - release checklist
 ---
 
-# release
+# prepare-release
 
 Release preparation for Stages I-L of the VibeFlow docs-first workflow.
 
@@ -67,7 +67,7 @@ Stage L: Close Loop
 ### Check Release Readiness
 
 ```
-/release check
+/prepare-release check
 ```
 
 Validates OP-NOTE completeness and spec reconciliation status.
@@ -75,7 +75,7 @@ Validates OP-NOTE completeness and spec reconciliation status.
 ### Create OP-NOTE
 
 ```
-/release opnote <feature-slug>
+/prepare-release opnote <feature-slug>
 ```
 
 Creates `docs/op-notes/op-<feature-slug>.md` from template with all required sections.
@@ -83,7 +83,7 @@ Creates `docs/op-notes/op-<feature-slug>.md` from template with all required sec
 ### Reconcile Specs
 
 ```
-/release reconcile <feature-id>
+/prepare-release reconcile <feature-id>
 ```
 
 Compares Feature Spec vs actual implementation and updates divergent docs.
@@ -193,5 +193,5 @@ After completing each stage, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 6` after passing validation
 - Criteria: Deployment verified, indices updated, git tag created
 
-To advance to the next stage: `/workitem advance <ID>`
-To check readiness: `/validate checkpoint 5` (after OP-NOTE) or `/validate checkpoint 6` (after deploy)
+To advance to the next stage: `/manage-work advance <ID>`
+To check readiness: `/validate-checkpoint 5` (after OP-NOTE) or `/validate-checkpoint 6` (after deploy)

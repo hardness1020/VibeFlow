@@ -3,7 +3,7 @@
 UserPromptSubmit hook: Block advance/close prompts when checkpoint validation fails.
 
 Intercepts user prompts that contain "advance" or "close" and validates that
-the checkpoint gate is satisfied before allowing the workitem skill to process them.
+the checkpoint gate is satisfied before allowing the manage-work skill to process them.
 
 Fails open: on any error, allows the prompt.
 
@@ -51,7 +51,7 @@ try:
         print(json.dumps({"decision": "allow"}))
         sys.exit(0)
 
-    # Determine if this looks like a workitem advance or close command
+    # Determine if this looks like a manage-work advance or close command
     is_advance = "advance" in message_lower
     is_close = "close" in message_lower
 
@@ -152,7 +152,7 @@ try:
         if matched_checkpoint < required_cp:
             # Try running the validator
             validator_path = os.path.join(
-                project_root, ".claude", "skills", "validate",
+                project_root, ".claude", "skills", "validate-checkpoint",
                 "scripts", "validate_checkpoint.py"
             )
 
@@ -174,7 +174,7 @@ try:
 
                     print(json.dumps({
                         "decision": "block",
-                        "reason": f"[VibeFlow] Cannot advance '{matched_slug}' past Stage {matched_stage} — {summary}. Run '/validate checkpoint {required_cp}' for details."
+                        "reason": f"[VibeFlow] Cannot advance '{matched_slug}' past Stage {matched_stage} — {summary}. Run '/validate-checkpoint {required_cp}' for details."
                     }))
                     sys.exit(0)
 
