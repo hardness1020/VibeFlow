@@ -82,6 +82,7 @@ docs/
 | `/vibeflow-tdd-implementation` | F-H | TDD cycle: RED → GREEN → REFACTOR |
 | `/vibeflow-release` | I-L | Reconcile, OP-NOTE, deploy, close |
 | `/vibeflow-validate` | Checkpoints | Checkpoint validation and enforcement |
+| `/vibeflow-intake` | Pre-register | Demand clarification + feasibility → register handoff |
 
 ## Agents
 
@@ -106,4 +107,5 @@ Agent definitions live in `.claude/agents/`. Enforcement hooks exit 2 to block, 
 /vibeflow-orchestrator close <ID>                        # Mark DONE after CP#4
 /vibeflow-orchestrator next <ID>                         # Show next action
 /vibeflow-validate checkpoint <N>                        # Validate checkpoint
+/vibeflow-intake                                         # Clarify idea → register
 ```

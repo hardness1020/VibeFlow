@@ -25,7 +25,7 @@ try:
     user_prompt = hook_input.get("user_prompt", "").lower()
 
     # Allow orchestrator commands on any branch (needed to register/manage work items)
-    orchestrator_keywords = ["orchestrator", "register", "/vibeflow"]
+    orchestrator_keywords = ["orchestrator", "register", "/vibeflow", "intake"]
     if any(kw in user_prompt for kw in orchestrator_keywords):
         print(json.dumps({"decision": "allow"}))
         sys.exit(0)

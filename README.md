@@ -95,7 +95,7 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
 git clone https://github.com/hardness1020/VibeFlow.git
 ```
 
-Start with `/vibeflow-orchestrator` to navigate the workflow.
+Start with `/vibeflow-intake` to clarify an idea, or `/vibeflow-orchestrator` to register directly.
 
 ```
 /vibeflow-orchestrator register "<description>" <ID> <track>
@@ -139,6 +139,7 @@ Start with `/vibeflow-orchestrator` to navigate the workflow.
 | `/vibeflow-tdd-implementation` | Write failing unit tests first (RED), implement minimal code (GREEN), add integration tests and refactor (REFACTOR) | F-H |
 | `/vibeflow-release` | Reconcile specs with implementation, create OP-NOTE deployment runbooks, deploy and verify, close loop and tag release | I-L |
 | `/vibeflow-validate` | Verify checkpoint completion, enforce blockers, check doc-code sync, validate test coverage | 1-6 |
+| `/vibeflow-intake` | Clarify demand, assess feasibility, recommend track, hand off to register | Pre-register |
 
 ---
 
