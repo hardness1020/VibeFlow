@@ -1,0 +1,21 @@
+# Local Overrides (not committed to git)
+#
+# Copy this file to CLAUDE.local.md and uncomment sections as needed.
+# CLAUDE.local.md is gitignored and loaded automatically by Claude Code.
+
+# ## Personal Preferences
+#
+# - Preferred test runner: pytest / jest / vitest
+# - Preferred language style: concise / verbose
+# - Always run tests before committing
+
+# ## Local Environment
+#
+# - Python version: 3.12
+# - Node version: 20
+# - Database: PostgreSQL running on localhost:5432
+
+# ## Workflow Overrides
+#
+# - Skip checkpoint validation during prototyping
+# - Default track for new work items: small

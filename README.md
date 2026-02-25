@@ -67,6 +67,16 @@ Produces a feature spec with acceptance criteria and API design. For larger trac
 
 Validates that implementation is complete (Checkpoint #4), marks the work item as DONE, and you're ready to merge.
 
+**Customizing for your project** *(optional)*
+
+Copy the local overrides template to set personal preferences (test runner, language style, environment details):
+
+```bash
+cp .claude/CLAUDE.local.md.example CLAUDE.local.md
+```
+
+`CLAUDE.local.md` is gitignored — it won't affect other contributors.
+
 ---
 
 ## For Contributors & Advanced Users
@@ -189,11 +199,26 @@ Specialized subagents with tool restrictions enforced by scoped PreToolUse hooks
 
 Agent definitions: `.claude/agents/`
 
+### Rules Reference
+
+Claude Code auto-loads these files from `.claude/rules/` as context:
+
+| File | Covers |
+|------|--------|
+| `workflow-stages.md` | Stage definitions, track sizes, checkpoint gates |
+| `branch-conventions.md` | `feat/<slug>` format, branch lifecycle |
+| `file-naming.md` | Document paths and directory hierarchy |
+| `skills-reference.md` | Skill-to-stage mapping and commands |
+| `agents-reference.md` | Agent tool restrictions and scoped hooks |
+| `skills-development.md` | Creating skills: directory structure, `SKILL.md` format, naming |
+| `hooks-development.md` | Creating hooks: input/output format, exit codes, fail-open principle |
+| `docs-standards.md` | Required sections for each document type (PRD, ADR, Feature Spec, etc.) |
+
 ---
 
 ## Contributing
 
-Contributions welcome. Follow the workflow when contributing, add examples, and test your changes.
+Contributions welcome. Before modifying VibeFlow internals, review the development conventions in `.claude/rules/` (see [Rules Reference](#rules-reference) above). Follow the workflow when contributing and test your changes.
 
 ## License
 

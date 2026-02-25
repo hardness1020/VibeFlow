@@ -8,36 +8,6 @@ VibeFlow is a workflow template that enforces docs-first, TDD-driven development
 
 **All documentation MUST exist and be validated BEFORE any code is written.** Stages A-E produce documents; Stages F-H implement code that must match those documents.
 
-## Workflow Structure
-
-See `README.md` for the full pipeline diagram. Summary:
-
-- **Stages A-D** (Planning): PRD, Discovery, Tech Specs, ADRs
-- **Stage E** (Design): Feature Spec with API Design
-- **Stages F-H** (Implementation): TDD cycle — RED, GREEN, REFACTOR
-- **Stages I-L** (Release): Reconcile, OP-NOTE, Deploy, Close — **optional**
-- **DONE**: Terminal state after Checkpoint #4 (can close without release)
-
-Six checkpoints gate progression between phases.
-
-## Tracks
-
-| Track | Start | End | Planning | Release |
-|-------|-------|-----|----------|---------|
-| Micro | F | G → DONE | None | No |
-| Small | E | H → DONE or I-L | Feature spec | Optional |
-| Medium | B | H → DONE or I-L | Full planning | Optional |
-| Large | A | H → DONE or I-L | Full + PRD | Optional |
-
-## Branch Convention
-
-Every work item is bound to a dedicated git branch:
-
-- **Format:** `feat/<slug>` (e.g., `feat/add-anti-hallucination-guardrails`)
-- **Slug:** The work item key from `docs/workflow-state.yaml` (kebab-case from description)
-- **Lifecycle:** Register creates branch → all work happens on branch → close/merge to main
-- **Enforcement:** Hook blocks edits on `main` and on branches not matching an active work item
-
 ## Enforcement Rules
 
 These rules are **deterministic** — enforced by hooks and skills:
@@ -49,73 +19,6 @@ These rules are **deterministic** — enforced by hooks and skills:
 3. **Exception:** Prompts are always allowed when no manifest exists (initial project setup) or when no active work items are present
 4. **All hooks are read-only** — no hook mutates any file. All manifest updates happen in skills.
 
-## File Naming Conventions
+## Reference
 
-- **Manifest:** `docs/workflow-state.yaml` (single source of truth)
-- **PRD:** `docs/prds/prd.md`
-- **Discovery:** `docs/discovery/disco-<ID>.md`
-- **Tech Specs:** `docs/specs/spec-<name>.md`
-- **ADRs:** `docs/adrs/adr-<ID>-<slug>.md`
-- **Feature Specs:** `docs/features/ft-<ID>-<slug>.md`
-- **OP-NOTEs:** `docs/op-notes/op-<slug>.md`
-
-## Document Hierarchy
-
-```
-docs/
-  workflow-state.yaml    # Manifest — source of truth
-  prds/prd.md            # Product Requirements
-  discovery/disco-*.md   # Codebase Analysis
-  specs/spec-*.md        # Tech Specifications
-  adrs/adr-*.md          # Architecture Decisions
-  features/ft-*.md       # Feature Specifications
-  op-notes/op-*.md       # Deployment Runbooks
-```
-
-## Skills
-
-### Workflow Management
-
-| Skill | Purpose |
-|-------|---------|
-| `/manage-work` | Register, track, advance, close work items |
-| `/clarify-demand` | Pre-register demand clarification |
-| `/validate-checkpoint` | Checkpoint validation and enforcement |
-
-### Stage Skills
-
-| Skill | Stage | Purpose |
-|-------|-------|---------|
-| `/define-prd` | A | PRDs with success metrics |
-| `/analyze-codebase` | B | Codebase discovery and analysis |
-| `/define-tech-spec` | C | Tech specs with architecture |
-| `/record-decision` | D | ADRs for non-trivial choices |
-| `/create-feature-spec` | E | Feature specs with acceptance criteria |
-| `/run-tdd` | F-H | TDD cycle: RED → GREEN → REFACTOR |
-| `/prepare-release` | I-L | Reconcile, OP-NOTE, deploy, close |
-
-## Agents
-
-Specialized subagents with tool restrictions enforced by PreToolUse hooks:
-
-| Agent | Stages | Tools | Hook | Purpose |
-|-------|--------|-------|------|---------|
-| `codebase-analyst` | B | Read, Grep, Glob | — | Analyze codebase, map dependencies |
-| `spec-drafter` | C-D | Read, Grep, Glob, Write, Edit | `enforce-docs-only.py` | Draft specs and ADRs (docs/ only) |
-| `api-researcher` | E | Read, Grep, Glob | — | Analyze existing API patterns |
-| `test-writer` | F | Read, Grep, Glob, Write, Edit, Bash | `enforce-test-files-only.py` | Create stubs + failing tests |
-| `implementer` | G | Read, Grep, Glob, Write, Edit, Bash | `enforce-no-test-no-doc.py` | Implement to pass tests (source only) |
-
-Agent definitions live in `.claude/agents/`. Enforcement hooks exit 2 to block, exit 0 to allow, and fail open on errors.
-
-## Quick Reference
-
-```
-/manage-work register "<desc>" <ID> <track>   # Create work item + branch
-/manage-work status [<ID>]                     # Dashboard or detail view
-/manage-work advance <ID>                      # Move to next stage
-/manage-work close <ID>                        # Mark DONE after CP#4
-/manage-work next <ID>                         # Show next action
-/validate-checkpoint <N>                       # Validate checkpoint
-/clarify-demand                                # Clarify idea → register
-```
+Workflow stages, tracks, branch conventions, file naming, skills, and agents are documented in `.claude/rules/`. See `README.md` for the full pipeline diagram and contributor details.
