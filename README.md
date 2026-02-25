@@ -199,7 +199,7 @@ Specialized subagents with tool restrictions enforced by scoped PreToolUse hooks
 
 Agent definitions: `.claude/agents/`
 
-### Rules Reference
+### Rules
 
 Claude Code auto-loads these files from `.claude/rules/` as context:
 
