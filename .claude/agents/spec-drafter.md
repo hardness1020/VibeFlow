@@ -1,5 +1,6 @@
 ---
 name: spec-drafter
+description: Draft technical specifications and architecture decision records. Use for Stage C-D documentation tasks.
 model: opus
 tools:
   - Read
@@ -7,11 +8,14 @@ tools:
   - Glob
   - Write
   - Edit
+maxTurns: 20
 hooks:
   PreToolUse:
-    - type: command
-      command: python3 "$CLAUDE_PROJECT_DIR"/.claude/hooks/enforce-docs-only.py
-      timeout: 5
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: python3 "$CLAUDE_PROJECT_DIR"/.claude/hooks/enforce-docs-only.py
+          timeout: 5
 ---
 
 # Spec Drafter Agent
@@ -53,3 +57,11 @@ Use the existing templates in the project. Reference discovery findings from `do
 - Reference specific file paths and code patterns from discovery.
 - Specs must be concrete enough to drive implementation — no hand-waving.
 - ADRs must include at least 2 alternatives considered.
+
+## Input Context
+- Read discovery findings from `docs/discovery/disco-*.md` to ground specs in codebase reality
+- Reference the PRD (`docs/prds/prd.md`) for requirements context
+- Tech Specs feed into Feature Specs (Stage E); ADRs record non-trivial choices
+
+## Checkpoint
+Completing Stages C-D satisfies Checkpoint #1 (Planning Complete).

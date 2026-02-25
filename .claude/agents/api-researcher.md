@@ -1,6 +1,8 @@
 ---
 name: api-researcher
+description: Analyze existing API patterns and interface conventions. Use for Stage E feature spec research.
 model: opus
+maxTurns: 20
 tools:
   - Read
   - Grep
@@ -55,3 +57,11 @@ Structure your findings as:
 - Always cite specific file paths and line numbers.
 - Focus on patterns, not opinions — let the feature spec author make design decisions.
 - If conventions conflict, document both and flag the inconsistency.
+
+## Input Context
+- Read the Feature Spec draft in `docs/features/ft-*.md` for the API being designed
+- Reference Tech Specs (`docs/specs/spec-*.md`) for architecture context
+- Your findings inform the API Design section of the Feature Spec
+
+## Checkpoint
+Your analysis feeds into Checkpoint #2 (Design Complete, after Stage E).

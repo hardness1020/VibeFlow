@@ -1,6 +1,8 @@
 ---
 name: codebase-analyst
+description: Analyze codebase structure, map dependencies, and identify reusable components. Use for Stage B discovery tasks.
 model: opus
+maxTurns: 30
 tools:
   - Read
   - Grep
@@ -52,3 +54,11 @@ Structure your findings as:
 - Always reference specific file paths and line numbers.
 - Focus on facts from the code, not speculation.
 - Flag ambiguities for the human to resolve.
+
+## Input Context
+- If a PRD exists: read `docs/prds/prd.md` for scope
+- Check existing specs/ADRs in `docs/specs/` and `docs/adrs/` for prior decisions
+- Your findings feed into Tech Specs (Stage C) and ADRs (Stage D)
+
+## Checkpoint
+Your work contributes to Checkpoint #1 (Planning Complete, after Stage D).

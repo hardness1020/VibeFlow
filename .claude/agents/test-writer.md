@@ -1,5 +1,6 @@
 ---
 name: test-writer
+description: Create function stubs and write failing unit tests from feature specs. Use for Stage F RED phase of TDD.
 model: opus
 tools:
   - Read
@@ -8,11 +9,14 @@ tools:
   - Write
   - Edit
   - Bash
+maxTurns: 25
 hooks:
   PreToolUse:
-    - type: command
-      command: python3 "$CLAUDE_PROJECT_DIR"/.claude/hooks/enforce-test-files-only.py
-      timeout: 5
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: python3 "$CLAUDE_PROJECT_DIR"/.claude/hooks/enforce-test-files-only.py
+          timeout: 5
 ---
 
 # Test Writer Agent
@@ -49,3 +53,12 @@ Create function stubs and write failing unit tests that define the expected beha
 - Stubs go in `stubs/` or follow the project's stub convention.
 - Tests must be runnable — verify with `Bash` that they execute and fail as expected.
 - Reference the Feature Spec for exact function signatures and acceptance criteria.
+
+## Input Context
+- Read the Feature Spec (`docs/features/ft-*.md`) for acceptance criteria and API signatures
+- Reference the API Design section for exact function signatures to stub
+- Auto-detect test framework from project config (pytest.ini, jest.config.*, vitest.config.*, etc.)
+
+## Checkpoint
+Completing Stage F (RED) satisfies Checkpoint #3 (Tests Complete).
+All tests must fail with NotImplementedError — not import or syntax errors.

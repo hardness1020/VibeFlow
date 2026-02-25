@@ -1,5 +1,6 @@
 ---
 name: implementer
+description: Write minimal production code to pass failing tests. Use for Stage G GREEN phase of TDD.
 model: opus
 tools:
   - Read
@@ -8,11 +9,14 @@ tools:
   - Write
   - Edit
   - Bash
+maxTurns: 30
 hooks:
   PreToolUse:
-    - type: command
-      command: python3 "$CLAUDE_PROJECT_DIR"/.claude/hooks/enforce-no-test-no-doc.py
-      timeout: 5
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: python3 "$CLAUDE_PROJECT_DIR"/.claude/hooks/enforce-no-test-no-doc.py
+          timeout: 5
 ---
 
 # Implementer Agent
@@ -49,3 +53,12 @@ Write the minimal production code needed to make all failing tests pass. You can
 - If a test seems wrong, report the issue — do not modify the test.
 - If the API contract needs to change, flag it for Stage G.1 review — do not change signatures unilaterally.
 - Minimal implementation: the simplest code that passes tests. Refactoring happens in Stage H.
+
+## Input Context
+- Run the test suite first to see all failing tests from Stage F
+- Read the Feature Spec (`docs/features/ft-*.md`) for API Design context
+- If a function signature must change, STOP and flag for Stage G.1 review — do not change signatures unilaterally
+
+## Checkpoint
+Completing Stage G (GREEN) progresses toward Checkpoint #4 (Implementation Complete).
+All unit tests must pass (exit code 0) before this stage is done.
