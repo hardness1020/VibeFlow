@@ -3,31 +3,94 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/hardness1020/VibeFlow?style=social)](https://github.com/hardness1020/VibeFlow/stargazers)
 
-A docs-first, TDD-driven workflow template for AI-assisted software engineering.
+## What is VibeFlow?
 
----
+VibeFlow is a docs-first development workflow for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Clone it into your project and it enforces the discipline that vibe coding usually skips: **write specs first, then tests, then code**, with guardrails that block you from cutting corners.
 
-## Using VibeFlow in your project? Open a PR to add it here! 🤩
+Three layers make this work:
+
+- **Workflow**: A staged pipeline that walks you from spec to ship, with validated checkpoints between each phase. Four track sizes (Micro → Large) so a config tweak doesn't need the same process as a new auth system.
+- **Guardrails**: Hooks that run on every prompt. They block work on `main`, prevent stage-skipping, and validate your docs automatically. No self-reporting.
+- **Agents**: Specialized roles locked to their job. The test-writer can't touch source code. The implementer can't edit tests. Each agent sees only the tools it needs.
+
+The result: **specs that actually drive tests, tests that actually drive code, and decisions that are traceable from doc to branch to PR.**
+
+## Projects Using VibeFlow: Open a PR to add yours!
 
 | Project | Description |
 |:---:|---|
-| <a href="https://github.com/hardness1020/CV-Tailor"><img src="assets/CV-Tailor.png" width="200" /></a> | **[CV-Tailor](https://github.com/hardness1020/CV-Tailor)** — A full-stack app that transforms work artifacts (GitHub repos, PDFs, web content) into customized, job-specific CVs and cover letters using OpenAI API. |
+| <a href="https://github.com/hardness1020/CV-Tailor"><img src="assets/CV-Tailor.png" width="200" /></a> | **[CV-Tailor](https://github.com/hardness1020/CV-Tailor)**: A full-stack app that transforms work artifacts (GitHub repos, PDFs, web content) into customized, job-specific CVs and cover letters using OpenAI API. |
+
+## Quick Start
+
+```bash
+git clone https://github.com/hardness1020/VibeFlow.git
+```
+
+**Step 1 — Clarify your idea** *(optional)*
+
+```
+/clarify-demand
+```
+
+Describe what you want to build. VibeFlow asks clarifying questions and checks feasibility before you commit to a plan.
+
+**Step 2 — Register a work item**
+
+```
+/manage-work register "Add search feature" 1 small
+```
+
+This creates a `feat/add-search-feature` branch, picks the right track (Micro/Small/Medium/Large), and starts tracking your progress.
+
+**Step 3 — Write your spec**
+
+```
+/create-feature-spec 1 add-search-feature
+```
+
+Produces a feature spec with acceptance criteria and API design. For larger tracks, you'll also use `/define-prd`, `/analyze-codebase`, `/define-tech-spec`, and `/record-decision` in earlier stages.
+
+**Step 4 — TDD cycle: red → green → refactor**
+
+```
+/run-tdd red        # write failing tests from spec
+/run-tdd green      # write minimal code to pass
+/run-tdd refactor   # clean up with integration tests
+```
+
+**Step 5 — Close and merge**
+
+```
+/manage-work close 1
+```
+
+Validates that implementation is complete (Checkpoint #4), marks the work item as DONE, and you're ready to merge.
 
 ---
 
-## Benefits
+## For Contributors & Advanced Users
 
-- **Specs drive tests, tests drive code** — feature specs define contracts, tests enforce them, code must pass
-- **Every prompt is tied to a work item** — dedicated `feat/<slug>` branch, work on `main` is blocked
-- **Checkpoints are validated, not self-reported** — validation scripts confirm completeness before you can advance
-- **Docs stay in sync automatically** — schema validation at conversation end gives pass/fail feedback
-- **Decisions are traceable** — ADRs capture the *why*; IDs link docs → branches → PRs → code
-- **Agents stay in their lane** — test-writers can't touch source, implementers can't touch tests
-- **Right-sized planning** — four tracks (Micro → Large) so a typo fix skips what a system change requires
+Everything below is for people modifying VibeFlow itself or wanting to understand the internals.
 
----
+### Workflow Pipeline
 
-## Workflow Pipeline
+Each stage produces a specific artifact. See the pipeline diagram below for stage flow, track sizes, and checkpoint gates.
+
+| Stage | Name | Purpose | Output |
+|-------|------|---------|--------|
+| A | Initiate | Define what to build, why it matters, and how to measure success | PRD |
+| B | Discovery | Analyze existing codebase for dependencies, patterns, and risks | Discovery doc |
+| C | Specify | Design architecture, data flow, and API contracts | Tech spec |
+| D | Decide | Record non-trivial choices with alternatives and rationale | ADRs |
+| E | Plan | Break the feature into implementable units with acceptance criteria | Feature spec |
+| F | Test (RED) | Write failing tests that define expected behavior from the spec | Failing tests |
+| G | Implement (GREEN) | Write minimal code to make all tests pass | Passing code |
+| H | Refactor | Clean up code and add integration test coverage | Clean code |
+| I | Reconcile | Update docs and specs to match what was actually built | Updated docs |
+| J | Prepare | Write step-by-step deploy and rollback instructions | OP-NOTE |
+| K | Deploy | Execute the runbook and verify in production | Live feature |
+| L | Close | Tag the release and update indices | Closed item |
 
 ```
                         WORKFLOW PIPELINE
@@ -42,6 +105,7 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
                                         │
                                         └──► DONE (close without release)
 
+  ---
   TRACKS (define planning depth, release is always optional):
   ─────────────────────────────────────────────────────────────
   Large:   A ─────────────────────────────────────────────► H → DONE or I-L
@@ -49,12 +113,14 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
   Small:                 E ───────────────────────────────► H → DONE or I-L
   Micro:                           F ─────────────────────► G → DONE
 
+  ---
   CHECKPOINTS:
   ────────────
   #1 Planning Complete .... after D    #4 Implementation Complete .. after H
-  #2 Design Complete ...... after E    #5 Release Ready ........... after J
-  #3 Tests Complete ....... after F    #6 Deployed ................ after L
+  #2 Design Complete ...... after E    #5 Release Ready ............ after J
+  #3 Tests Complete ....... after F    #6 Deployed ................. after L
 
+  ---
   BRANCH LIFECYCLE:
   ─────────────────
   Register ──► git checkout -b feat/<slug>
@@ -64,63 +130,7 @@ A docs-first, TDD-driven workflow template for AI-assisted software engineering.
      └──► Close/Done ──► merge feat/<slug> → main
 ```
 
-
-
-| Stage | Name | Output |
-|-------|------|--------|
-| A | Initiate | PRD with goals and success metrics |
-| B | Discovery | Codebase analysis, impact mapping |
-| C | Specify | Tech specs with architecture diagrams |
-| D | Decide | ADRs for non-trivial choices |
-| | **CHECKPOINT #1** | **Planning Complete** |
-| E | Plan | Feature spec with acceptance criteria |
-| | **CHECKPOINT #2** | **Design Complete** |
-| F | Test (RED) | Failing unit tests define behavior |
-| | **CHECKPOINT #3** | **Tests Complete** |
-| G | Implement (GREEN) | Minimal code to pass tests |
-| H | Refactor | Integration tests + clean code |
-| | **CHECKPOINT #4** | **Implementation Complete** |
-| I | Reconcile | Sync specs with implementation |
-| J | Prepare | OP-NOTE deployment runbook |
-| | **CHECKPOINT #5** | **Release Ready** |
-| K | Deploy | Follow OP-NOTE, verify in production |
-| L | Close | Update indices, tag release |
-| | **CHECKPOINT #6** | **Deployed** |
-
----
-
-## Usage
-
-### Getting Started
-
-```bash
-git clone https://github.com/hardness1020/VibeFlow.git
-```
-
-Start with `/clarify-demand` to clarify an idea, or `/manage-work` to register directly.
-
-```
-/manage-work register "<description>" <ID> <track>
-/manage-work status [<ID>]
-/manage-work advance <ID>
-/manage-work close <ID>
-/manage-work next <ID>
-```
-
-### Quick Workflow
-
-```
-/manage-work register "Add search feature" 1 small
-/create-feature-spec 1 add-search-feature
-/validate-checkpoint 2
-/run-tdd red
-/run-tdd green
-/run-tdd refactor
-/validate-checkpoint 4
-/manage-work close 1
-```
-
-### Workflow Tracks
+### Tracks
 
 | Track | Scope | Stages | Release | Example |
 |-------|-------|--------|---------|---------|
@@ -129,11 +139,9 @@ Start with `/clarify-demand` to clarify an idea, or `/manage-work` to register d
 | **Medium** | Multi-component | B → C → D → E → F → G → H → DONE | Optional (I-L) | New API endpoint |
 | **Large** | System change | A → B → C → D → E → F → G → H → DONE | Optional (I-L) | New auth system |
 
----
+### Skills
 
-## Skills
-
-### Workflow Management
+#### Workflow Management
 
 | Skill | Purpose |
 |-------|---------|
@@ -141,21 +149,19 @@ Start with `/clarify-demand` to clarify an idea, or `/manage-work` to register d
 | `/clarify-demand` | Pre-register demand clarification |
 | `/validate-checkpoint` | Checkpoint validation and enforcement |
 
-### Stage Skills
+#### Stage Skills
 
 | Skill | Stage | Purpose |
 |-------|-------|---------|
-| `/define-prd` | A | PRDs with success metrics |
+| `/define-prd` | A | PRDs (Product Requirements Documents) with success metrics |
 | `/analyze-codebase` | B | Codebase discovery and analysis |
 | `/define-tech-spec` | C | Tech specs with architecture |
-| `/record-decision` | D | ADRs for non-trivial choices |
+| `/record-decision` | D | ADRs (Architecture Decision Records) for non-trivial choices |
 | `/create-feature-spec` | E | Feature specs with acceptance criteria |
-| `/run-tdd` | F-H | TDD cycle: RED → GREEN → REFACTOR |
+| `/run-tdd` | F-H | TDD (Test-Driven Development) cycle: RED → GREEN → REFACTOR |
 | `/prepare-release` | I-L | Reconcile, OP-NOTE, deploy, close |
 
----
-
-## Enforcement (Hooks)
+### Enforcement (Hooks)
 
 Hooks run automatically and deterministically — all are read-only (no file mutations). All fail open.
 
@@ -169,32 +175,7 @@ Hooks run automatically and deterministically — all are read-only (no file mut
 | `doc-path-tracker.py` | Conversation end | `Stop` | **Warns** if document paths missing from manifest | Manifest |
 | `stage-transition-update.py` | Conversation end | `Stop` | Reminds to advance if artifacts exist | Manifest |
 
----
-
-```
-  User Prompt
-       │
-       ▼
-  ┌─ Hooks (UserPromptSubmit) ───────────────────────────┐
-  │  state-inject │ branch-guard │ checkpoint-gate       │
-  └───────────────────────┬──────────────────────────────┘
-                          ▼
-  ┌─ Hooks (PreToolUse) ───────────────────────────────────┐
-  │  git-push-guard (advisory)                             │
-  └───────────────────────┬────────────────────────────────┘
-                          ▼
-  ┌─ Skills (on demand) ─────────────────────────────────┐
-  │  manage-work │ define-prd │ create-feature-spec │ run-tdd │ …    │
-  └───────────────────────┬──────────────────────────────┘
-                          ▼
-  ┌─ Hooks (Stop) ───────────────────────────────────────┐
-  │  auto-validate │ doc-path-tracker │ stage-transition │
-  └──────────────────────────────────────────────────────┘
-```
-
----
-
-## Agents
+### Agents
 
 Specialized subagents with tool restrictions enforced by scoped PreToolUse hooks. Each agent can only write to its designated file types.
 
