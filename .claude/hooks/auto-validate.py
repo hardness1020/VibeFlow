@@ -43,6 +43,11 @@ try:
     scripts_dir = os.path.join(
         project_root, ".claude", "skills", "validate-checkpoint", "scripts"
     )
+    if not os.path.isdir(scripts_dir):
+        hook_dir = os.path.dirname(os.path.abspath(__file__))
+        scripts_dir = os.path.normpath(os.path.join(
+            hook_dir, "..", "skills", "validate-checkpoint", "scripts"
+        ))
 
     # Collect changed files (modified + staged + untracked)
     result = subprocess.run(

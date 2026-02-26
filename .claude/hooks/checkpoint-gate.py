@@ -155,6 +155,12 @@ try:
                 project_root, ".claude", "skills", "validate-checkpoint",
                 "scripts", "validate_checkpoint.py"
             )
+            if not os.path.exists(validator_path):
+                hook_dir = os.path.dirname(os.path.abspath(__file__))
+                validator_path = os.path.normpath(os.path.join(
+                    hook_dir, "..", "skills", "validate-checkpoint",
+                    "scripts", "validate_checkpoint.py"
+                ))
 
             if os.path.exists(validator_path):
                 result = subprocess.run(

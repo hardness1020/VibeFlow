@@ -27,9 +27,26 @@ The result: **specs that actually drive tests, tests that actually drive code, a
 
 ## Quick Start
 
+### Installation
+
+**Option A — Clone into your project** *(full control, can customize)*
+
 ```bash
 git clone https://github.com/hardness1020/VibeFlow.git
 ```
+
+**Option B — Install as a Claude Code plugin**
+
+```bash
+claude plugin marketplace add hardness1020/VibeFlow
+claude plugin install vibeflow@vibeflow
+```
+
+Skills appear as `/vibeflow:<skill-name>`, agents and hooks activate automatically.
+
+> To update the plugin after installation, run `claude plugin update vibeflow`.
+
+---
 
 **Step 1 — Clarify your idea** *(optional)*
 

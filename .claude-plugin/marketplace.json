@@ -1,0 +1,14 @@
+{
+  "name": "vibeflow",
+  "owner": { "name": "hardness1020" },
+  "metadata": {
+    "description": "Docs-first, TDD-driven development workflow for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "vibeflow",
+      "source": "./",
+      "description": "Docs-first, TDD-driven development workflow for Claude Code"
+    }
+  ]
+}

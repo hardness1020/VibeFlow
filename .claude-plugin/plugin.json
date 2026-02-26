@@ -1,0 +1,13 @@
+{
+  "name": "vibeflow",
+  "version": "1.0.0",
+  "description": "Docs-first, TDD-driven development workflow for Claude Code",
+  "author": { "name": "hardness1020" },
+  "homepage": "https://github.com/hardness1020/VibeFlow",
+  "repository": "https://github.com/hardness1020/VibeFlow",
+  "license": "MIT",
+  "keywords": ["workflow", "tdd", "docs-first", "development", "agents"],
+  "skills": "./.claude/skills",
+  "agents": "./agents",
+  "hooks": "./hooks"
+}
