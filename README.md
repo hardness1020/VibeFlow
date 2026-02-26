@@ -21,6 +21,10 @@ The result: **specs that actually drive tests, tests that actually drive code, a
 |:---:|---|
 | <a href="https://github.com/hardness1020/CV-Tailor"><img src="assets/CV-Tailor.png" width="200" /></a> | **[CV-Tailor](https://github.com/hardness1020/CV-Tailor)**: A full-stack app that transforms work artifacts (GitHub repos, PDFs, web content) into customized, job-specific CVs and cover letters using OpenAI API. |
 
+## The Pipeline
+
+![VibeFlow Development Pipeline](assets/pipeline-redesign.gif)
+
 ## Quick Start
 
 ```bash
@@ -85,7 +89,7 @@ Everything below is for people modifying VibeFlow itself or wanting to understan
 
 ### Workflow Pipeline
 
-Each stage produces a specific artifact. See the pipeline diagram below for stage flow, track sizes, and checkpoint gates.
+Each stage produces a specific artifact. See [the pipeline diagram](#the-pipeline) above for stage flow, track sizes, and checkpoint gates.
 
 | Stage | Name | Purpose | Output |
 |-------|------|---------|--------|
@@ -103,41 +107,20 @@ Each stage produces a specific artifact. See the pipeline diagram below for stag
 | L | Close | Tag the release and update indices | Closed item |
 
 ```
-                        WORKFLOW PIPELINE
-                        =================
+TRACKS (define planning depth, release is always optional):
+─────────────────────────────────────────────────────────────
+Large:   A ─────────────────────────────────────────────► H → DONE or I-L
+Medium:      B ─────────────────────────────────────────► H → DONE or I-L
+Small:                 E ───────────────────────────────► H → DONE or I-L
+Micro:                           F ─────────────────────► G → DONE
 
-     PLANNING           DESIGN    IMPLEMENTATION         RELEASE (optional)
-  ┌─────────────────┐  ┌─────┐  ┌───────────────┐  ┌─────────────────────┐
-  │                  │  │     │  │               │  │                     │
-  A → B → C → D ──────► E ──────► F → G → H ──────► I → J → K → L
-  │         │ CP#1  │  │CP#2 │  │  CP#3   CP#4 │  │        CP#5   CP#6 │
-  └─────────────────┘  └─────┘  └───────┬───────┘  └─────────────────────┘
-                                        │
-                                        └──► DONE (close without release)
-
-  ---
-  TRACKS (define planning depth, release is always optional):
-  ─────────────────────────────────────────────────────────────
-  Large:   A ─────────────────────────────────────────────► H → DONE or I-L
-  Medium:      B ─────────────────────────────────────────► H → DONE or I-L
-  Small:                 E ───────────────────────────────► H → DONE or I-L
-  Micro:                           F ─────────────────────► G → DONE
-
-  ---
-  CHECKPOINTS:
-  ────────────
-  #1 Planning Complete .... after D    #4 Implementation Complete .. after H
-  #2 Design Complete ...... after E    #5 Release Ready ............ after J
-  #3 Tests Complete ....... after F    #6 Deployed ................. after L
-
-  ---
-  BRANCH LIFECYCLE:
-  ─────────────────
-  Register ──► git checkout -b feat/<slug>
-     │              │
-     │         (all work on this branch)
-     │              │
-     └──► Close/Done ──► merge feat/<slug> → main
+BRANCH LIFECYCLE:
+─────────────────
+Register ──► git checkout -b feat/<slug>
+   │              │
+   │         (all work on this branch)
+   │              │
+   └──► Close/Done ──► merge feat/<slug> → main
 ```
 
 ### Tracks

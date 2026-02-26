@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VibeFlow Development Pipeline</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    /* ── Global / Structural ── */
+    --bg-body: #edeae6;
+    --bg-card: #f8f6f3;
+    --border-section: #d5d0ca;
+    --text-dark: #3a3530;
+    --text-muted: #9b9590;
+    --text-cp: #7a7470;
+    --cp-bg-start: #f2f0ed;
+    --cp-bg-end: #edebe8;
+
+    /* ── Planning (Dusty Slate) ── */
+    --plan-primary: #7d8fa3;
+    --plan-track-large: #6b7d91;
+    --plan-border: #c4cdd6;
+    --plan-bg-start: #edeef1;
+
+    /* ── Design (Dusty Mauve) ── */
+    --design-primary: #8e7e99;
+    --design-border: #cdc7d1;
+    --design-bg-start: #eeecf0;
+
+    /* ── Implementation (Sage) ── */
+    --impl-primary: #7a9a7e;
+    --impl-bg-start: #ecf0ec;
+
+    /* ── Release (Warm Clay) ── */
+    --release-primary: #b09070;
+    --release-border: #d3c4b6;
+    --release-bg-start: #f0ece7;
+
+    /* ── TDD Stages ── */
+    --red-primary: #b07070;
+    --red-border: #d4bfbf;
+    --green-primary: #7a9a7e;
+    --green-border: #bfcdbf;
+    --refac-primary: #7080a0;
+    --refac-border: #bcc5d1;
+
+    /* ── Badge: Skills ── */
+    --skill-text: #3d7a6a;
+    --skill-bg: #e8efec;
+    --skill-border: #a3c4b5;
+
+    /* ── Badge: Agents ── */
+    --agent-text: #6e5f8a;
+    --agent-bg: #edeaf2;
+    --agent-border: #bab0cc;
+
+    /* ── Badge: Hooks ── */
+    --hook-text: #8a6050;
+    --hook-bg: #f0ebe8;
+    --hook-border: #d4c0ba;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-body);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.05), 0 12px 48px rgba(0,0,0,0.05);
+    padding: 24px 24px 20px;
+    width: 900px;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-dark);
+    letter-spacing: -0.5px;
+  }
+  .header .subtitle {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  /* ── Column Headers ── */
+  .col-headers {
+    display: flex;
+    align-items: center;
+    padding: 0 2px;
+    padding-left: 42px; /* offset for phase sidebar (32px label + 8px arrow + 2px) */
+    margin-bottom: 4px;
+  }
+  .col-headers .col-left {
+    width: 80px;
+    flex-shrink: 0;
+  }
+  .col-headers .col-center {
+    flex: 1;
+    text-align: center;
+  }
+  .col-header {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  /* ── Section (bordered group) ── */
+  .section {
+    border: 1.5px solid var(--border-section);
+    border-radius: 10px;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+    overflow: hidden;
+  }
+  .section.sec-planning {
+    border-top: 2.5px solid var(--plan-primary);
+    background: linear-gradient(135deg, var(--plan-bg-start) 0%, var(--bg-card) 60%);
+  }
+  .section.sec-design {
+    border-top: 2.5px solid var(--design-primary);
+    background: linear-gradient(135deg, var(--design-bg-start) 0%, var(--bg-card) 60%);
+  }
+  .section.sec-impl {
+    border-top: 2.5px solid var(--impl-primary);
+    background: linear-gradient(135deg, var(--impl-bg-start) 0%, var(--bg-card) 60%);
+  }
+  .section.release {
+    border-style: dashed;
+    border-color: var(--border-section);
+    border-width: 1.5px;
+    border-top: 2.5px solid var(--release-primary);
+    border-top-style: dashed;
+    background: linear-gradient(135deg, var(--release-bg-start) 0%, var(--bg-card) 60%);
+  }
+
+  /* ── Section Header ── */
+  .section-hdr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 5px 0 3px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+  .section-hdr svg {
+    width: 15px;
+    height: 15px;
+  }
+  .section-hdr.planning { color: var(--plan-primary); }
+  .section-hdr.design   { color: var(--design-primary); }
+  .section-hdr.impl     { color: var(--impl-primary); }
+  .section-hdr.release-h { color: var(--release-primary); }
+  .section-hdr .opt {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: lowercase;
+    opacity: 0.7;
+    font-style: italic;
+  }
+
+  /* ── Row ── */
+  .row {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    min-height: auto;
+  }
+  .row .left {
+    width: 80px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 6px;
+  }
+  .row .center {
+    flex: 1;
+  }
+
+  /* ── Track Label ── */
+  .track {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .track .arr { font-size: 12px; }
+  .track-large  { color: var(--plan-track-large); }
+  .track-medium { color: var(--plan-primary); }
+  .track-small  { color: var(--design-primary); }
+  .track-micro  { color: var(--red-primary); }
+
+  /* ── Agent Label ── */
+  .agent {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--agent-text);
+    background: var(--agent-bg);
+    border: 1px solid var(--agent-border);
+    border-radius: 3px;
+    padding: 2px 6px;
+    white-space: nowrap;
+  }
+
+  /* ── Stage Card ── */
+  .stage {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 7px;
+    border: 1.5px solid;
+    background: var(--bg-card);
+  }
+  .stage .ico {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .stage .ico svg {
+    width: 10px;
+    height: 10px;
+    color: #fff;
+  }
+  .stage .ltr {
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0.45;
+    letter-spacing: 0.5px;
+    width: 14px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .stage .stage-text {
+    flex: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .stage .name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+    width: 105px;
+    flex-shrink: 0;
+  }
+  .stage .desc {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .stage .sk {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--skill-text);
+    background: var(--skill-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--skill-border);
+    white-space: nowrap;
+  }
+  .stage .badges {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
+  }
+
+  /* Stage color variants */
+  .s-plan  { border-color: var(--plan-border); border-left: 3px solid var(--plan-primary); }
+  .s-plan .ico { background: var(--plan-primary); }
+  .s-design { border-color: var(--design-border); border-left: 3px solid var(--design-primary); }
+  .s-design .ico { background: var(--design-primary); }
+  .s-red    { border-color: var(--red-border); border-left: 3px solid var(--red-primary); }
+  .s-red .ico { background: var(--red-primary); }
+  .s-green  { border-color: var(--green-border); border-left: 3px solid var(--green-primary); }
+  .s-green .ico { background: var(--green-primary); }
+  .s-refac  { border-color: var(--refac-border); border-left: 3px solid var(--refac-primary); }
+  .s-refac .ico { background: var(--refac-primary); }
+  .s-rel    { border-color: var(--release-border); border-left: 3px solid var(--release-primary); }
+  .s-rel .ico { background: var(--release-primary); }
+
+  /* ── Checkpoint pill ── */
+  .cp-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 6px;
+    min-height: 22px;
+  }
+  .cp {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-cp);
+    background: linear-gradient(90deg, var(--cp-bg-start), var(--cp-bg-end));
+    border-left: 2.5px solid var(--text-muted);
+    padding: 2px 10px;
+    border-radius: 10px;
+    letter-spacing: 0.3px;
+  }
+  .cp svg {
+    width: 10px;
+    height: 10px;
+    color: var(--text-muted);
+  }
+
+  /* Row spacing helper */
+  .row + .row { margin-top: 2px; }
+  .row + .cp-row { margin-top: 1px; }
+  .cp-row + .row { margin-top: 1px; }
+
+  /* ── Release multi-stage card ── */
+  .rel-card {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 7px;
+    border: 1.5px solid var(--release-border);
+    border-left: 3px solid var(--release-primary);
+    background: var(--bg-card);
+  }
+  .rel-card .ico {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--release-primary);
+    flex-shrink: 0;
+  }
+  .rel-card .ico svg {
+    width: 10px;
+    height: 10px;
+    color: #fff;
+  }
+  .rel-card .ltr {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--release-primary);
+    opacity: 0.65;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .rel-card .stage-text {
+    flex: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .rel-card .name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+    width: 105px;
+    flex-shrink: 0;
+  }
+  .rel-card .desc {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .rel-card .sk {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--skill-text);
+    background: var(--skill-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--skill-border);
+    white-space: nowrap;
+  }
+
+  /* ── Cycle / Repeat Indicator ── */
+  .cycle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 8px 6px;
+  }
+  .cycle svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  .cycle-lbl {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+  }
+
+  /* ── Guardrails ── */
+  .guardrails {
+    border-top: 1.5px solid var(--border-section);
+    margin-top: 2px;
+    padding-top: 8px;
+    background: linear-gradient(180deg, var(--hook-bg) 0%, var(--bg-card) 40%);
+    border-radius: 0 0 16px 16px;
+  }
+  .gr-hdr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .gr-hdr svg {
+    width: 12px;
+    height: 12px;
+    color: var(--text-muted);
+  }
+  .gr-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px 16px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .hk {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--hook-text);
+    background: var(--hook-bg);
+    border: 1px solid var(--hook-border);
+    border-radius: 5px;
+    padding: 5px 10px;
+    white-space: nowrap;
+  }
+  .hk svg {
+    width: 12px;
+    height: 12px;
+    color: var(--hook-text);
+    flex-shrink: 0;
+  }
+
+  /* ── Phase Sidebar ── */
+  .phase {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 4px;
+  }
+  .phase-label {
+    width: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border-radius: 0 10px 10px 0;  /* visually left-side rounded after 180deg rotation */
+    color: #fff;
+  }
+  .phase-docs .phase-label {
+    background: linear-gradient(180deg, var(--design-primary), var(--plan-primary));  /* after rotation: slate top → mauve bottom */
+  }
+  .phase-code .phase-label {
+    background: linear-gradient(180deg, var(--release-primary), var(--impl-primary));  /* after rotation: sage top → clay bottom */
+  }
+  /* Right-pointing arrow notch on phase label */
+  .phase-arrow {
+    width: 8px;
+    flex-shrink: 0;
+    align-self: stretch;
+  }
+  .phase-arrow svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .phase-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .phase-content > .section {
+    margin-bottom: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-cp);
+  }
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .legend-dot.dot-skill { background: var(--skill-text); }
+  .legend-dot.dot-agent { background: var(--agent-text); }
+  .legend-dot.dot-hook  { background: var(--hook-text); }
+
+
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- ════ Header ════ -->
+  <div class="header">
+    <h1>VibeFlow &mdash; The Dev Pipeline That Never Drifts</h1>
+    <div class="subtitle">DOCS-FIRST &middot; TESTS-FIRST &middot; SHIP</div>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot dot-skill"></span> Skills (slash commands)</span>
+      <span class="legend-item"><span class="legend-dot dot-agent"></span> Agents (subagents)</span>
+      <span class="legend-item"><span class="legend-dot dot-hook"></span> Hooks (guardrails)</span>
+    </div>
+  </div>
+
+  <!-- ════ Column Labels ════ -->
+  <div class="col-headers">
+    <div class="col-left"><span class="col-header">Tracks</span></div>
+    <div class="col-center"><span class="col-header">Pipeline</span></div>
+  </div>
+
+  <!-- ════════════ DOCS PHASE ════════════ -->
+  <div class="phase phase-docs">
+  <div class="phase-label">Docs</div>
+  <div class="phase-arrow"><svg viewBox="0 0 8 100" preserveAspectRatio="none"><defs><linearGradient id="gDocs" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7d8fa3"/><stop offset="100%" stop-color="#8e7e99"/></linearGradient></defs><polygon points="0,0 0,100 8,50" fill="url(#gDocs)"/></svg></div>
+  <div class="phase-content">
+
+  <!-- ════════════ PLANNING ════════════ -->
+  <div class="section sec-planning">
+    <div class="section-hdr planning">PLANNING</div>
+
+    <!-- A — Initiate -->
+    <div class="row">
+      <div class="left"><span class="track track-large">Large <span class="arr">&#9654;</span></span></div>
+      <div class="center">
+        <div class="stage s-plan">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <span class="ltr">A</span>
+          <span class="stage-text"><span class="name">Initiate</span><span class="desc">Write PRD with success metrics</span></span>
+          <span class="badges"><span class="sk">/define-prd</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- B — Discover -->
+    <div class="row">
+      <div class="left"><span class="track track-medium">Medium <span class="arr">&#9654;</span></span></div>
+      <div class="center">
+        <div class="stage s-plan">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+          <span class="ltr">B</span>
+          <span class="stage-text"><span class="name">Discover</span><span class="desc">Analyze codebase, map dependencies</span></span>
+          <span class="badges"><span class="sk">/analyze-codebase</span><span class="agent">codebase-analyst</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- C — Specify -->
+    <div class="row">
+      <div class="left"></div>
+      <div class="center">
+        <div class="stage s-plan">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          <span class="ltr">C</span>
+          <span class="stage-text"><span class="name">Specify</span><span class="desc">Draft tech spec with architecture</span></span>
+          <span class="badges"><span class="sk">/define-tech-spec</span><span class="agent">spec-drafter</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- D — Decide -->
+    <div class="row">
+      <div class="left"></div>
+      <div class="center">
+        <div class="stage s-plan">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+          <span class="ltr">D</span>
+          <span class="stage-text"><span class="name">Decide</span><span class="desc">Record architecture decisions</span></span>
+          <span class="badges"><span class="sk">/record-decision</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CP#1 -->
+    <div class="cp-row">
+      <div class="cp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        CP#1 &mdash; Planning Complete
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ DESIGN ════════════ -->
+  <div class="section sec-design">
+    <div class="section-hdr design">DESIGN</div>
+
+    <!-- E — Plan -->
+    <div class="row">
+      <div class="left"><span class="track track-small">Small <span class="arr">&#9654;</span></span></div>
+      <div class="center">
+        <div class="stage s-design">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+          <span class="ltr">E</span>
+          <span class="stage-text"><span class="name">Plan</span><span class="desc">Feature spec with acceptance criteria</span></span>
+          <span class="badges"><span class="sk">/create-feature-spec</span><span class="agent">api-researcher</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CP#2 -->
+    <div class="cp-row">
+      <div class="cp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        CP#2 &mdash; Design Complete
+      </div>
+    </div>
+  </div>
+
+  </div><!-- .phase-content -->
+  </div><!-- .phase.phase-docs -->
+
+  <!-- ════════════ CODE PHASE ════════════ -->
+  <div class="phase phase-code">
+  <div class="phase-label">Code</div>
+  <div class="phase-arrow"><svg viewBox="0 0 8 100" preserveAspectRatio="none"><defs><linearGradient id="gCode" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7a9a7e"/><stop offset="100%" stop-color="#b09070"/></linearGradient></defs><polygon points="0,0 0,100 8,50" fill="url(#gCode)"/></svg></div>
+  <div class="phase-content">
+
+  <!-- ════════════ IMPLEMENTATION ════════════ -->
+  <div class="section sec-impl">
+    <div class="section-hdr impl">IMPLEMENTATION</div>
+
+    <!-- F — RED -->
+    <div class="row">
+      <div class="left"><span class="track track-micro">Micro <span class="arr">&#9654;</span></span></div>
+      <div class="center">
+        <div class="stage s-red">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg></div>
+          <span class="ltr">F</span>
+          <span class="stage-text"><span class="name">RED</span><span class="desc">Write failing tests from spec</span></span>
+          <span class="badges"><span class="sk">/run-tdd</span><span class="agent">test-writer</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CP#3 -->
+    <div class="cp-row">
+      <div class="cp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        CP#3 &mdash; Tests Complete
+      </div>
+    </div>
+
+    <!-- G — GREEN -->
+    <div class="row">
+      <div class="left"></div>
+      <div class="center">
+        <div class="stage s-green">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="ltr">G</span>
+          <span class="stage-text"><span class="name">GREEN</span><span class="desc">Implement minimal code to pass</span></span>
+          <span class="badges"><span class="agent">implementer</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- H — REFACTOR -->
+    <div class="row">
+      <div class="left"></div>
+      <div class="center">
+        <div class="stage s-refac">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
+          <span class="ltr">H</span>
+          <span class="stage-text"><span class="name">REFACTOR</span><span class="desc">Clean up, integrate, quality check</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CP#4 -->
+    <div class="cp-row">
+      <div class="cp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        CP#4 &mdash; Implementation Complete
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ RELEASE (optional) ════════════ -->
+  <div class="section release">
+    <div class="section-hdr release-h">RELEASE <span class="opt">(optional)</span></div>
+
+    <div class="row">
+      <div class="left"></div>
+      <div class="center">
+        <div class="rel-card">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <span class="ltr">I-L</span>
+          <span class="stage-text"><span class="name">Release</span><span class="desc">Reconcile, OP-NOTE, deploy, close</span></span>
+          <span class="sk">/prepare-release</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- .phase-content -->
+  </div><!-- .phase.phase-code -->
+
+  <!-- ════════════ Cycle Indicator ════════════ -->
+  <div class="cycle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#9b9590" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 1l4 4-4 4"/>
+      <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+      <path d="M7 23l-4-4 4-4"/>
+      <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+    </svg>
+    <span class="cycle-lbl">Register next work item &mdash; pipeline repeats per feature</span>
+  </div>
+
+  <!-- ════════════ Guardrails ════════════ -->
+  <div class="guardrails">
+    <div class="gr-hdr">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Guardrails &mdash; Hooks run on every prompt
+    </div>
+    <div class="gr-grid">
+      <div class="hk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        branch-guard
+      </div>
+      <div class="hk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        checkpoint-gate
+      </div>
+      <div class="hk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        auto-validate
+      </div>
+      <div class="hk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        doc-path-tracker
+      </div>
+      <div class="hk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        stage-transition
+      </div>
+      <div class="hk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+        git-push-guard
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
