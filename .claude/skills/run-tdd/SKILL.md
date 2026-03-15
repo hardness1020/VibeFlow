@@ -215,3 +215,27 @@ After completing each stage, update `docs/workflow-state.yaml`:
 
 To advance to the next stage: `/manage-work advance <ID>`
 To check readiness: `/validate-checkpoint 3` (after RED) or `/validate-checkpoint 4` (after REFACTOR)
+
+## Git Commit
+
+After completing each stage, ask the user for permission before committing:
+
+**Stage F (RED):**
+```bash
+git add <test-files> <stub-files> docs/workflow-state.yaml
+git commit -m "feat(<module>): add failing tests and stubs (#ft-<ID>)"
+```
+
+**Stage G (GREEN):**
+```bash
+git add <source-files> docs/workflow-state.yaml
+git commit -m "feat(<module>): implement to pass tests (#ft-<ID>)"
+```
+
+**Stage H (REFACTOR):**
+```bash
+git add <source-files> <test-files> docs/workflow-state.yaml
+git commit -m "feat(<module>): add integration tests and refactor (#ft-<ID>)"
+```
+
+Replace `<module>` with the actual module name, `<ID>` with the work item ID, and file placeholders with actual paths.

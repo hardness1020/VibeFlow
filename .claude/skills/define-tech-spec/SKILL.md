@@ -69,6 +69,15 @@ Required sections:
 See `assets/`:
 - `techspec-template.md` — Tech spec template
 
+## Library Documentation Lookup
+
+When referencing external libraries, frameworks, or APIs in this document, use the Context7 MCP tools to look up current documentation rather than relying on training data:
+
+1. `mcp__context7_resolve-library-id` — find the library ID
+2. `mcp__context7_get-library-docs` — retrieve current docs
+
+Also consider using `/find-docs` for broader technical documentation lookup.
+
 ## Manifest Update
 
 After completing Stage C, update `docs/workflow-state.yaml`:
@@ -77,3 +86,14 @@ After completing Stage C, update `docs/workflow-state.yaml`:
 - Append to `docs.specs[]`: `docs/specs/spec-<name>.md`
 
 To advance to the next stage: `/manage-work advance <ID>`
+
+## Git Commit
+
+After completing this stage, ask the user for permission before committing:
+
+```bash
+git add docs/specs/spec-<name>.md docs/workflow-state.yaml
+git commit -m "feat(spec): define <name> tech spec (#ft-<ID>)"
+```
+
+Replace `<name>` and `<ID>` with actual values.

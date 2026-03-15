@@ -156,6 +156,15 @@ See `assets/`:
 See `references/`:
 - `api-design-guide.md` — API Design section guidance
 
+## Library Documentation Lookup
+
+When referencing external libraries, frameworks, or APIs in this document, use the Context7 MCP tools to look up current documentation rather than relying on training data:
+
+1. `mcp__context7_resolve-library-id` — find the library ID
+2. `mcp__context7_get-library-docs` — retrieve current docs
+
+Also consider using `/find-docs` for broader technical documentation lookup.
+
 ## Manifest Update
 
 After completing Stage E, update `docs/workflow-state.yaml`:
@@ -169,3 +178,14 @@ After completing Stage E, update `docs/workflow-state.yaml`:
 
 To advance to the next stage: `/manage-work advance <ID>`
 To check readiness: `/validate-checkpoint 2`
+
+## Git Commit
+
+After completing this stage, ask the user for permission before committing:
+
+```bash
+git add docs/features/ft-<ID>-<slug>.md docs/workflow-state.yaml
+git commit -m "feat(feature): define <slug> feature spec (#ft-<ID>)"
+```
+
+Replace `<ID>` and `<slug>` with actual values.

@@ -195,3 +195,29 @@ After completing each stage, update `docs/workflow-state.yaml`:
 
 To advance to the next stage: `/manage-work advance <ID>`
 To check readiness: `/validate-checkpoint 5` (after OP-NOTE) or `/validate-checkpoint 6` (after deploy)
+
+## Git Commit
+
+After completing each stage, ask the user for permission before committing:
+
+**Stage I (Reconcile):**
+```bash
+git add docs/ docs/workflow-state.yaml
+git commit -m "feat(release): reconcile specs with implementation (#ft-<ID>)"
+```
+
+**Stage J (OP-NOTE):**
+```bash
+git add docs/op-notes/op-<slug>.md docs/workflow-state.yaml
+git commit -m "feat(release): create OP-NOTE for <slug> (#ft-<ID>)"
+```
+
+**Stage L (Close):**
+```bash
+git add docs/workflow-state.yaml
+git commit -m "feat(release): close <slug> (#ft-<ID>)"
+git tag v<version>-<slug>
+gh pr create --title "[ft-<ID>] <Description>" --body "Closes #ft-<ID>"
+```
+
+Replace `<slug>`, `<ID>`, `<version>`, and `<Description>` with actual values.

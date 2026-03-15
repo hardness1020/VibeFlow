@@ -75,3 +75,14 @@ After completing Stage A, update `docs/workflow-state.yaml`:
 - Set `docs.prd: docs/prds/prd.md`
 
 To advance to the next stage: `/manage-work advance <ID>`
+
+## Git Commit
+
+After completing this stage, ask the user for permission before committing:
+
+```bash
+git add docs/prds/prd.md docs/workflow-state.yaml
+git commit -m "feat(prd): define product requirements (#ft-<ID>)"
+```
+
+Replace `<ID>` with the actual work item ID.

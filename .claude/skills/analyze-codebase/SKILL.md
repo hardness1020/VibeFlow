@@ -76,3 +76,14 @@ After completing Stage B, update `docs/workflow-state.yaml`:
 - Set `docs.discovery: docs/discovery/disco-<ID>.md`
 
 To advance to the next stage: `/manage-work advance <ID>`
+
+## Git Commit
+
+After completing this stage, ask the user for permission before committing:
+
+```bash
+git add docs/discovery/disco-<ID>.md docs/workflow-state.yaml
+git commit -m "feat(discovery): codebase analysis for <slug> (#ft-<ID>)"
+```
+
+Replace `<ID>` and `<slug>` with actual values.

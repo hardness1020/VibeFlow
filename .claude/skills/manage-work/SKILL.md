@@ -298,6 +298,31 @@ python scripts/detect_track.py --all-workitems
 
 This catches drift between the manifest and actual project state.
 
+## Git Commit
+
+After manifest updates, ask the user for permission before committing:
+
+```bash
+git add docs/workflow-state.yaml
+git commit -m "chore(workflow): update manifest for <slug> (#ft-<ID>)"
+```
+
+### On Close: Create Pull Request
+
+When closing a work item (`/manage-work close <ID>`), after committing, ask the user for permission then:
+
+```bash
+git push -u origin feat/<slug>
+gh pr create --title "[ft-<ID>] <Description>" --body "## Summary
+
+Closes work item #ft-<ID>: <Description>
+
+Track: <track>
+Stages completed: <stages>"
+```
+
+Replace `<slug>`, `<ID>`, `<Description>`, `<track>`, and `<stages>` with actual values.
+
 ## References
 
 See `references/workflow-summary.md` for a condensed workflow overview.

@@ -68,6 +68,15 @@ Required sections:
 See `assets/`:
 - `adr-template.md` — ADR template
 
+## Library Documentation Lookup
+
+When referencing external libraries, frameworks, or APIs in this document, use the Context7 MCP tools to look up current documentation rather than relying on training data:
+
+1. `mcp__context7_resolve-library-id` — find the library ID
+2. `mcp__context7_get-library-docs` — retrieve current docs
+
+Also consider using `/find-docs` for broader technical documentation lookup.
+
 ## Manifest Update
 
 After completing Stage D, update `docs/workflow-state.yaml`:
@@ -81,3 +90,14 @@ After completing Stage D, update `docs/workflow-state.yaml`:
 
 To check readiness: `/validate-checkpoint 1`
 To advance to the next stage: `/manage-work advance <ID>`
+
+## Git Commit
+
+After completing this stage, ask the user for permission before committing:
+
+```bash
+git add docs/adrs/adr-<ID>-<slug>.md docs/workflow-state.yaml
+git commit -m "feat(adr): record <slug> decision (#ft-<ID>)"
+```
+
+Replace `<ID>` and `<slug>` with actual values.
