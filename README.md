@@ -42,7 +42,9 @@ claude plugin marketplace add hardness1020/VibeFlow
 claude plugin install vibeflow@vibeflow
 ```
 
-Skills appear as `/vibeflow:<skill-name>`, agents and hooks activate automatically.
+Skills appear as `/vibeflow:<skill-name>` and agents activate automatically.
+
+> **Note:** Workflow enforcement hooks (branch guard, checkpoint gate, etc.) are only active in clone mode (Option A). Plugin mode provides skills and agents but not hooks, due to a [known Claude Code limitation](https://github.com/anthropics/claude-code/issues/24529) with `${CLAUDE_PLUGIN_ROOT}` in hook commands.
 
 > To update the plugin after installation, run `claude plugin update vibeflow`.
 
