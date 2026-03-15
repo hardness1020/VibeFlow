@@ -1,4 +1,5 @@
 {
+  "description": "VibeFlow workflow enforcement hooks",
   "hooks": {
     "UserPromptSubmit": [
       {

@@ -6,8 +6,5 @@
   "homepage": "https://github.com/hardness1020/VibeFlow",
   "repository": "https://github.com/hardness1020/VibeFlow",
   "license": "MIT",
-  "keywords": ["workflow", "tdd", "docs-first", "development", "agents"],
-  "skills": "./.claude/skills",
-  "agents": "./agents",
-  "hooks": "./hooks"
+  "keywords": ["workflow", "tdd", "docs-first", "development", "agents"]
 }
