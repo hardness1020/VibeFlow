@@ -175,7 +175,9 @@ Register ──► git checkout -b feat/<slug>
 
 ### Enforcement (Hooks)
 
-Hooks run automatically and deterministically — all are read-only (no file mutations). All fail open.
+> **Note:** Hooks are currently **disabled** in `.claude/settings.json` due to input field name bugs (`user_prompt` vs `user_message` vs `prompt`) that cause errors on every prompt. All hook scripts remain on disk in `.claude/hooks/` and can be re-enabled once fixed. Workflow enforcement is maintained through skill instructions.
+
+When enabled, hooks run automatically and deterministically — all are read-only (no file mutations). All fail open.
 
 | Hook | Trigger | Fires On | Outcome | Reads |
 |------|---------|----------|---------|-------|
