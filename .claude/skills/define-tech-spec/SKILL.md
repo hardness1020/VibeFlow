@@ -69,14 +69,16 @@ Required sections:
 See `assets/`:
 - `techspec-template.md` — Tech spec template
 
-## Library Documentation Lookup
+## Context7 Library Research
 
-When referencing external libraries, frameworks, or APIs in this document, use the Context7 MCP tools to look up current documentation rather than relying on training data:
+Follow the workflow in `.claude/rules/context7-research.md` to fetch current library documentation.
 
-1. `mcp__context7_resolve-library-id` — find the library ID
-2. `mcp__context7_get-library-docs` — retrieve current docs
+**What to look for:** API surfaces, configuration options, integration patterns, version constraints.
 
-Also consider using `/find-docs` for broader technical documentation lookup.
+**Where to incorporate findings:**
+- **Architecture** — topology and component interactions with external dependencies
+- **Interfaces & Data Contracts** — exact types, parameters, and return values from library APIs
+- **Reliability** — known limitations, failure modes, and SLO implications
 
 ## Manifest Update
 

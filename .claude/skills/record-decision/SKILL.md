@@ -68,14 +68,16 @@ Required sections:
 See `assets/`:
 - `adr-template.md` — ADR template
 
-## Library Documentation Lookup
+## Context7 Library Research
 
-When referencing external libraries, frameworks, or APIs in this document, use the Context7 MCP tools to look up current documentation rather than relying on training data:
+Follow the workflow in `.claude/rules/context7-research.md` to fetch current library documentation.
 
-1. `mcp__context7_resolve-library-id` — find the library ID
-2. `mcp__context7_get-library-docs` — retrieve current docs
+**What to look for:** capabilities, limitations, compatibility, migration effort, maintenance status.
 
-Also consider using `/find-docs` for broader technical documentation lookup.
+**Where to incorporate findings:**
+- **Decision** — ground the chosen option in verified library capabilities
+- **Consequences** — cite actual limitations and version constraints from docs
+- **Alternatives Considered** — compare alternatives using current feature sets, not assumptions
 
 ## Manifest Update
 

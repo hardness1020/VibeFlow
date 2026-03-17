@@ -156,14 +156,16 @@ See `assets/`:
 See `references/`:
 - `api-design-guide.md` — API Design section guidance
 
-## Library Documentation Lookup
+## Context7 Library Research
 
-When referencing external libraries, frameworks, or APIs in this document, use the Context7 MCP tools to look up current documentation rather than relying on training data:
+Follow the workflow in `.claude/rules/context7-research.md` to fetch current library documentation.
 
-1. `mcp__context7_resolve-library-id` — find the library ID
-2. `mcp__context7_get-library-docs` — retrieve current docs
+**What to look for:** exact method signatures, error types, configuration options, parameter defaults.
 
-Also consider using `/find-docs` for broader technical documentation lookup.
+**Where to incorporate findings:**
+- **API Design** — use verified signatures and types from library docs, not assumed ones
+- **Acceptance Criteria** — reference actual error types and edge cases from docs
+- **Edge Cases & Risks** — document known limitations and version-specific behaviors
 
 ## Manifest Update
 
