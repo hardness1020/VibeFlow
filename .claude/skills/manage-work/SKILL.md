@@ -55,9 +55,13 @@ Advance & Route
     ▼
 Close Work Item (after Checkpoint #4)
     │
-    ├── Mark stage as DONE (terminal state)
-    ├── Branch ready for merge to main
-    └── Alternative: advance to Stage I for release track
+    ├── Validate CP#4, set stage: DONE in manifest
+    ├── Commit all changes on feat/<slug>
+    ├── Push branch, create PR (or find existing)
+    ├── Present PR URL — ask user to review
+    │
+    ├─► User accepts  → Merge PR, delete branch, checkout main
+    └─► User declines → Leave PR open, stay on branch
 ```
 
 ## Usage
@@ -133,17 +137,51 @@ Marks a work item as advancing to the next stage in its track:
 /manage-work close <ID>
 ```
 
-Marks a work item as DONE after passing Checkpoint #4 (Implementation Complete):
-- Validates Checkpoint #4 if not yet passed (runs `validate_checkpoint.py 4 --json --project-root <root>`)
+Closes a work item with an interactive PR review and merge flow. Blocked if Checkpoint #4 validation fails.
+
+**Step 1 — Validate & mark DONE**
+- Validate Checkpoint #4 if not yet passed (runs `validate_checkpoint.py 4 --json --project-root <root>`)
 - Requires work item to be at stage H or later with checkpoint >= 4
-- Sets `stage: DONE` in `docs/workflow-state.yaml`
-- Branch `feat/<slug>` is ready for merge to main
-- Blocked if Checkpoint #4 validation fails
+- Set `stage: DONE` in `docs/workflow-state.yaml`
+
+**Step 2 — Commit all changes**
+- Run `git status` to check for uncommitted changes on `feat/<slug>`
+- If there are changes: `git add -A && git commit -m "chore(workflow): close <slug> (#ft-<ID>)"`
+- If working tree is clean: skip commit
+
+**Step 3 — Push & create PR**
+- Check for an existing PR: `gh pr list --head feat/<slug> --state open --json url`
+- If no PR exists: push and create one:
+  ```bash
+  git push -u origin feat/<slug>
+  gh pr create --title "[ft-<ID>] <Description>" --body "## Summary
+
+  Closes work item #ft-<ID>: <Description>
+
+  Track: <track>
+  Stages completed: <stages>"
+  ```
+- If PR already exists: use the existing PR URL
+
+**Step 4 — Ask user to review**
+- Present the PR URL to the user
+- Ask: "Please review the PR. Would you like to merge it now, or keep it open?"
+- **Wait for the user's response before proceeding**
+
+**Step 5 — Merge or keep open**
+- **User accepts →** merge, clean up, and switch to main:
+  ```bash
+  gh pr merge --merge --delete-branch
+  git checkout main
+  git pull
+  ```
+  Delete the local branch if it still exists: `git branch -d feat/<slug>`
+- **User declines →** leave the PR open, stay on `feat/<slug>`, inform the user the manifest is already DONE
 
 Example:
 ```
 /manage-work close 030
-# Sets stage: DONE, branch feat/add-anti-hallucination-guardrails ready for merge
+# Validates CP#4 → commits → creates PR → asks for review → merges on approval
 ```
 
 ### Next Steps for a Work Item
@@ -300,28 +338,35 @@ This catches drift between the manifest and actual project state.
 
 ## Git Commit
 
-After manifest updates, ask the user for permission before committing:
+### After Manifest Updates (register/advance)
+
+After register or advance updates the manifest, ask the user for permission before committing:
 
 ```bash
 git add docs/workflow-state.yaml
 git commit -m "chore(workflow): update manifest for <slug> (#ft-<ID>)"
 ```
 
-### On Close: Create Pull Request
+### After Close
 
-When closing a work item (`/manage-work close <ID>`), after committing, ask the user for permission then:
+The close flow handles its own commits inline (see "Close a Work Item" above). It commits **all** files via `git add -A` as part of Step 2, then pushes and creates a PR in Step 3.
 
-```bash
-git push -u origin feat/<slug>
-gh pr create --title "[ft-<ID>] <Description>" --body "## Summary
+## Interactive PR Review and Merge
 
-Closes work item #ft-<ID>: <Description>
+The close flow (Steps 3-5) manages the full PR lifecycle. Key commands and edge cases:
 
-Track: <track>
-Stages completed: <stages>"
-```
+**Commands used:**
+- `gh pr list --head feat/<slug> --state open --json url` — check for existing PR
+- `gh pr create --title "..." --body "..."` — create PR if none exists
+- `gh pr merge --merge --delete-branch` — merge and delete remote branch
+- `git checkout main && git pull` — switch to main after merge
+- `git branch -d feat/<slug>` — clean up local branch
 
-Replace `<slug>`, `<ID>`, `<Description>`, `<track>`, and `<stages>` with actual values.
+**Edge cases:**
+- **No uncommitted changes:** `git status` is clean → skip commit in Step 2
+- **PR already exists:** reuse the existing PR URL instead of creating a new one
+- **Merge conflicts:** report the conflict to the user, leave PR open, stay on branch
+- **User declines merge:** PR stays open, branch preserved, manifest already shows DONE
 
 ## References
 
