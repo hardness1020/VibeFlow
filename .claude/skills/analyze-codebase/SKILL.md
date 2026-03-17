@@ -75,8 +75,6 @@ After completing Stage B, update `docs/workflow-state.yaml`:
 - Set `stage: B`
 - Set `docs.discovery: docs/discovery/disco-<ID>.md`
 
-To advance to the next stage: `/manage-work advance <ID>`
-
 ## Git Commit
 
 After completing this stage, ask the user for permission before committing:
@@ -87,3 +85,7 @@ git commit -m "feat(discovery): codebase analysis for <slug> (#ft-<ID>)"
 ```
 
 Replace `<ID>` and `<slug>` with actual values.
+
+## Auto-Advance
+
+After the commit is complete, directly run `/manage-work advance <ID>` to advance to the next stage.

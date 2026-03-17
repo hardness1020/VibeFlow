@@ -29,22 +29,12 @@ The result: **specs that actually drive tests, tests that actually drive code, a
 
 ### Installation
 
-**Option A — Clone into your project** *(full control, can customize)*
-
-```bash
-git clone https://github.com/hardness1020/VibeFlow.git
-```
-
-**Option B — Install as a Claude Code plugin**
-
 ```bash
 claude plugin marketplace add hardness1020/VibeFlow
 claude plugin install vibeflow@vibeflow
 ```
 
-Skills appear as `/vibeflow:<skill-name>` and agents activate automatically.
-
-> **Note:** Workflow enforcement hooks (branch guard, checkpoint gate, etc.) are only active in clone mode (Option A). Plugin mode provides skills and agents but not hooks, due to a [known Claude Code limitation](https://github.com/anthropics/claude-code/issues/24529) with `${CLAUDE_PLUGIN_ROOT}` in hook commands.
+Skills appear as `/vibeflow:<skill-name>`, agents activate automatically, and hooks enforce the workflow.
 
 > To update the plugin after installation, run `claude plugin update vibeflow`.
 
@@ -175,9 +165,7 @@ Register ──► git checkout -b feat/<slug>
 
 ### Enforcement (Hooks)
 
-> **Note:** Hooks are currently **disabled** in `.claude/settings.json` due to input field name bugs (`user_prompt` vs `user_message` vs `prompt`) that cause errors on every prompt. All hook scripts remain on disk in `.claude/hooks/` and can be re-enabled once fixed. Workflow enforcement is maintained through skill instructions.
-
-When enabled, hooks run automatically and deterministically — all are read-only (no file mutations). All fail open.
+Hooks run automatically and deterministically — all are read-only (no file mutations). All fail open.
 
 | Hook | Trigger | Fires On | Outcome | Reads |
 |------|---------|----------|---------|-------|
@@ -201,7 +189,7 @@ Specialized subagents with tool restrictions enforced by scoped PreToolUse hooks
 | `test-writer` | F | Read, Grep, Glob, Write, Edit, Bash | `enforce-test-files-only.py` | Create stubs + write failing tests |
 | `implementer` | G | Read, Grep, Glob, Write, Edit, Bash | `enforce-no-test-no-doc.py` | Implement to pass tests (source only) |
 
-Agent definitions: `.claude/agents/`
+Agent definitions: `agents/`
 
 ### Rules
 
@@ -222,7 +210,13 @@ Claude Code auto-loads these files from `.claude/rules/` as context:
 
 ## Contributing
 
-Contributions welcome. Before modifying VibeFlow internals, review the development conventions in `.claude/rules/` (see [Rules Reference](#rules-reference) above). Follow the workflow when contributing and test your changes.
+Contributions welcome. Clone the repo to customize or develop VibeFlow itself:
+
+```bash
+git clone https://github.com/hardness1020/VibeFlow.git
+```
+
+Before modifying VibeFlow internals, review the development conventions in `.claude/rules/` (see [Rules Reference](#rules-reference) above). Follow the workflow when contributing and test your changes.
 
 ## License
 

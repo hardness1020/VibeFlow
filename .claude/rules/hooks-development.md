@@ -51,4 +51,4 @@ except Exception:
 
 ## Registration
 
-Hooks are registered in `.claude/settings.json` under the appropriate event key (`UserPromptSubmit`, `PreToolUse`, `Stop`). Always use `$CLAUDE_PROJECT_DIR` for paths.
+Hooks are registered in `hooks/hooks.json` for plugin delivery. Use `${CLAUDE_PLUGIN_ROOT}` for paths. Agent-scoped hooks use the same variable in agent frontmatter (`agents/`).

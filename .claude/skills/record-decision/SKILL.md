@@ -88,9 +88,6 @@ After completing Stage D, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 1` after passing validation
 - Criteria: PRD exists with all required sections, discovery doc exists, at least one tech spec, at least one ADR
 
-To check readiness: `/validate-checkpoint 1`
-To advance to the next stage: `/manage-work advance <ID>`
-
 ## Git Commit
 
 After completing this stage, ask the user for permission before committing:
@@ -101,3 +98,8 @@ git commit -m "feat(adr): record <slug> decision (#ft-<ID>)"
 ```
 
 Replace `<ID>` and `<slug>` with actual values.
+
+## Auto-Advance
+
+After the commit is complete, directly run `/manage-work advance <ID>` to advance to the next stage.
+The advance command will automatically validate Checkpoint #1 at the D→E boundary.

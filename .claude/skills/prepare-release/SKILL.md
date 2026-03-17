@@ -193,9 +193,6 @@ After completing each stage, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 6` after passing validation
 - Criteria: Deployment verified, indices updated, git tag created
 
-To advance to the next stage: `/manage-work advance <ID>`
-To check readiness: `/validate-checkpoint 5` (after OP-NOTE) or `/validate-checkpoint 6` (after deploy)
-
 ## Git Commit
 
 After completing each stage, ask the user for permission before committing:
@@ -221,3 +218,11 @@ gh pr create --title "[ft-<ID>] <Description>" --body "Closes #ft-<ID>"
 ```
 
 Replace `<slug>`, `<ID>`, `<version>`, and `<Description>` with actual values.
+
+## Auto-Advance
+
+After each sub-stage commit, directly run `/manage-work advance <ID>`:
+1. **After Stage I (Reconcile) commit** → advances I→J.
+2. **After Stage J (OP-NOTE) commit** → advances J→K. The advance command will automatically validate Checkpoint #5 at the J→K boundary.
+3. **After Stage K (Deploy) commit** → advances K→L.
+4. **After Stage L (Close) commit** → advances L→DONE. The advance command will automatically validate Checkpoint #6 at the L→DONE boundary.

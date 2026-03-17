@@ -213,9 +213,6 @@ After completing each stage, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 4` after passing validation
 - Criteria: All unit tests pass, integration tests pass, H.4 quality validation passes
 
-To advance to the next stage: `/manage-work advance <ID>`
-To check readiness: `/validate-checkpoint 3` (after RED) or `/validate-checkpoint 4` (after REFACTOR)
-
 ## Git Commit
 
 After completing each stage, ask the user for permission before committing:
@@ -239,3 +236,10 @@ git commit -m "feat(<module>): add integration tests and refactor (#ft-<ID>)"
 ```
 
 Replace `<module>` with the actual module name, `<ID>` with the work item ID, and file placeholders with actual paths.
+
+## Auto-Advance
+
+After each sub-stage commit, directly run `/manage-work advance <ID>`:
+1. **After Stage F (RED) commit** → advances F→G. The advance command will automatically validate Checkpoint #3 at the F→G boundary.
+2. **After Stage G (GREEN) commit** → advances G→H.
+3. **After Stage H (REFACTOR) commit** → advances H→DONE or I. The advance command will automatically validate Checkpoint #4 at the H→DONE/I boundary.

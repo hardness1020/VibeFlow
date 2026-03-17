@@ -85,8 +85,6 @@ After completing Stage C, update `docs/workflow-state.yaml`:
 - Set `stage: C`
 - Append to `docs.specs[]`: `docs/specs/spec-<name>.md`
 
-To advance to the next stage: `/manage-work advance <ID>`
-
 ## Git Commit
 
 After completing this stage, ask the user for permission before committing:
@@ -97,3 +95,7 @@ git commit -m "feat(spec): define <name> tech spec (#ft-<ID>)"
 ```
 
 Replace `<name>` and `<ID>` with actual values.
+
+## Auto-Advance
+
+After the commit is complete, directly run `/manage-work advance <ID>` to advance to the next stage.

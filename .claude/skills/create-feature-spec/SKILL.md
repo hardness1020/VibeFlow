@@ -176,9 +176,6 @@ After completing Stage E, update `docs/workflow-state.yaml`:
 - Set `checkpoint: 2` after passing validation
 - Criteria: Feature spec exists with all required sections, API Design section has exact signatures, acceptance criteria are testable
 
-To advance to the next stage: `/manage-work advance <ID>`
-To check readiness: `/validate-checkpoint 2`
-
 ## Git Commit
 
 After completing this stage, ask the user for permission before committing:
@@ -189,3 +186,8 @@ git commit -m "feat(feature): define <slug> feature spec (#ft-<ID>)"
 ```
 
 Replace `<ID>` and `<slug>` with actual values.
+
+## Auto-Advance
+
+After the commit is complete, directly run `/manage-work advance <ID>` to advance to the next stage.
+The advance command will automatically validate Checkpoint #2 at the E→F boundary.

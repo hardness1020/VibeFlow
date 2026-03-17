@@ -10,4 +10,4 @@ Specialized subagents with tool restrictions enforced by PreToolUse hooks:
 | `test-writer` | F | Read, Grep, Glob, Write, Edit, Bash | `enforce-test-files-only.py` | Create stubs + failing tests |
 | `implementer` | G | Read, Grep, Glob, Write, Edit, Bash | `enforce-no-test-no-doc.py` | Implement to pass tests (source only) |
 
-Agent definitions live in `.claude/agents/`. Enforcement hooks exit 2 to block, exit 0 to allow, and fail open on errors.
+Agent definitions live in `agents/`. Enforcement hooks exit 2 to block, exit 0 to allow, and fail open on errors.
