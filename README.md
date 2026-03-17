@@ -55,13 +55,19 @@ Describe what you want to build. VibeFlow asks clarifying questions and checks f
 
 This creates a `feat/add-search-feature` branch, picks the right track (Micro/Small/Medium/Large), and starts tracking your progress.
 
-**Step 3 — Write your spec**
+**Step 3 — Write your docs**
+
+Depending on your track size, produce the required documentation before any code:
 
 ```
-/create-feature-spec 1 add-search-feature
+/define-prd 1                          # Stage A (Large only) — PRD with success metrics
+/analyze-codebase 1                    # Stage B (Medium+)   — codebase discovery
+/define-tech-spec 1 add-search-feature # Stage C (Medium+)   — architecture & API contracts
+/record-decision 1 add-search-feature  # Stage D (Medium+)   — ADRs for non-trivial choices
+/create-feature-spec 1 add-search-feature # Stage E (Small+) — feature spec with acceptance criteria
 ```
 
-Produces a feature spec with acceptance criteria and API design. For larger tracks, you'll also use `/define-prd`, `/analyze-codebase`, `/define-tech-spec`, and `/record-decision` in earlier stages.
+Small tracks start at `/create-feature-spec`; Medium adds B-D; Large adds the PRD on top. Micro tracks skip docs entirely and go straight to TDD.
 
 **Step 4 — TDD cycle: red → green → refactor**
 
