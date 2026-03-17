@@ -51,4 +51,4 @@ except Exception:
 
 ## Registration
 
-Hooks are registered in `hooks/hooks.json` for plugin delivery. Use `${CLAUDE_PLUGIN_ROOT}` for paths. Agent-scoped hooks use the same variable in agent frontmatter (`agents/`).
+Hooks are registered in `hooks/hooks.json` for plugin delivery. Use `${CLAUDE_PLUGIN_ROOT}` for paths.

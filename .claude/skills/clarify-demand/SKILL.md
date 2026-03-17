@@ -38,7 +38,7 @@ Keep the conversation natural. Ask follow-up questions if answers are vague. One
 
 ### Phase 2: Feasibility Research
 
-Delegate to the `codebase-analyst` agent for read-only codebase analysis:
+Perform read-only codebase analysis:
 
 - Does existing code support this, or is new infrastructure needed?
 - What files/modules would be affected?

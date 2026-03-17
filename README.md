@@ -7,11 +7,10 @@
 
 VibeFlow is a docs-first development workflow for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Clone it into your project and it enforces the discipline that vibe coding usually skips: **write specs first, then tests, then code**, with guardrails that block you from cutting corners.
 
-Three layers make this work:
+Two layers make this work:
 
 - **Workflow**: A staged pipeline that walks you from spec to ship, with validated checkpoints between each phase. Four track sizes (Micro → Large) so a config tweak doesn't need the same process as a new auth system.
 - **Guardrails**: Hooks that run on every prompt. They block work on `main`, prevent stage-skipping, and validate your docs automatically. No self-reporting.
-- **Agents**: Specialized roles locked to their job. The test-writer can't touch source code. The implementer can't edit tests. Each agent sees only the tools it needs.
 
 The result: **specs that actually drive tests, tests that actually drive code, and decisions that are traceable from doc to branch to PR.**
 
@@ -34,7 +33,7 @@ claude plugin marketplace add hardness1020/VibeFlow
 claude plugin install vibeflow@vibeflow
 ```
 
-Skills appear as `/vibeflow:<skill-name>`, agents activate automatically, and hooks enforce the workflow.
+Skills appear as `/vibeflow:<skill-name>` and hooks enforce the workflow.
 
 > To update the plugin after installation, run `claude plugin update vibeflow`.
 
@@ -177,20 +176,6 @@ Hooks run automatically and deterministically — all are read-only (no file mut
 | `doc-path-tracker.py` | Conversation end | `Stop` | **Warns** if document paths missing from manifest | Manifest |
 | `stage-transition-update.py` | Conversation end | `Stop` | Reminds to advance if artifacts exist | Manifest |
 
-### Agents
-
-Specialized subagents with tool restrictions enforced by scoped PreToolUse hooks. Each agent can only write to its designated file types.
-
-| Agent | Stages | Tools | Scoped Hook | Purpose |
-|-------|--------|-------|-------------|---------|
-| `codebase-analyst` | B | Read, Grep, Glob | — | Analyze codebase, map dependencies |
-| `spec-drafter` | C-D | Read, Grep, Glob, Write, Edit | `enforce-docs-only.py` | Draft specs and ADRs (`docs/` only) |
-| `api-researcher` | E | Read, Grep, Glob | — | Analyze existing API patterns |
-| `test-writer` | F | Read, Grep, Glob, Write, Edit, Bash | `enforce-test-files-only.py` | Create stubs + write failing tests |
-| `implementer` | G | Read, Grep, Glob, Write, Edit, Bash | `enforce-no-test-no-doc.py` | Implement to pass tests (source only) |
-
-Agent definitions: `agents/`
-
 ### Rules
 
 Claude Code auto-loads these files from `.claude/rules/` as context:
@@ -201,7 +186,6 @@ Claude Code auto-loads these files from `.claude/rules/` as context:
 | `branch-conventions.md` | `feat/<slug>` format, branch lifecycle |
 | `file-naming.md` | Document paths and directory hierarchy |
 | `skills-reference.md` | Skill-to-stage mapping and commands |
-| `agents-reference.md` | Agent tool restrictions and scoped hooks |
 | `skills-development.md` | Creating skills: directory structure, `SKILL.md` format, naming |
 | `hooks-development.md` | Creating hooks: input/output format, exit codes, fail-open principle |
 | `docs-standards.md` | Required sections for each document type (PRD, ADR, Feature Spec, etc.) |

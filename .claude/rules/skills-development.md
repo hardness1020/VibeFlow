@@ -49,5 +49,4 @@ metadata:
 
 - Skills are the **only** place that mutates `docs/workflow-state.yaml` — hooks are read-only
 - Skills should reference `docs/workflow-state.yaml` as the single source of truth
-- Skills that spawn subagents should specify the agent by name from `.claude/agents/`
 - Scripts in `scripts/` should use Python with only standard library dependencies

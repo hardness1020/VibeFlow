@@ -21,4 +21,4 @@ These rules are **deterministic** — enforced by hooks and skills:
 
 ## Reference
 
-Workflow stages, tracks, branch conventions, file naming, skills, and agents are documented in `.claude/rules/`. See `README.md` for the full pipeline diagram and contributor details.
+Workflow stages, tracks, branch conventions, file naming, and skills are documented in `.claude/rules/`. See `README.md` for the full pipeline diagram and contributor details.
