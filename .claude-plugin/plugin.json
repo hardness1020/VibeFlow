@@ -1,6 +1,6 @@
 {
   "name": "vibeflow",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Docs-first, TDD-driven development workflow for Claude Code",
   "author": { "name": "hardness1020" },
   "homepage": "https://github.com/hardness1020/VibeFlow",

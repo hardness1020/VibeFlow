@@ -1,7 +1,7 @@
 {
   "description": "VibeFlow workflow enforcement hooks",
   "hooks": {
-    "UserPromptSubmit": [
+    "_disabled_UserPromptSubmit": [
       {
         "hooks": [
           {
