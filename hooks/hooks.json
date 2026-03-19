@@ -1,7 +1,7 @@
 {
   "description": "VibeFlow workflow enforcement hooks",
   "hooks": {
-    "UserPromptSubmit": [
+    "_disabled_UserPromptSubmit": [
       {
         "hooks": [
           {
@@ -22,7 +22,7 @@
         ]
       }
     ],
-    "PreToolUse": [
+    "_disabled_PreToolUse": [
       {
         "hooks": [
           {
@@ -33,7 +33,7 @@
         ]
       }
     ],
-    "Stop": [
+    "_disabled_Stop": [
       {
         "hooks": [
           {

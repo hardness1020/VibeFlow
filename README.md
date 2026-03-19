@@ -172,6 +172,8 @@ Register ──► git checkout -b feat/<slug>
 
 Hooks run automatically and deterministically — all are read-only (no file mutations). All fail open.
 
+> **Note:** Hooks are currently not functional and are disabled by default (prefixed with `_disabled_` in `hooks/hooks.json`). To enable them, remove the `_disabled_` prefix from each key.
+
 | Hook | Trigger | Fires On | Outcome | Reads |
 |------|---------|----------|---------|-------|
 | `workflow-state-inject.py` | Every prompt | `UserPromptSubmit` | Injects `[VibeFlow] Active: <slug> (Stage X, feat/<slug>)` | Manifest |
