@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Stop hook: Batch-validate all changed doc files at end of turn.
 Replaces per-edit PostToolUse validation with one consolidated pass.

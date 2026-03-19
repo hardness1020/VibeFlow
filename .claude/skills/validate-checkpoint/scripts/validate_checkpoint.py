@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Master checkpoint validator for VibeFlow workflow.
 

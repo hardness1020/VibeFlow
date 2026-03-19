@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Stop hook: Warn about missing doc paths in workflow-state.yaml.
 

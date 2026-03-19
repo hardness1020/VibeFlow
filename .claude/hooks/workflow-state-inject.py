@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 UserPromptSubmit hook: Inject active work items and branches into every prompt.
 

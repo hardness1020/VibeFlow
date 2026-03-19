@@ -11,7 +11,7 @@ When creating or modifying hooks in `.claude/hooks/`, follow these conventions.
 
 - **Read-only:** Hooks MUST NOT mutate any file. All manifest updates happen in skills.
 - **Fail-open:** On any error (missing files, parse failures, exceptions), hooks must allow the action to proceed. Never block on an error.
-- **No external dependencies:** Use only Python standard library. No pip packages.
+- **No external dependencies:** Use only Python standard library. No pip packages. Hooks are invoked via `uv run --no-project python3` to ensure Python availability without depending on the user's project environment.
 
 ## Input/Output Format
 
@@ -32,7 +32,6 @@ When creating or modifying hooks in `.claude/hooks/`, follow these conventions.
 ## Structure
 
 ```python
-#!/usr/bin/env python3
 """
 <HookType> hook: <one-line description>.
 Exit 0 + allow/block JSON. Fail-open on errors.
@@ -51,4 +50,4 @@ except Exception:
 
 ## Registration
 
-Hooks are registered in `hooks/hooks.json` for plugin delivery. Use `${CLAUDE_PLUGIN_ROOT}` for paths.
+Hooks are registered in `hooks/hooks.json` for plugin delivery. Use `${CLAUDE_PLUGIN_ROOT}` for paths. Commands must use `uv run --no-project python3` (not bare `python3`) to ensure Python is available without depending on the user's project environment.

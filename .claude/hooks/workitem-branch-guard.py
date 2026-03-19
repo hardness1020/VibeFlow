@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 UserPromptSubmit hook: Block prompts unless current git branch matches an active work item.
 

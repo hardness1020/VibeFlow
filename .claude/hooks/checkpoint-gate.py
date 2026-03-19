@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 UserPromptSubmit hook: Block advance/close prompts when checkpoint validation fails.
 

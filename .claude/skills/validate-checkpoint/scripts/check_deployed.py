@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Checkpoint #6: Deployed Validator
 

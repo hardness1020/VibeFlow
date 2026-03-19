@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Checkpoint #5: Release Ready Validator
 

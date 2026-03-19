@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Stop hook: Non-blocking reminder if manifest needs updating.
 

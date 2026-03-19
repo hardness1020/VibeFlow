@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Checkpoint #2: Design Complete Validator
 

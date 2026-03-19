@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 PreToolUse hook: Advisory guard for git push commands.
 
