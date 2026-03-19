@@ -87,7 +87,7 @@ try:
 
         try:
             val_result = subprocess.run(
-                ["uv", "run", "--no-project", "python3", script_path, "--json", "--project-root", project_root],
+                ["uv", "run", "--no-project", script_path, "--json", "--project-root", project_root],
                 capture_output=True, text=True, timeout=15,
                 cwd=project_root
             )

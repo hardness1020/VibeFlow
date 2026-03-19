@@ -285,7 +285,7 @@ When registering a new work item:
 When advancing a work item:
 1. Read `docs/workflow-state.yaml`
 2. Check if current stage is a checkpoint boundary (D→E=CP#1, E→F=CP#2, F→G=CP#3, H→I=CP#4, J→K=CP#5, L→done=CP#6)
-3. If checkpoint boundary: run `uv run --no-project python3 .claude/skills/validate-checkpoint/scripts/validate_checkpoint.py <N> --json --project-root <root>`
+3. If checkpoint boundary: run `uv run --no-project .claude/skills/validate-checkpoint/scripts/validate_checkpoint.py <N> --json --project-root <root>`
    - If exit code 1 (failed): STOP. Report errors. Do NOT update manifest.
    - If exit code 0 or 2 (passed/warnings): proceed
 4. Update `stage` field to the next stage in the track
