@@ -1,11 +1,11 @@
 ---
 paths:
-  - ".claude/hooks/**"
+  - "hooks/**"
 ---
 
 # Hook Development Conventions
 
-When creating or modifying hooks in `.claude/hooks/`, follow these conventions.
+When creating or modifying hooks in `hooks/`, follow these conventions.
 
 ## Core Principles
 
