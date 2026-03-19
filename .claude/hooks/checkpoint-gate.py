@@ -163,7 +163,7 @@ try:
 
             if os.path.exists(validator_path):
                 result = subprocess.run(
-                    ["python3", validator_path, str(required_cp), "--json",
+                    ["uv", "run", "--no-project", "python3", validator_path, str(required_cp), "--json",
                      "--project-root", project_root],
                     capture_output=True, text=True, timeout=30,
                     cwd=project_root

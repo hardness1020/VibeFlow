@@ -21,10 +21,12 @@ try:
     ).stdout.strip()
 
     if not project_root:
+        print(json.dumps({"decision": "allow"}))
         sys.exit(0)
 
     manifest_path = os.path.join(project_root, "docs", "workflow-state.yaml")
     if not os.path.exists(manifest_path):
+        print(json.dumps({"decision": "allow"}))
         sys.exit(0)
 
     # Get current branch
@@ -86,6 +88,7 @@ try:
         items.append((current_slug, current_stage, branch, current_track))
 
     if not items:
+        print(json.dumps({"decision": "allow"}))
         sys.exit(0)
 
     # Build status message
@@ -99,5 +102,6 @@ try:
     print(json.dumps({"user_message": "\n".join(lines)}))
 
 except Exception:
-    # Fail silently — never disrupt the prompt
-    pass
+    # Fail open — always output valid JSON
+    print(json.dumps({"decision": "allow"}))
+    sys.exit(0)
