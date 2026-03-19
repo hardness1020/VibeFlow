@@ -6,17 +6,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run --no-project python3 \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/workflow-state-inject.py\"",
+            "command": "uv run --no-project python3 ${CLAUDE_PLUGIN_ROOT}/.claude/hooks/workflow-state-inject.py",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "uv run --no-project python3 \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/workitem-branch-guard.py\"",
+            "command": "uv run --no-project python3 ${CLAUDE_PLUGIN_ROOT}/.claude/hooks/workitem-branch-guard.py",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "uv run --no-project python3 \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/checkpoint-gate.py\"",
+            "command": "uv run --no-project python3 ${CLAUDE_PLUGIN_ROOT}/.claude/hooks/checkpoint-gate.py",
             "timeout": 15
           }
         ]
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run --no-project python3 \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/git-push-guard.py\"",
+            "command": "uv run --no-project python3 ${CLAUDE_PLUGIN_ROOT}/.claude/hooks/git-push-guard.py",
             "timeout": 5
           }
         ]
@@ -38,17 +38,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run --no-project python3 \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/auto-validate.py\"",
+            "command": "uv run --no-project python3 ${CLAUDE_PLUGIN_ROOT}/.claude/hooks/auto-validate.py",
             "timeout": 15
           },
           {
             "type": "command",
-            "command": "uv run --no-project python3 \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/doc-path-tracker.py\"",
+            "command": "uv run --no-project python3 ${CLAUDE_PLUGIN_ROOT}/.claude/hooks/doc-path-tracker.py",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "uv run --no-project python3 \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/stage-transition-update.py\"",
+            "command": "uv run --no-project python3 ${CLAUDE_PLUGIN_ROOT}/.claude/hooks/stage-transition-update.py",
             "timeout": 5
           }
         ]
